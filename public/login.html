@@ -145,19 +145,7 @@
   
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
-
-    // Check if the user is already logged in when the page loads
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // If already logged in, redirect to the admin dashboard
-        if (user.email === 'arban@gmail.com') {
-          window.location.href = 'admin_dashboard.html'; // Admin dashboard
-        } else {
-          window.location.href = 'index.html'; // Regular user homepage
-        }
-      }
-    });
-
+  
     // Handle login form submission
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -172,8 +160,7 @@
         // After login, check if the user is admin and redirect accordingly
         const user = auth.currentUser;  // Get the currently logged-in user
         if (user) {
-          if (user.email === 'arban@gmail.com') {
-            localStorage.setItem("adminLoggedIn", "true");  // Store session data
+          if (user.email === 'arban@gmail.com') {  // Replace with the admin email from Firebase
             window.location.href = 'admin_dashboard.html';  // Redirect to the admin dashboard
           } else {
             window.location.href = 'index.html';  // Redirect to the home page for regular users
@@ -185,7 +172,18 @@
       }
     });
   
+    // Check if the user is already logged in when the page loads (for auto-redirect)
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (user.email === 'arban@gmail.com') {  // Replace with the admin email
+          window.location.href = 'admin_dashboard.html';  // Redirect to the admin dashboard
+        } else {
+          window.location.href = 'index.html';  // Redirect to the home page
+        }
+      }
+    });
   </script>
+  
   
 </body>
 </html>
