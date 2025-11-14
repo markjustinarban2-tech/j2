@@ -17,7 +17,6 @@
       display: flex;
       min-height: 100vh;
       background-color: #f4f7fc;
-      transition: all 0.3s ease;
     }
 
     /* ===== Sidebar ===== */
@@ -31,11 +30,6 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: width 0.3s ease;
-    }
-
-    .sidebar:hover {
-      width: 270px;
     }
 
     .sidebar .logo {
@@ -54,7 +48,6 @@
     .sidebar ul li {
       padding: 15px 20px;
       border-bottom: 1px solid #1c3d8c;
-      transition: background-color 0.3s ease;
     }
 
     .sidebar ul li a {
@@ -62,7 +55,6 @@
       color: white;
       font-weight: 600;
       font-size: 16px;
-      display: block;
     }
 
     .sidebar ul li:hover {
@@ -84,11 +76,6 @@
       margin-left: 250px;
       padding: 20px;
       width: 100%;
-      transition: margin-left 0.3s ease;
-    }
-
-    .sidebar:hover + .main-content {
-      margin-left: 270px;
     }
 
     /* ===== Topbar ===== */
@@ -99,7 +86,6 @@
       align-items: center;
       padding: 20px 30px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
     }
 
     .topbar .brand {
@@ -112,7 +98,6 @@
       display: flex;
       align-items: center;
       gap: 15px;
-      transition: transform 0.3s ease;
     }
 
     .topbar .user-profile img {
@@ -245,17 +230,17 @@
     <div class="dashboard-overview">
       <div class="overview-card">
         <h3>Total Users</h3>
-        <div class="number">0</div>
+        <div class="number">1,245</div>
         <div class="description">The total number of registered users.</div>
       </div>
       <div class="overview-card">
         <h3>Total Products</h3>
-        <div class="number">0</div>
+        <div class="number">432</div>
         <div class="description">The total number of available products.</div>
       </div>
       <div class="overview-card">
         <h3>Sales</h3>
-        <div class="number">$0</div>
+        <div class="number">$15,320</div>
         <div class="description">Total sales in the last 30 days.</div>
       </div>
     </div>
@@ -270,9 +255,15 @@
   <script>
     // Logout function
     function logout() {
-      // Clear user session (in a real app, use Firebase or your own auth method)
+      // Clear session data and redirect to the login page
+      sessionStorage.removeItem("loggedInUser");  // Assuming you store the user session here
       alert("You have been logged out.");
       window.location.href = 'login.html';  // Redirect to login page
+    }
+
+    // Check if the user is logged in on page load
+    if (!sessionStorage.getItem("loggedInUser")) {
+      window.location.href = 'login.html';  // Redirect to login page if not logged in
     }
   </script>
 </body>
