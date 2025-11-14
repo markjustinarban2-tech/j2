@@ -1,165 +1,130 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RouteLink - Login</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚚</text></svg>">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MyShop — Home</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    body{background:#f5f6f8;color:#111}
+    header{background:#fff;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.05);position:sticky;top:0;z-index:50}
+    .logo{font-size:24px;font-weight:700;color:#2563eb;text-decoration:none}
+    nav a{margin-left:20px;text-decoration:none;color:#444;font-weight:500}
+    nav a:hover{color:#2563eb}
+
+    /* Hero */
+    .hero{display:flex;align-items:center;justify-content:space-between;padding:80px 32px;background:#eef2ff}
+    .hero h1{font-size:42px;font-weight:800;margin-bottom:14px}
+    .hero p{font-size:18px;color:#444;margin-bottom:24px}
+    .hero button{padding:14px 22px;background:#2563eb;border:0;color:#fff;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
+    .hero button:hover{opacity:0.9}
+    .hero img{width:460px;border-radius:20px;box-shadow:0 10px 30px rgba(37, 99, 235, 0.3)}
+
+    /* Sections */
+    .section{padding:60px 32px}
+    .section h2{font-size:28px;font-weight:700;margin-bottom:20px}
+
+    .categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px}
+    .category-card{background:#fff;padding:20px;border-radius:14px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.06);cursor:pointer;transition:0.2s}
+    .category-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.1)}
+    .category-card img{width:80px;height:80px;object-fit:cover;margin-bottom:12px;border-radius:50%}
+
+    /* Featured products */
+    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
+    .product-card{background:#fff;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,0.06);padding:14px;cursor:pointer;transition:0.2s}
+    .product-card:hover{transform:translateY(-4px)}
+    .product-card img{width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:12px}
+    .product-card h3{font-size:18px;font-weight:600;margin-bottom:6px}
+    .product-card p{color:#666;font-size:14px;margin-bottom:10px}
+    .price{font-size:18px;font-weight:700;color:#2563eb}
+
+    /* Footer */
+    footer{margin-top:60px;background:#111;color:#fff;padding:40px;text-align:center;font-size:14px}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="auth-card">
-            <h1>RouteLink</h1>
-            <h2>Trucking Booking System</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-                <p class="error-message" id="errorMessage"></p>
-                <p class="switch-form">
-                    Don't have an account? <a href="register.html">Register here</a>
-                </p>
-            </form>
-        </div>
+
+  <header>
+    <a href="#" class="logo">J2 Nexus</a>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#categories">Categories</a>
+      <a href="#products">Products</a>
+      <a href="login.html">Login</a>
+      <a href="signup.html">signup</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1>Your One-Stop Online Store</h1>
+      <p>Discover the latest products, hottest deals, and premium quality items — all in one place.</p>
+      <button>Shop Now</button>
     </div>
+    <img src="https://images.pexels.com/photos/3965545/pexels-photo-3965545.jpeg" />
+  </section>
 
-    <!-- Firebase Login Script -->
-    <script type="module">
-        import { auth, db } from "./firebase-config.js";
-        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-        import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+  <section class="section" id="categories">
+    <h2>Shop by Category</h2>
+    <div class="categories">
+      <div class="category-card">
+        <img src="https://images.pexels.com/photos/845434/pexels-photo-845434.jpeg" />
+        <h3>Fashion</h3>
+      </div>
+      <div class="category-card">
+        <img src="https://images.pexels.com/photos/1334597/pexels-photo-1334597.jpeg" />
+        <h3>Electronics</h3>
+      </div>
+      <div class="category-card">
+        <img src="https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg" />
+        <h3>Home & Living</h3>
+      </div>
+      <div class="category-card">
+        <img src="https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg" />
+        <h3>Beauty</h3>
+      </div>
+    </div>
+  </section>
 
-        const loginForm = document.getElementById("loginForm");
-        const errorMessage = document.getElementById("errorMessage");
+  <section class="section" id="products">
+    <h2>Featured Products</h2>
+    <div class="products">
 
-        const roleRedirectMap = {
-            admin: "admin.html",
-            driver: "driver.html",
-            user: "user.html"
-        };
+      <div class="product-card">
+        <img src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg" />
+        <h3>Stylish Sneakers</h3>
+        <p>Comfortable everyday shoes designed for style.</p>
+        <div class="price">₱1,299</div>
+      </div>
 
-        loginForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
+      <div class="product-card">
+        <img src="https://images.pexels.com/photos/18105/pexels-photo.jpg" />
+        <h3>Smart Headphones</h3>
+        <p>Noise-cancelling with superior sound quality.</p>
+        <div class="price">₱2,799</div>
+      </div>
 
-            errorMessage.textContent = "";
-            errorMessage.style.display = "none";
+      <div class="product-card">
+        <img src="https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg" />
+        <h3>Classic Wristwatch</h3>
+        <p>Elegant design for any occasion.</p>
+        <div class="price">₱899</div>
+      </div>
 
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value.trim();
+      <div class="product-card">
+        <img src="https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg" />
+        <h3>Wireless Speaker</h3>
+        <p>High-quality sound with long battery life.</p>
+        <div class="price">₱1,999</div>
+      </div>
 
-            if (!email || !password) {
-                showError("Please enter both email and password.");
-                return;
-            }
+    </div>
+  </section>
 
-            try {
-                const credential = await signInWithEmailAndPassword(auth, email, password);
-                const user = credential.user;
+  <footer>
+    © 2025 MyShop — All Rights Reserved
+  </footer>
 
-                const userDocRef = doc(db, "users", user.uid);
-                let userDocSnap = await getDoc(userDocRef);
-
-                if (!userDocSnap.exists()) {
-                    const fallbackRole = deriveRoleFromEmail(user.email);
-                    await setDoc(userDocRef, {
-                        name: user.displayName || user.email?.split("@")[0] || "User",
-                        email: user.email || "",
-                        role: fallbackRole,
-                        license: "",
-                        createdAt: serverTimestamp()
-                    }, { merge: true });
-
-                    userDocSnap = await getDoc(userDocRef);
-                }
-
-                const userData = userDocSnap.data();
-                const role = userData.role || "user";
-
-                cacheUserSession({
-                    id: user.uid,
-                    uid: user.uid,
-                    email: user.email || "",
-                    name: userData.name || user.displayName || "",
-                    role,
-                    license: userData.license || "",
-                    password
-                });
-
-                window.location.href = roleRedirectMap[role] || "user.html";
-            } catch (error) {
-                showError(normalizeAuthError(error));
-            }
-        });
-
-        function cacheUserSession(user) {
-            try {
-                localStorage.setItem("currentUser", JSON.stringify(user));
-
-                const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
-                const existingIndex = storedUsers.findIndex((item) => item.id === user.id || item.email === user.email);
-
-                if (existingIndex >= 0) {
-                    storedUsers[existingIndex] = { ...storedUsers[existingIndex], ...user };
-                } else {
-                    storedUsers.push(user);
-                }
-
-                localStorage.setItem("users", JSON.stringify(storedUsers));
-            } catch {
-                console.warn("Failed to update local cache");
-            }
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = "block";
-        }
-
-        function normalizeAuthError(error) {
-            if (!error || !error.code) {
-                return (error && error.message) || "Login failed. Please try again.";
-            }
-
-            switch (error.code) {
-                case "auth/invalid-credential":
-                case "auth/wrong-password":
-                    return "Incorrect email or password.";
-                case "auth/user-not-found":
-                    return "No account found with that email.";
-                case "auth/too-many-requests":
-                    return "Too many attempts. Please try again later.";
-                default:
-                    return error.message || "Login failed. Please try again.";
-            }
-        }
-
-        function deriveRoleFromEmail(email = "") {
-            const normalizedEmail = email.trim().toLowerCase();
-
-            try {
-                const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
-                const cached = storedUsers.find((item) => item.email?.toLowerCase() === normalizedEmail);
-                if (cached?.role) {
-                    return cached.role;
-                }
-            } catch {
-                // ignore cache read errors
-            }
-
-            if (normalizedEmail === "admin@routelink.com") {
-                return "admin";
-            }
-
-            return "user";
-        }
-    </script>
 </body>
 </html>
-www.w3.org
+images.pexels.com
