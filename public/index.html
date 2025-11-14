@@ -1,350 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>J2 Nexus Technologies</title>
-  <style>
-    /* ===== Global Reset ===== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Arial, sans-serif;
-    }
-
-    body {
-      background: #f4f4f4;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* ===== Header ===== */
-    header {
-      background-color: #003366;
-      color: #fff;
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .header-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 0;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo img {
-      height: 40px;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 25px;
-    }
-
-    nav ul li a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    nav ul li a.active,
-    nav ul li a:hover {
-      border-bottom: 2px solid #fff;
-    }
-
-    .login {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .login a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    /* ===== Hero Section ===== */
-    .hero {
-      margin-top: 80px;
-      background: url('banner.jpg') center/cover no-repeat;
-      color: #130202;
-      text-align: center;
-      padding: 120px 20px;
-      position: relative;
-    }
-
-    .hero h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      margin-bottom: 20px;
-    }
-
-    .btn {
-      background: #0055a5;
-      color: #fff;
-      padding: 12px 25px;
-      border-radius: 30px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: #003366;
-      transform: scale(1.05);
-    }
-
-    /* ===== Products Section ===== */
-    .products {
-      padding: 80px 20px;
-      text-align: center;
-    }
-
-    .products h2 {
-      font-size: 2rem;
-      color: #003366;
-      margin-bottom: 40px;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
-      justify-items: center;
-    }
-
-    .product-card {
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      overflow: hidden;
-      transition: 0.3s;
-      width: 100%;
-      max-width: 280px;
-    }
-
-    .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    }
-
-    .product-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-
-    .product-info {
-      padding: 15px;
-    }
-
-    .product-info h3 {
-      font-size: 1.2rem;
-      color: #003366;
-      margin-bottom: 10px;
-    }
-
-    .product-info p {
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 15px;
-    }
-
-    .product-info .btn {
-      background: #0055a5;
-    }
-
-    .product-info .btn:hover {
-      background: #003366;
-    }
-
-    /* ===== Footer ===== */
-    footer {
-      background-color: #003366;
-      color: #fff;
-      text-align: center;
-      padding: 15px 0;
-      font-size: 14px;
-      margin-top: auto;
-    }
-
-    /* ===== Search ===== */
-    #searchContainer input {
-      padding: 5px 10px;
-      border-radius: 20px;
-      border: none;
-      font-size: 14px;
-    }
-
-    #searchContainer button {
-      padding: 5px 10px;
-      border: none;
-      border-radius: 20px;
-      background: #0055a5;
-      color: #fff;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    @media (max-width:768px) {
-      .hero h1 { font-size: 2rem; }
-      nav ul { gap: 15px; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RouteLink - Login</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚚</text></svg>">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-  <!-- ===== Header ===== -->
-  <header>
-    <div class="container header-container">
-      <div class="logo">
-        <img src="pic/logo.jpg.png" alt="J2 Nexus Logo" />
-        <span>J2 Nexus Technologies</span>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="product.html">Products</a></li>
-          <li><a href="explore.html">Explore</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact Us</a></li>
-        </ul>
-      </nav>
-      <div class="login">
-        <!-- Search Icon -->
-        <div id="searchIcon" style="cursor:pointer; font-size:1.3rem;">🔍</div>
-        <div id="searchContainer" style="display:none; align-items:center; gap:5px;">
-          <input type="text" id="searchInput" placeholder="Search products..." />
-          <button id="searchBtn">Search</button>
+    <div class="container">
+        <div class="auth-card">
+            <h1>RouteLink</h1>
+            <h2>Trucking Booking System</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p class="error-message" id="errorMessage"></p>
+                <p class="switch-form">
+                    Don't have an account? <a href="register.html">Register here</a>
+                </p>
+            </form>
         </div>
-
-        <!-- Cart -->
-        <div class="cart" onclick="window.location.href='cart.html'" 
-             style="position:relative; cursor:pointer; font-size:1.3rem;">
-          🛒
-          <div id="cartCount" style="position:absolute; top:-8px; right:-8px; background:red; color:#fff; width:18px; height:18px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:12px;">0</div>
-        </div>
-
-        <a href="login.html">Sign In</a>
-      </div>
     </div>
-  </header>
 
-  <!-- ===== Hero Section ===== -->
-  <section class="hero">
-    <h1>Welcome to J2 Nexus Technologies</h1>
-    <p>Your trusted source for tech innovation and quality products.</p>
-    <a href="product.html" class="btn">Shop Now</a>
-  </section>
+    <!-- Firebase Login Script -->
+    <script type="module">
+        import { auth, db } from "./firebase-config.js";
+        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+        import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-  <!-- ===== Featured Products ===== -->
-  <section class="products">
-    <h2>Featured Products</h2>
-    <div class="product-grid">
-      <div class="product-card">
-        <img src="pic/headphone.jpg.jpg" alt="Product 1" />
-        <div class="product-info">
-          <h3>Wireless Headphones</h3>
-          <p>Crystal-clear sound and long battery life.</p>
-          <button class="btn add-to-cart" data-name="Wireless Headphones">Add to Cart</button>
-        </div>
-      </div>
+        const loginForm = document.getElementById("loginForm");
+        const errorMessage = document.getElementById("errorMessage");
 
-      <div class="product-card">
-        <img src="pic/smartwatch.jpg.webp" alt="Product 2" />
-        <div class="product-info">
-          <h3>Smartwatch Pro</h3>
-          <p>Track fitness, health, and notifications with style.</p>
-          <button class="btn add-to-cart" data-name="Smartwatch Pro">Add to Cart</button>
-        </div>
-      </div>
+        const roleRedirectMap = {
+            admin: "admin.html",
+            driver: "driver.html",
+            user: "user.html"
+        };
 
-      <div class="product-card">
-        <img src="pic/bluetooth.jpg" alt="Product 3" />
-        <div class="product-info">
-          <h3>Bluetooth Speaker</h3>
-          <p>Powerful sound for both indoor and outdoor fun.</p>
-          <button class="btn add-to-cart" data-name="Bluetooth Speaker">Add to Cart</button>
-        </div>
-      </div>
-    </div>
-  </section>
+        loginForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
 
-  <!-- ===== Footer ===== -->
-  <footer>
-    <p>© 2025 J2 Nexus Technologies. All rights reserved.</p>
-  </footer>
+            errorMessage.textContent = "";
+            errorMessage.style.display = "none";
 
-  <!-- ===== Firebase & Scripts ===== -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
 
-    const firebaseConfig = {
-  apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
-  authDomain: "j2nexuss-a7b99.firebaseapp.com",
-  projectId: "j2nexuss-a7b99",
-  storageBucket: "j2nexuss-a7b99.firebasestorage.app",
-  messagingSenderId: "456617087462",
-  appId: "1:456617087462:web:be5dba59b5a117cab38627",
-  measurementId: "G-9JQEGSHWHM"
-};
+            if (!email || !password) {
+                showError("Please enter both email and password.");
+                return;
+            }
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+            try {
+                const credential = await signInWithEmailAndPassword(auth, email, password);
+                const user = credential.user;
 
-    // Load cart count
-    async function loadCartCount() {
-      const snapshot = await getDocs(collection(db, "cart"));
-      document.getElementById("cartCount").textContent = snapshot.size;
-    }
-    loadCartCount();
+                const userDocRef = doc(db, "users", user.uid);
+                let userDocSnap = await getDoc(userDocRef);
 
-    // Add to Cart
-    document.querySelectorAll('.add-to-cart').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const name = btn.dataset.name;
-        await addDoc(collection(db, "cart"), { name, timestamp: new Date() });
-        alert(`${name} added to cart!`);
-        loadCartCount();
-      });
-    });
+                if (!userDocSnap.exists()) {
+                    const fallbackRole = deriveRoleFromEmail(user.email);
+                    await setDoc(userDocRef, {
+                        name: user.displayName || user.email?.split("@")[0] || "User",
+                        email: user.email || "",
+                        role: fallbackRole,
+                        license: "",
+                        createdAt: serverTimestamp()
+                    }, { merge: true });
 
-    // Search toggle
-    const searchIcon = document.getElementById('searchIcon');
-    const searchContainer = document.getElementById('searchContainer');
-    searchIcon.addEventListener('click', () => {
-      searchContainer.style.display = searchContainer.style.display==='flex'?'none':'flex';
-      if(searchContainer.style.display==='flex') document.getElementById('searchInput').focus();
-    });
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const query = document.getElementById('searchInput').value.trim();
-      if(query) window.location.href=`product.html?search=${encodeURIComponent(query)}`;
-    });
-  </script>
+                    userDocSnap = await getDoc(userDocRef);
+                }
+
+                const userData = userDocSnap.data();
+                const role = userData.role || "user";
+
+                cacheUserSession({
+                    id: user.uid,
+                    uid: user.uid,
+                    email: user.email || "",
+                    name: userData.name || user.displayName || "",
+                    role,
+                    license: userData.license || "",
+                    password
+                });
+
+                window.location.href = roleRedirectMap[role] || "user.html";
+            } catch (error) {
+                showError(normalizeAuthError(error));
+            }
+        });
+
+        function cacheUserSession(user) {
+            try {
+                localStorage.setItem("currentUser", JSON.stringify(user));
+
+                const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+                const existingIndex = storedUsers.findIndex((item) => item.id === user.id || item.email === user.email);
+
+                if (existingIndex >= 0) {
+                    storedUsers[existingIndex] = { ...storedUsers[existingIndex], ...user };
+                } else {
+                    storedUsers.push(user);
+                }
+
+                localStorage.setItem("users", JSON.stringify(storedUsers));
+            } catch {
+                console.warn("Failed to update local cache");
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = "block";
+        }
+
+        function normalizeAuthError(error) {
+            if (!error || !error.code) {
+                return (error && error.message) || "Login failed. Please try again.";
+            }
+
+            switch (error.code) {
+                case "auth/invalid-credential":
+                case "auth/wrong-password":
+                    return "Incorrect email or password.";
+                case "auth/user-not-found":
+                    return "No account found with that email.";
+                case "auth/too-many-requests":
+                    return "Too many attempts. Please try again later.";
+                default:
+                    return error.message || "Login failed. Please try again.";
+            }
+        }
+
+        function deriveRoleFromEmail(email = "") {
+            const normalizedEmail = email.trim().toLowerCase();
+
+            try {
+                const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
+                const cached = storedUsers.find((item) => item.email?.toLowerCase() === normalizedEmail);
+                if (cached?.role) {
+                    return cached.role;
+                }
+            } catch {
+                // ignore cache read errors
+            }
+
+            if (normalizedEmail === "admin@routelink.com") {
+                return "admin";
+            }
+
+            return "user";
+        }
+    </script>
 </body>
 </html>
+www.w3.org
