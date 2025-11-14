@@ -146,44 +146,32 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
   
+    // Check if the user is logged in and redirect accordingly
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // If the logged-in user is an admin
+        if (user.email === 'arban@gmail..com') {  // Replace with the admin email
+          window.location.href = 'admin_dashboard.html';  // Redirect to the admin dashboard
+        } else {
+          window.location.href = 'index.html';  // Redirect to the regular home page
+        }
+      }
+    });
+  
     // Handle login form submission
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
-  
       try {
-        // Sign in the user
         await signInWithEmailAndPassword(auth, email, password);
         alert("✅ Logged in successfully!");
-  
-        // After login, check if the user is admin and redirect accordingly
-        const user = auth.currentUser;  // Get the currently logged-in user
-        if (user) {
-          if (user.email === 'arban@gmail.com') {  // Replace with the admin email from Firebase
-            window.location.href = 'admin_dashboard.html';  // Redirect to the admin dashboard
-          } else {
-            window.location.href = 'index.html';  // Redirect to the home page for regular users
-          }
-        }
       } catch (error) {
         console.error(error);
         alert("⚠️ Login failed: " + error.message);
       }
     });
-  
-    // Check if the user is already logged in when the page loads (for auto-redirect)
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        if (user.email === 'arban@gmail.com') {  // Replace with the admin email
-          window.location.href = 'admin_dashboard.html';  // Redirect to the admin dashboard
-        } else {
-          window.location.href = 'index.html';  // Redirect to the home page
-        }
-      }
-    });
   </script>
-  
   
 </body>
 </html>
