@@ -1,227 +1,386 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Us - J2 Nexus Technologies</title>
-  <style>
-    /* ===== Global Reset ===== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Arial, sans-serif;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - J2 Nexus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Define Variables for consistency */
+        :root {
+            --primary-color: #4f46e5; /* Indigo */
+            --secondary-color: #6366f1; /* Light Indigo */
+            --light-bg: #f3f4f6;
+            --text-color: #1f2937;
+            --subtle-text: #6b7280;
+            --card-background: #ffffff;
+            --shadow-light: 0 4px 6px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
 
-    body {
-      background: #f5f6f8;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+        /* ===== Global Reset and Typography ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    /* ===== Header ===== */
-    header {
-      background-color: #fff;
-      padding: 18px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
+        body {
+            background: var(--light-bg);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
 
-    .logo {
-      font-size: 24px;
-      font-weight: 700;
-      color: #2563eb;
-      text-decoration: none;
-    }
+        /* ===== Header (Copied from Index/Dashboard for Consistency) ===== */
+        header {
+            background: var(--card-background);
+            padding: 18px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-light);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
 
-    nav a {
-      margin-left: 20px;
-      text-decoration: none;
-      color: #444;
-      font-weight: 500;
-    }
+        .logo {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
 
-    nav a:hover {
-      color: #2563eb;
-    }
+        nav a {
+            margin-left: 25px;
+            text-decoration: none;
+            color: var(--subtle-text);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
 
-    /* ===== Contact Section ===== */
-    main {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 120px 32px 40px;
-    }
+        nav a:hover,
+        nav a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        /* Highlight the active contact link */
+        nav a.active {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
 
-    .contact-container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      width: 100%;
-      max-width: 600px;
-    }
+        /* ===== Main Content Layout (2-Column Contact) ===== */
+        main {
+            flex: 1;
+            padding: 60px 32px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns for desktop */
+            gap: 30px;
+            background: var(--card-background);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden; /* Contains children shadows */
+        }
+        
+        .form-column {
+            padding: 40px;
+        }
 
-    .contact-container h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 28px;
-      font-weight: 700;
-      color: #2563eb;
-    }
+        .form-column h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
 
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-      color: #444;
-    }
+        .form-column p {
+            color: var(--subtle-text);
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
 
-    input,
-    textarea {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
+        /* ===== Form Styles ===== */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 14px;
+        }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 8px;
-      background: #2563eb;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-    }
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
 
-    button:hover {
-      opacity: 0.9;
-    }
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
 
-    .contact-info {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 14px;
-      color: #444;
-    }
+        button[type="submit"]:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+        
+        /* ===== Info Panel Styles (Right Column) ===== */
+        .info-panel {
+            background: var(--primary-color);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .info-panel h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+        
+        .info-item i {
+            font-size: 24px;
+            flex-shrink: 0;
+            color: #ffed4a; /* Yellow icon highlight */
+        }
+        
+        .info-item-text p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        .info-item-text a {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .map-placeholder {
+            height: 250px;
+            background: #ccc;
+            margin-top: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .map-placeholder iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
 
-    .contact-info a {
-      color: #2563eb;
-      text-decoration: none;
-    }
+        /* ===== Footer (Simple) ===== */
+        footer {
+            background-color: var(--text-color);
+            color: #fff;
+            text-align: center;
+            padding: 20px 32px;
+            font-size: 14px;
+        }
 
-    .contact-info a:hover {
-      text-decoration: underline;
-    }
-
-    /* ===== Footer ===== */
-    footer {
-      background-color: #111;
-      color: #fff;
-      text-align: center;
-      padding: 40px 32px;
-      font-size: 14px;
-      margin-top: 60px;
-    }
-
-    @media (max-width:768px) {
-      nav a {
-        margin-left: 12px;
-      }
-      .contact-container {
-        padding: 20px;
-      }
-    }
-  </style>
+        /* ===== Media Queries ===== */
+        @media (max-width: 900px) {
+            .contact-grid {
+                grid-template-columns: 1fr; /* Single column layout on mobile/tablet */
+            }
+            .info-panel {
+                padding: 30px;
+            }
+            .form-column {
+                padding: 30px;
+            }
+            .form-column h1 {
+                font-size: 32px;
+            }
+            header {
+                flex-direction: column;
+                padding-bottom: 10px;
+            }
+            nav a {
+                margin: 0 10px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- ===== Header ===== -->
-  <header>
-    <a href="#" class="logo">J2 Nexus</a>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="product.html">Products</a>
-      <a href="explore.html">Explore</a>
-      <a href="about.html">About</a>
-      <a href="contact.html" class="active">Contact Us</a>
-    </nav>
-  </header>
+    <header>
+        <a href="index.html" class="logo">J2 Nexus</a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="product.html">Products</a> 
+            <a href="explore.html">Explore</a>
+            <a href="about.html">About</a>
+            <a href="contact.html" class="active">Contact Us</a>
+        </nav>
+    </header>
 
-  <!-- ===== Contact Form Section ===== -->
-  <main>
-    <div class="contact-container">
-      <h2>Contact Us</h2>
-      <form id="contactForm">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" placeholder="Your Name" required>
+    <main>
+        <div class="contact-grid">
+            
+            <div class="form-column">
+                <h1>Get In Touch</h1>
+                <p>We're here to help and answer any questions you might have. We look forward to hearing from you!</p>
+                
+                <form id="contactForm">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" placeholder="Mark Justin Arban" required>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="Your Email" required>
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="youremail@example.com" required>
 
-        <label for="message">Message</label>
-        <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" placeholder="Inquiry about product X" required>
 
-        <button type="submit">Send Message</button>
-      </form>
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Tell us how we can help..." required></textarea>
 
-      <div class="contact-info">
-        <p>Email us: <a href="mailto:markjustinarban2@example.com">markjustinarban2@example.com</a></p>
-        <p>Call us: +69 951 067 2001</p>
-      </div>
-    </div>
-  </main>
+                    <button type="submit">Send Message</button>
+                    <div id="statusMessage" style="margin-top: 15px; text-align: center; font-weight: 600; display: none;"></div>
+                </form>
+            </div>
 
-  <!-- ===== Footer ===== -->
-  <footer>
-    <p>© 2025 J2 Nexus Technologies. All rights reserved.</p>
-  </footer>
+            <div class="info-panel">
+                <h2>Our Contact Details</h2>
+                
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="info-item-text">
+                        <h3>Office Address</h3>
+                        <p>123 Nexus Tower, Innovation Drive, Imus, Cavite, PH</p>
+                    </div>
+                </div>
 
-  <!-- ===== Firebase & Scripts ===== -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div class="info-item-text">
+                        <h3>Email Us</h3>
+                        <p>Support: <a href="mailto:support@j2nexus.com">support@j2nexus.com</a></p>
+                        <p>Sales: <a href="mailto:sales@j2nexus.com">sales@j2nexus.com</a></p>
+                    </div>
+                </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
-      authDomain: "j2nexuss-a7b99.firebaseapp.com",
-      projectId: "j2nexuss-a7b99",
-      storageBucket: "j2nexuss-a7b99.firebasestorage.app",
-      messagingSenderId: "456617087462",
-      appId: "1:456617087462:web:be5dba59b5a117cab38627",
-      measurementId: "G-9JQEGSHWHM"
-    };
+                <div class="info-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <div class="info-item-text">
+                        <h3>Call Us</h3>
+                        <p>Main Line: +69 951 067 2001</p>
+                        <p>Billing: +63 917 XXX XXXX</p>
+                    </div>
+                </div>
+                
+                <div class="map-placeholder">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3864.7176465431613!2d120.92383187498357!3d14.36862598603683!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397d519b5b9b657%3A0x86e88e89f64c1257!2sImus%20City%20Hall!5e0!3m2!1sen!2sph!4v1709299499871!5m2!1sen!2sph" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+            </div>
+            
+        </div>
+    </main>
 
-    // Contact form submission
-    document.getElementById("contactForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const message = document.getElementById("message").value.trim();
+    <footer>
+        <p>© 2025 J2 Nexus Technologies. All rights reserved. | Developed with care.</p>
+    </footer>
 
-      try {
-        await addDoc(collection(db, "contacts"), { name, email, message, timestamp: new Date() });
-        alert("✅ Message sent successfully!");
-        e.target.reset();
-      } catch (error) {
-        console.error(error);
-        alert("⚠️ Failed to send message.");
-      }
-    });
-  </script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
+            authDomain: "j2nexuss-a7b99.firebaseapp.com",
+            projectId: "j2nexuss-a7b99",
+            storageBucket: "j2nexuss-a7b99.firebasestorage.app",
+            messagingSenderId: "456617087462",
+            appId: "1:456617087462:web:be5dba59b5a117cab38627",
+            measurementId: "G-9JQEGSHWHM"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const statusEl = document.getElementById("statusMessage");
+        const formEl = document.getElementById("contactForm");
+
+        // Contact form submission
+        formEl.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            statusEl.style.display = 'block';
+            statusEl.textContent = 'Sending...';
+            statusEl.style.color = '#4f46e5'; 
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const subject = document.getElementById("subject").value.trim();
+            const message = document.getElementById("message").value.trim();
+
+            try {
+                await addDoc(collection(db, "contacts"), { 
+                    name, 
+                    email, 
+                    subject,
+                    message, 
+                    timestamp: new Date() 
+                });
+                
+                statusEl.textContent = "✅ Message sent successfully! We will get back to you soon.";
+                statusEl.style.color = '#10b981'; // Green for success
+                formEl.reset();
+            } catch (error) {
+                console.error("Error submitting contact form:", error);
+                statusEl.textContent = "⚠️ Failed to send message. Please try again or email us directly.";
+                statusEl.style.color = '#ef4444'; // Red for error
+            }
+            
+            // Hide status message after a few seconds
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        });
+    </script>
 </body>
 </html>

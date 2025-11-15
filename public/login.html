@@ -1,132 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - J2 Nexus</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - J2 Nexus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Define Variables for consistency */
+        :root {
+            --primary-color: #4f46e5; /* Indigo */
+            --secondary-color: #6366f1; /* Light Indigo */
+            --light-bg: #f3f4f6;
+            --text-color: #1f2937;
+            --subtle-text: #6b7280;
+            --card-background: #ffffff;
+            --shadow-light: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .login-box {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      width: 320px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      background: #007bff;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 6px;
-      margin-top: 10px;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .error {
-      color: red;
-      text-align: center;
-      margin-top: 10px;
-    }
-  </style>
+        /* ===== Global Styles and Background ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            /* Elegant gradient background matching the primary color */
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* ===== Login Box Container ===== */
+        .login-box {
+            background: var(--card-background);
+            padding: 40px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== Header and Branding ===== */
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-header .logo {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: block;
+        }
+        .login-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--subtle-text);
+            margin-top: 5px;
+        }
+
+        /* ===== Form Inputs ===== */
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 12px 0;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        /* ===== Button Styles ===== */
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 10px;
+            margin-top: 20px;
+            transition: background 0.2s, transform 0.1s;
+        }
+        button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        /* ===== Footer Links ===== */
+        .footer-links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--subtle-text);
+        }
+        .footer-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover {
+            color: var(--text-color);
+        }
+
+        /* ===== Error Message ===== */
+        .error {
+            color: #ef4444; /* Red color */
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="login-box">
-    <h2>Login</h2>
+    <div class="login-box">
+        <div class="login-header">
+            <a href="index.html" class="logo">J2 Nexus</a>
+            <h2>Sign in to your account</h2>
+        </div>
 
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    
-    <button id="loginBtn">Login</button>
+        <input type="email" id="email" placeholder="Email Address" required />
+        <input type="password" id="password" placeholder="Password" required />
+        
+        <button id="loginBtn">Log In</button>
 
-    <p class="error" id="errorMsg"></p>
-  </div>
+        <p class="error" id="errorMsg"></p>
 
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        <div class="footer-links">
+            Don't have an account? <a href="signup.html">Sign Up</a>
+        </div>
+    </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
-      authDomain: "j2nexuss-a7b99.firebaseapp.com",
-      projectId: "j2nexuss-a7b99",
-      storageBucket: "j2nexuss-a7b99.firebasestorage.app",
-      messagingSenderId: "456617087462",
-      appId: "1:456617087462:web:be5dba59b5a117cab38627",
-      measurementId: "G-9JQEGSHWHM"
-    };
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
+            authDomain: "j2nexuss-a7b99.firebaseapp.com",
+            projectId: "j2nexuss-a7b99",
+            storageBucket: "j2nexuss-a7b99.firebasestorage.app",
+            messagingSenderId: "456617087462",
+            appId: "1:456617087462:web:be5dba59b5a117cab38627",
+            measurementId: "G-9JQEGSHWHM"
+        };
 
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const errorMsg = document.getElementById("errorMsg");
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-      errorMsg.textContent = "";
+        document.getElementById("loginBtn").addEventListener("click", async () => {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const errorMsg = document.getElementById("errorMsg");
 
-      try {
-        // Sign in user
-        const userCred = await signInWithEmailAndPassword(auth, email, password);
-        const uid = userCred.user.uid;
+            errorMsg.textContent = "";
+            document.getElementById("loginBtn").disabled = true;
 
-        // Get role from Firestore
-        const ref = doc(db, "users", uid);
-        const snap = await getDoc(ref);
+            try {
+                // Sign in user
+                const userCred = await signInWithEmailAndPassword(auth, email, password);
+                const uid = userCred.user.uid;
 
-        if (!snap.exists()) {
-          errorMsg.textContent = "User role not found!";
-          return;
-        }
+                // Get role from Firestore
+                const ref = doc(db, "users", uid);
+                const snap = await getDoc(ref);
 
-        const role = snap.data().role;
+                if (!snap.exists()) {
+                    errorMsg.textContent = "User role not found!";
+                    document.getElementById("loginBtn").disabled = false;
+                    return;
+                }
 
-        // Redirect based on role
-        if (role === "admin") {
-          window.location.href = "admin_dashboard.html";
-        } else if (role === "seller") {
-          window.location.href = "seller_dashboard.html";
-        } else if (role === "user") {
-          window.location.href = "user_dashboard.html";
-        } else {
-          errorMsg.textContent = "Unknown role!";
-        }
+                const role = snap.data().role;
 
-      } catch (error) {
-        errorMsg.textContent = error.message;
-      }
-    });
+                // Redirect based on role
+                if (role === "admin") {
+                    window.location.href = "admin_dashboard.html";
+                } else if (role === "seller") {
+                    window.location.href = "seller_dashboard.html"; // Redirect to your seller dashboard
+                } else if (role === "user") {
+                    window.location.href = "user_dashboard.html";
+                } else {
+                    errorMsg.textContent = "Unknown role or insufficient permissions!";
+                }
 
-  </script>
+            } catch (error) {
+                // Handle Firebase-specific errors
+                let message;
+                switch(error.code) {
+                    case 'auth/user-not-found':
+                    case 'auth/wrong-password':
+                        message = 'Invalid email or password.';
+                        break;
+                    case 'auth/invalid-email':
+                        message = 'The email address is not formatted correctly.';
+                        break;
+                    default:
+                        message = 'Login failed. Please check your credentials.';
+                }
+                errorMsg.textContent = message;
+                
+            } finally {
+                document.getElementById("loginBtn").disabled = false;
+            }
+        });
+
+    </script>
 
 </body>
 </html>
