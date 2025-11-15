@@ -333,7 +333,33 @@
             <div id="orders" class="seller-tab-content">
                 <h2 style="margin-bottom: 20px;">🚚 Recent Orders</h2>
                 <div id="ordersList">
-                    <p style="text-align: center; color: #6b7280;">Loading orders...</p> 
+                    <table class="order-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#90123</td>
+                                <td>Wireless Headset</td>
+                                <td>1</td>
+                                <td>₱1,500.00</td>
+                                <td><span class="status-badge status-shipped">Shipped</span></td>
+                            </tr>
+                            <tr>
+                                <td>#90124</td>
+                                <td>Ergonomic Keyboard</td>
+                                <td>2</td>
+                                <td>₱4,000.00</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -374,6 +400,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        // 🟢 UPDATED IMPORTS: Added doc, getDoc, updateDoc
         import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; 
 
         // --- 1. Firebase Configuration (USE YOURS) ---
@@ -397,18 +424,6 @@
         const sellerProductGrid = document.getElementById('sellerProductGrid');
         const addProductForm = document.getElementById('addProductForm');
         const formMessage = document.getElementById('formMessage');
-        const ordersListDiv = document.getElementById('ordersList'); // New element reference
-
-        // --- Mock Data for Orders (Simulating the orders collection) ---
-        // NOTE: In a production app, the 'orders' collection would contain a 'sellerId'
-        // or a list of items, each with a 'sellerId', which we can query/filter against.
-        const mockOrders = [
-            { id: '90123', product: 'Wireless Headset', qty: 1, total: 1500.00, status: 'shipped', sellerId: 'seller1_uid', buyerId: 'user1_uid' },
-            { id: '90124', product: 'Ergonomic Keyboard', qty: 2, total: 4000.00, status: 'pending', sellerId: 'seller2_uid', buyerId: 'user2_uid' },
-            { id: '90125', product: '4K Monitor', qty: 1, total: 12000.00, status: 'delivered', sellerId: 'seller1_uid', buyerId: 'user3_uid' },
-            { id: '90126', product: 'Gaming Mouse', qty: 3, total: 3600.00, status: 'pending', sellerId: 'seller2_uid', buyerId: 'user1_uid' }
-        ];
-
 
         // --- 2. Tab Switching Functionality ---
         window.switchTab = function(tabId) {
@@ -424,11 +439,9 @@
                 }
             });
 
-            // Load specific data only when switching to the relevant tab
+            // Load products only when switching to the 'products' tab
             if (tabId === 'products') {
                 loadSellerProducts();
-            } else if (tabId === 'orders') {
-                loadSellerOrders(); // 🟢 NEW: Load orders when switching to the 'orders' tab
             }
         };
 
@@ -440,8 +453,8 @@
             
             try {
                 const productsCollection = collection(db, "products");
-                // Fetch all products
-                const querySnapshot = await getDocs(productsCollection);
+                // Fetch all products where the sellerId matches the current user's UID
+                const querySnapshot = await getDocs(productsCollection); // In a real app, you'd use a Firestore query
 
                 let productsHTML = '';
                 let count = 0;
@@ -491,75 +504,8 @@
             }
         }
 
-        // --- 4. Load Seller's Orders (NEW FUNCTIONALITY) ---
-        async function loadSellerOrders() {
-            if (!currentSellerId) return;
 
-            ordersListDiv.innerHTML = '<p style="text-align: center; color: #6b7280;"><i class="fas fa-spinner fa-spin"></i> Fetching your orders...</p>';
-
-            try {
-                // 🛑 NOTE: In a real-world scenario, you would query the 'orders' collection 
-                // using a Firestore where clause: query(ordersCollection, where("sellerId", "==", currentSellerId))
-                // For this example, we'll use the mock data and client-side filter it based on the currentSellerId.
-                
-                // Simulate a database fetch
-                const orders = mockOrders; 
-
-                // Filter orders to only show those for the current seller
-                const sellerOrders = orders.filter(order => order.sellerId === currentSellerId);
-
-                if (sellerOrders.length === 0) {
-                    ordersListDiv.innerHTML = '<p style="text-align: center; color: #6b7280;">You have no recent orders.</p>';
-                    return;
-                }
-
-                let tableHTML = `
-                    <table class="order-table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Product</th>
-                                <th>Qty</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
-                sellerOrders.forEach(order => {
-                    const statusClass = `status-${order.status}`;
-                    const formattedTotal = order.total.toLocaleString('en-PH', { minimumFractionDigits: 2 });
-
-                    tableHTML += `
-                        <tr>
-                            <td>#${order.id}</td>
-                            <td>${order.product}</td>
-                            <td>${order.qty}</td>
-                            <td>₱${formattedTotal}</td>
-                            <td><span class="status-badge ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
-                            <td>
-                                <button class="edit-btn" style="padding: 5px 10px; font-size: 12px;" 
-                                    onclick="alert('Simulated action: Updating status for order ${order.id}')">
-                                    <i class="fas fa-clipboard-check"></i> Manage
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-
-                tableHTML += `</tbody></table>`;
-                ordersListDiv.innerHTML = tableHTML;
-
-            } catch (error) {
-                console.error("Error loading seller orders:", error);
-                ordersListDiv.innerHTML = '<p style="text-align: center; color: #ef4444;">Error fetching orders. Check console.</p>';
-            }
-        }
-
-
-        // --- 5. Add Product Handler ---
+        // --- 4. Add Product Handler ---
         addProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             formMessage.textContent = 'Submitting...';
@@ -595,7 +541,7 @@
             }
         });
 
-        // --- 6. Delete Product Handler ---
+        // --- 5. Delete Product Handler ---
         async function deleteProduct(productId) {
             if (!confirm("Are you sure you want to delete this product listing permanently?")) {
                 return;
@@ -614,7 +560,9 @@
             }
         }
 
-        // --- 7. Stock Management (Conceptual function for sales fulfillment) ---
+        // --- 6. Stock Management (Conceptual function for sales fulfillment) ---
+        // This function would be called when an order is moved to 'Shipped' or 'Completed'.
+        // It is defined here to ensure your seller dashboard is ready for e-commerce logic.
         async function decrementStock(productId, quantitySold) {
             if (quantitySold <= 0) return;
 
@@ -632,6 +580,9 @@
                     });
                     console.log(`Successfully reduced stock for ${productId} from ${currentStock} to ${newStock}.`);
                     
+                    // You would refresh the product list if the current tab is 'products'
+                    // if (document.getElementById('products').classList.contains('active')) loadSellerProducts(); 
+
                 } else {
                     console.error(`Product ID ${productId} not found.`);
                 }
@@ -640,7 +591,7 @@
             }
         }
         
-        // --- 8. Authentication and Setup ---
+        // --- 7. Authentication and Setup ---
 
         // Check authentication state on page load
         onAuthStateChanged(auth, async (user) => {
@@ -650,16 +601,7 @@
                 // Check role (Optional but highly recommended)
                 const userDocRef = doc(db, "users", user.uid);
                 const userDoc = await getDoc(userDocRef);
-                // For demonstration, we'll assign a placeholder 'seller1_uid' to the current user
-                // so they can see the mock orders. In production, this would be user.uid.
-                const role = userDoc.exists() ? userDoc.data().role : 'seller'; // Default to 'seller' for test
-                
-                // OVERRIDE: For the purpose of testing the order list with mock data, 
-                // we'll temporarily set the seller ID to 'seller1_uid' if the user exists.
-                // You must change this to `currentSellerId = user.uid;` for live data.
-                if (user.uid) {
-                    currentSellerId = 'seller1_uid'; // Use the mock ID to see mock orders
-                }
+                const role = userDoc.exists() ? userDoc.data().role : 'user';
 
                 if (role !== 'seller' && role !== 'admin') {
                     alert("Access denied. You are not registered as a seller.");
@@ -669,17 +611,16 @@
                 }
                 
                 // Set Display Names
-                const displayName = user.email ? user.email.split('@')[0] : 'J2 Seller';
+                const displayName = user.email.split('@')[0];
                 document.getElementById("sellerName").textContent = displayName;
                 document.getElementById("welcomeTitle").textContent = `Hello, ${displayName}!`;
 
-                // Load initial data (products if the default tab is products)
-                // For this scenario, we load products on auth to ensure currentSellerId is set
+                // Load initial data (products if the default tab is products, otherwise load stats)
                 loadSellerProducts(); 
                 
             } else {
                 // User is signed out, redirect to login
-                // window.location.href = "login.html";
+                window.location.href = "login.html";
             }
         });
 
