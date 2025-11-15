@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Dashboard - J2 Nexus</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Variables and Global Reset */
         :root {
-            --primary-color: #3210b9; /* Green */
-            --secondary-color: #3b82f6; /* Blue */
-            --background-color: #f8fafc;
+            --primary-color: #3210b9; /* Deep Indigo/Violet */
+            --secondary-color: #00bcd4; /* Cyan/Teal Accent */
+            --background-color: #f0f2f5; /* Light Gray Background */
             --card-background: #ffffff;
-            --text-color: #1f2937;
-            --shadow-light: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --text-color: #1a1a2e; /* Dark Blue Text */
+            --text-light: #6b7280;
+            --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 15px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         * {
@@ -31,25 +33,27 @@
             color: var(--text-color);
         }
 
-        /* Sidebar Styles */
+        /* --- Sidebar Styles --- */
         .sidebar {
             width: 260px;
-            background-color: var(--card-background);
-            box-shadow: var(--shadow-light);
+            background: linear-gradient(180deg, var(--primary-color) 0%, #1e097d 100%);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px 0;
             position: fixed;
             height: 100%;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid #e5e7eb;
+            color: white;
+            z-index: 20;
         }
 
         .sidebar .logo {
             text-align: center;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-color);
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 1px;
             margin-bottom: 40px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .sidebar ul {
@@ -62,40 +66,55 @@
             align-items: center;
             padding: 15px 30px;
             text-decoration: none;
-            color: var(--text-color);
+            color: #d1d5db;
             font-weight: 500;
-            font-size: 15px;
-            transition: background-color 0.2s, color 0.2s;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s, padding-left 0.3s;
+            border-left: 5px solid transparent;
         }
 
         .sidebar ul li a i {
             margin-right: 15px;
             font-size: 18px;
             color: #9ca3af;
+            transition: color 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 35px;
+            color: white;
+        }
+        
+        .sidebar ul li a:hover i {
+             color: var(--secondary-color);
         }
 
         .sidebar ul li.active a {
-            background-color: var(--primary-color);
+            background-color: rgba(255, 255, 255, 0.15);
             color: white;
+            border-left-color: var(--secondary-color);
+            font-weight: 600;
         }
 
         .sidebar ul li.active a i {
-            color: white;
+            color: var(--secondary-color);
         }
 
         .sidebar-footer {
             text-align: center;
             padding: 20px;
-            font-size: 14px;
-            color: #6b7280;
-            border-top: 1px solid #e5e7eb;
+            font-size: 12px;
+            color: #9ca3af;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Main Content and Topbar */
+        /* --- Main Content and Topbar --- */
         .main-content {
             margin-left: 260px;
             padding: 0;
             width: 100%;
+            position: relative;
         }
 
         .topbar {
@@ -104,7 +123,7 @@
             justify-content: flex-end;
             align-items: center;
             padding: 15px 30px;
-            box-shadow: var(--shadow-light);
+            box-shadow: var(--shadow-card);
             position: sticky;
             top: 0;
             z-index: 10;
@@ -114,39 +133,42 @@
         .topbar .user-profile {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
 
         .topbar .user-profile .username {
             font-size: 16px;
             font-weight: 600;
             color: var(--text-color);
+            padding-right: 10px;
+            border-right: 1px solid #e5e7eb;
         }
 
         button.logout-btn {
             background: #ef4444;
             border: none;
             color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 8px 18px;
+            border-radius: 9999px; /* Pill shape */
             cursor: pointer;
             font-weight: 600;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
         }
 
         button.logout-btn:hover {
             background: #dc2626;
+            transform: translateY(-1px);
         }
 
-        /* Dashboard Body Content & Tabs */
+        /* --- Dashboard Body Content & Tabs --- */
         .dashboard-body {
             padding: 30px;
         }
 
         .dashboard-title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
-            color: var(--text-color);
+            color: var(--primary-color);
             margin-bottom: 30px;
         }
 
@@ -158,7 +180,47 @@
             display: block;
         }
 
-        /* Product Listing Section */
+        /* --- Dashboard Stats Grid --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-background);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-card);
+            border-left: 5px solid var(--secondary-color);
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-card .icon {
+            font-size: 30px;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .stat-card .label {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* --- Product Listing Section --- */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -169,34 +231,45 @@
             background: var(--card-background);
             padding: 20px;
             border-radius: 12px;
-            box-shadow: var(--shadow-light);
+            box-shadow: var(--shadow-card);
             border-top: 4px solid var(--primary-color);
             min-height: 250px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
         }
 
         .product-card h3 {
             font-size: 20px;
+            font-weight: 600;
             margin-bottom: 5px;
+            color: var(--text-color);
         }
 
         .product-card p {
             font-size: 14px;
-            color: #6b7280;
+            color: var(--text-light);
         }
 
         .product-card .price {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--secondary-color);
             margin: 10px 0;
+            border-bottom: 1px solid #f0f2f5;
+            padding-bottom: 5px;
         }
         
         .product-card .stock {
             font-weight: 600;
             color: var(--primary-color);
+            font-size: 15px;
         }
 
         .product-actions {
@@ -206,103 +279,138 @@
         }
 
         .product-actions button {
-            padding: 8px 15px;
-            border-radius: 6px;
+            padding: 10px 18px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
             font-weight: 600;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .edit-btn { background: #f59e0b; color: white; }
-        .edit-btn:hover { background: #d97706; }
+        .edit-btn:hover { background: #d97706; transform: scale(1.02); }
         
         .delete-btn { background: #ef4444; color: white; }
-        .delete-btn:hover { background: #dc2626; }
+        .delete-btn:hover { background: #dc2626; transform: scale(1.02); }
 
-        /* Add Product Form */
+        /* --- Add Product Form --- */
         #addProductForm {
             background: var(--card-background);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: var(--shadow-light);
-            max-width: 600px;
+            box-shadow: var(--shadow-card);
+            max-width: 700px;
             margin: 0 auto;
+        }
+        
+        #addProductForm h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
         }
         
         #addProductForm label {
             display: block;
             margin-top: 15px;
             margin-bottom: 5px;
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--text-color);
         }
         
         #addProductForm input, 
         #addProductForm textarea, 
         #addProductForm select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #e5e7eb;
+            padding: 12px;
+            border: 1px solid #d1d5db;
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        #addProductForm input:focus, 
+        #addProductForm textarea:focus, 
+        #addProductForm select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(50, 16, 185, 0.1);
+            outline: none;
         }
         
         #addProductForm button[type="submit"] {
-            margin-top: 25px;
+            margin-top: 30px;
             background: var(--primary-color);
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            width: 100%;
+            border: none;
+            transition: background 0.2s, transform 0.1s;
         }
         
-        /* Order List Table */
+        #addProductForm button[type="submit"]:hover {
+            background: #1e097d;
+            transform: translateY(-1px);
+        }
+
+        /* --- Order List Table --- */
+        .order-table-container {
+            background: var(--card-background);
+            border-radius: 12px;
+            box-shadow: var(--shadow-card);
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
         .order-table {
             width: 100%;
-            border-collapse: collapse;
-            background: var(--card-background);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow-light);
+            border-collapse: separate;
+            border-spacing: 0;
         }
         
         .order-table th, .order-table td {
-            padding: 12px 15px;
+            padding: 15px 20px;
             text-align: left;
             border-bottom: 1px solid #f3f4f6;
             font-size: 14px;
         }
         
         .order-table th {
-            background-color: #f3f4f6;
-            font-weight: 600;
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .order-table tbody tr:hover {
+            background-color: #f7f9fb;
         }
         
         /* Status Dropdown Styling */
         .status-select {
             padding: 6px 10px;
             border-radius: 6px;
-            border: 1px solid #ccc;
+            border: none;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            /* Default appearance reset */
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
         }
-        .status-select:hover {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
+        
         /* Custom background for dropdown options and select */
-        .status-select.status-pending, .status-pending { background-color: #fef3c7; color: #b45309; }
-        .status-select.status-shipped, .status-shipped { background-color: #dbeafe; color: #1e40af; }
-        .status-select.status-delivered, .status-delivered { background-color: #d1fae5; color: #065f46; }
+        .status-select.status-pending { background-color: #fef3c7; color: #b45309; }
+        .status-select.status-shipped { background-color: #dbeafe; color: #1e40af; }
+        .status-select.status-delivered { background-color: #d1fae5; color: #065f46; }
 
-        /* Modal Styles for Order Details */
+        /* --- Modal Styles for Order Details --- */
         .modal {
             position: fixed;
             z-index: 1000;
@@ -311,48 +419,96 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-            display: none; /* Hidden by default */
+            background-color: rgba(26, 26, 46, 0.6); /* Darker overlay */
+            display: none;
             padding-top: 60px;
+            animation: fadeIn 0.3s;
         }
+        
         .modal-content {
             background-color: var(--card-background);
             margin: 5% auto;
-            padding: 30px;
+            padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            width: 80%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            width: 90%;
             max-width: 600px;
             position: relative;
+            animation: slideDown 0.3s;
         }
+
+        .modal-content h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-content p {
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .modal-content p strong {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
         .close-btn {
             color: #aaa;
-            float: right;
-            font-size: 28px;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 32px;
             font-weight: bold;
+            line-height: 1;
         }
         .close-btn:hover,
         .close-btn:focus {
-            color: #000;
+            color: var(--primary-color);
             text-decoration: none;
             cursor: pointer;
         }
+        
         .modal-item-list {
             list-style: none;
             padding: 0;
-            margin-top: 15px;
-            border-top: 1px dashed #e5e7eb;
+            margin-top: 20px;
+            border-top: 2px solid #f0f2f5;
             padding-top: 15px;
         }
         .modal-item-list li {
-            padding: 8px 0;
-            border-bottom: 1px dotted #f3f4f6;
+            padding: 10px 0;
+            border-bottom: 1px dotted #e5e7eb;
             display: flex;
             justify-content: space-between;
+            font-size: 15px;
         }
-        .modal-item-list li span {
+        .modal-item-list li span:first-child {
+            font-weight: 500;
+        }
+        .modal-item-list li span:last-child {
             font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* Total in Modal */
+        #modalTotalAmount {
+            font-size: 26px !important;
+            font-weight: 800 !important;
+            color: var(--primary-color) !important;
             display: inline-block;
+            margin-left: 10px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
@@ -376,7 +532,7 @@
         <div class="topbar">
             <div class="user-profile">
                 <span class="username" id="sellerName">Loading...</span>
-                <button class="logout-btn" id="logoutBtn">Logout</button>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </div>
 
@@ -384,20 +540,37 @@
             <h1 class="dashboard-title" id="welcomeTitle">Hello, Seller!</h1>
             
             <div id="dashboard" class="seller-tab-content active">
-                <p>Welcome to your central hub. View quick stats below.</p>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-money-bill-wave icon"></i>
+                        <div class="value">₱0.00</div>
+                        <div class="label">Total Revenue (Pending)</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-boxes icon"></i>
+                        <div class="value">0</div>
+                        <div class="label">Total Products Listed</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-cart icon"></i>
+                        <div class="value">0</div>
+                        <div class="label">Pending Orders</div>
+                    </div>
                 </div>
+                <h2 style="margin-bottom: 20px; color: var(--text-color); font-weight: 600;">📋 Quick Status</h2>
+                <p style="color: var(--text-light);">Use the side menu to manage your products and orders.</p>
+            </div>
             
             <div id="products" class="seller-tab-content">
-                <h2 style="margin-bottom: 20px;">📦 My Product Listings</h2>
+                <h2 style="margin-bottom: 20px; color: var(--text-color); font-weight: 600;">📦 My Product Listings</h2>
                 <div id="sellerProductGrid" class="product-grid">
-                    <p style="text-align: center; color: #6b7280;">Loading your products...</p>
+                    <p style="text-align: center; color: var(--text-light);"><i class="fas fa-spinner fa-spin"></i> Loading your products...</p>
                 </div>
             </div>
             
             <div id="orders" class="seller-tab-content">
-                <h2 style="margin-bottom: 20px;">🚚 Recent Orders</h2>
-                <div id="ordersList">
-                    <p style="text-align: center; color: #6b7280;"><i class="fas fa-spinner fa-spin"></i> Loading orders...</p>
+                <h2 style="margin-bottom: 20px; color: var(--text-color); font-weight: 600;">🚚 Recent Orders</h2>
+                <div id="ordersList" class="order-table-container">
                     <table class="order-table" id="orderTable">
                         <thead>
                             <tr>
@@ -416,7 +589,7 @@
             </div>
 
             <div id="add" class="seller-tab-content">
-                <h2 style="margin-bottom: 20px;">➕ List a New Product</h2>
+                <h2 style="margin-bottom: 20px; color: var(--text-color); font-weight: 600;">➕ List a New Product</h2>
                 <form id="addProductForm">
                     <label for="name">Product Name</label>
                     <input type="text" id="name" required>
@@ -441,12 +614,11 @@
                     <label for="imageURL">Image URL (Optional)</label>
                     <input type="url" id="imageURL">
                     
-                    <button type="submit">Submit Product for Listing</button>
-                    <p id="formMessage" style="margin-top: 15px; font-weight: 500;"></p>
+                    <button type="submit"><i class="fas fa-cloud-upload-alt"></i> Submit Product for Listing</button>
+                    <p id="formMessage" style="margin-top: 15px; font-weight: 500; text-align: center;"></p>
                 </form>
             </div>
         </div>
-
     </div>
 
     <div id="orderDetailsModal" class="modal">
@@ -461,7 +633,7 @@
             <ul class="modal-item-list" id="modalItemList">
                 </ul>
             
-            <h3 style="text-align: right; margin-top: 15px;">Seller Total: <span id="modalTotalAmount" style="color: var(--primary-color);"></span></h3>
+            <h3 style="text-align: right; margin-top: 20px;">Seller Total: <span id="modalTotalAmount"></span></h3>
         </div>
     </div>
 
@@ -496,6 +668,8 @@
         const ordersListDiv = document.getElementById('ordersList');
         const orderDetailsModal = document.getElementById('orderDetailsModal');
         const closeModalBtn = document.getElementById('closeModal');
+        // NEW STATS ELEMENT
+        const statsGrid = document.querySelector('.stats-grid');
 
 
         // --- 2. Tab Switching Functionality ---
@@ -528,7 +702,6 @@
             
             try {
                 const productsCollection = collection(db, "products");
-                // Note: In a real app, use a query (where('sellerId', '==', currentSellerId)) for efficiency.
                 const querySnapshot = await getDocs(productsCollection); 
 
                 let productsHTML = '';
@@ -537,7 +710,7 @@
                 querySnapshot.forEach((doc) => {
                     const product = doc.data();
                     
-                    // Client-side filtering (due to generic getDocs above)
+                    // Client-side filtering
                     if (product.sellerId === currentSellerId) { 
                         count++;
                         
@@ -580,7 +753,7 @@
         }
 
 
-        // --- 4. Add Product Handler (Remains the same) ---
+        // --- 4. Add Product Handler ---
         addProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             formMessage.textContent = 'Submitting...';
@@ -599,7 +772,7 @@
                 stock: parseInt(document.getElementById('stock').value),
                 category: document.getElementById('category').value,
                 imageURL: document.getElementById('imageURL').value || 'placeholder.jpg',
-                sellerId: currentSellerId, // CRITICAL: Assign the product to the current seller
+                sellerId: currentSellerId,
                 createdAt: new Date().toISOString()
             };
 
@@ -607,7 +780,10 @@
                 await addDoc(collection(db, "products"), newProduct);
                 formMessage.textContent = 'Product listed successfully! It is now visible in the marketplace.';
                 formMessage.style.color = '#10b981';
-                addProductForm.reset(); // Clear the form
+                addProductForm.reset(); 
+                
+                // Update stats after adding a product
+                updateDashboardStats();
 
             } catch (error) {
                 console.error("Error adding product:", error);
@@ -616,7 +792,7 @@
             }
         });
 
-        // --- 5. Delete Product Handler (Remains the same) ---
+        // --- 5. Delete Product Handler ---
         async function deleteProduct(productId) {
             if (!confirm("Are you sure you want to delete this product listing permanently?")) {
                 return;
@@ -628,6 +804,7 @@
 
                 alert("Product deleted successfully.");
                 loadSellerProducts(); // Refresh the list
+                updateDashboardStats(); // Update stats after deleting
 
             } catch (error) {
                 console.error("Error deleting product:", error);
@@ -636,21 +813,88 @@
         }
         
         // ----------------------------------------------------
-        // --- 6. Order Management Functions 🟢 NEW SECTION ---
+        // --- 6. Order Management Functions & Dashboard Stats ---
         // ----------------------------------------------------
+        
+        // Helper function to format currency
+        function formatCurrency(amount) {
+            return `₱${amount.toLocaleString('en-PH', {minimumFractionDigits: 2})}`;
+        }
+
+        // --- Update Dashboard Statistics (Combined Metric Updater) ---
+        async function updateDashboardStats() {
+            if (!currentSellerId || !statsGrid) return;
+            
+            let totalRevenuePending = 0;
+            let totalProductsCount = 0;
+            let pendingOrdersCount = 0;
+
+            // 1. Calculate Total Products Listed
+            try {
+                const productsCollection = collection(db, "products");
+                const productSnapshot = await getDocs(productsCollection);
+                
+                productSnapshot.forEach(doc => {
+                    const product = doc.data();
+                    if (product.sellerId === currentSellerId) {
+                        totalProductsCount++;
+                    }
+                });
+            } catch (error) {
+                console.error("Error calculating products count:", error);
+            }
+
+            // 2. Calculate Revenue and Pending Orders
+            try {
+                const ordersCollection = collection(db, "orders");
+                const orderSnapshot = await getDocs(ordersCollection);
+
+                orderSnapshot.forEach(doc => {
+                    const order = doc.data();
+                    
+                    // Filter items relevant to the current seller
+                    const relevantItems = order.items.filter(item => item.sellerId === currentSellerId);
+                    
+                    if (relevantItems.length > 0) {
+                        // Calculate seller's portion of the order
+                        const sellerOrderTotal = relevantItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+                        // Count towards Pending Revenue/Orders only if status is 'Pending'
+                        if (order.status === 'Pending') {
+                            totalRevenuePending += sellerOrderTotal;
+                            pendingOrdersCount++;
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Error calculating orders/revenue:", error);
+            }
+
+            // 3. Update the HTML Elements
+            
+            // Total Revenue (Pending)
+            statsGrid.children[0].querySelector('.value').textContent = formatCurrency(totalRevenuePending);
+            
+            // Total Products Listed
+            statsGrid.children[1].querySelector('.value').textContent = totalProductsCount;
+            
+            // Pending Orders
+            statsGrid.children[2].querySelector('.value').textContent = pendingOrdersCount;
+        }
+
 
         async function loadSellerOrders() {
             if (!currentSellerId) return;
 
             orderTableBody.innerHTML = ''; // Clear existing orders
+            // Remove previous loading message
             ordersListDiv.querySelector('p')?.remove();
             
-            ordersListDiv.insertAdjacentHTML('afterbegin', '<p style="text-align: center; color: #6b7280;"><i class="fas fa-spinner fa-spin"></i> Fetching your orders...</p>');
+            ordersListDiv.insertAdjacentHTML('afterbegin', '<p style="text-align: center; color: #6b7280; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Fetching your orders...</p>');
             const loadingMessage = ordersListDiv.querySelector('p');
 
             try {
                 const ordersCollection = collection(db, "orders");
-                // Fetch all orders (relies on the loosened security rule)
                 const querySnapshot = await getDocs(ordersCollection); 
 
                 let ordersHTML = '';
@@ -676,7 +920,7 @@
                             <tr>
                                 <td>${doc.id.substring(0, 6)}...</td>
                                 <td>${order.fullName}</td>
-                                <td>₱${sellerTotal.toLocaleString('en-PH', {minimumFractionDigits: 2})}</td>
+                                <td><span style="font-weight: 700; color: var(--primary-color);">₱${sellerTotal.toLocaleString('en-PH', {minimumFractionDigits: 2})}</span></td>
                                 <td>${date}</td>
                                 <td>
                                     <select class="status-select ${statusClass}" data-order-id="${doc.id}">
@@ -686,7 +930,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <button class="edit-btn" onclick='showOrderDetails("${doc.id}", ${JSON.stringify(order)})'><i class="fas fa-eye"></i> View</button>
+                                    <button class="edit-btn" onclick='showOrderDetails("${doc.id}", ${JSON.stringify(order).replace(/"/g, '&quot;')})'><i class="fas fa-eye"></i> View</button>
                                 </td>
                             </tr>
                         `;
@@ -697,7 +941,7 @@
                 orderTableBody.innerHTML = ordersHTML;
 
                 if (count === 0) {
-                    orderTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6b7280;">No orders found for your products.</td></tr>';
+                    orderTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6b7280; padding: 20px;">No orders found for your products.</td></tr>';
                 }
                 
                 // Attach event listeners for status change
@@ -707,8 +951,10 @@
                 
             } catch (error) {
                 console.error("Error loading seller orders:", error);
-                loadingMessage.textContent = 'Error fetching orders. Access denied or console error.';
-                loadingMessage.style.color = '#ef4444';
+                if(loadingMessage) {
+                    loadingMessage.textContent = 'Error fetching orders. Access denied or console error.';
+                    loadingMessage.style.color = '#ef4444';
+                }
             }
         }
         
@@ -728,6 +974,9 @@
                     selectElement.className = `status-select status-${newStatus.toLowerCase()}`;
                 }
                 alert(`Order ${orderId.substring(0, 6)}... status updated to ${newStatus}.`);
+
+                // 🟢 IMPORTANT: Update the dashboard stats after a successful status change
+                updateDashboardStats();
 
             } catch (error) {
                 console.error("Error updating order status:", error);
@@ -757,12 +1006,12 @@
                 itemListHTML += `
                     <li>
                         <span>${item.name} (x${item.quantity})</span>
-                        <span>₱${subtotal.toFixed(2)}</span>
+                        <span>${formatCurrency(subtotal)}</span>
                     </li>
                 `;
             });
             document.getElementById('modalItemList').innerHTML = itemListHTML;
-            document.getElementById('modalTotalAmount').textContent = `₱${total.toLocaleString('en-PH', {minimumFractionDigits: 2})}`;
+            document.getElementById('modalTotalAmount').textContent = formatCurrency(total);
 
             orderDetailsModal.style.display = 'block';
         }
@@ -802,7 +1051,10 @@
                 document.getElementById("sellerName").textContent = displayName;
                 document.getElementById("welcomeTitle").textContent = `Hello, ${displayName}!`;
 
-                // Load initial data (start on 'dashboard' but load orders and products for the first time)
+                // 🟢 IMPORTANT: Call the stats function immediately
+                await updateDashboardStats(); 
+
+                // Load initial content for the tables
                 loadSellerProducts(); 
                 loadSellerOrders(); 
                 
