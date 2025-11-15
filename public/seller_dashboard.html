@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Seller Dashboard - J2 Nexus</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Variables and Global Reset (Improved Design) */
+        /* Define Variables for consistency */
         :root {
-            --primary-color: #0d9488; /* Teal-Green - slightly darker for sophistication */
-            --secondary-color: #3b82f6; /* Blue */
-            --accent-color: #fcd34d; /* Amber/Gold for contrast */
-            --background-color: #f9fafb; /* Very light background for cleaner look */
-            --card-background: #ffffff;
+            --primary-color: #4f46e5; /* Indigo */
+            --secondary-color: #6366f1; /* Light Indigo */
+            --light-bg: #f3f4f6;
             --text-color: #1f2937;
-            --text-light: #6b7280;
-            --shadow-subtle: 0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.02);
-            --shadow-hover: 0 10px 15px rgba(0,0,0,0.08);
-            --border-radius: 12px;
+            --subtle-text: #6b7280;
+            --card-background: #ffffff;
+            --shadow-light: 0 4px 6px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
         }
 
+        /* ===== Global Reset and Typography ===== */
         * {
             margin: 0;
             padding: 0;
@@ -29,577 +28,401 @@
         }
 
         body {
+            background: var(--light-bg);
             display: flex;
+            flex-direction: column;
             min-height: 100vh;
-            background-color: var(--background-color);
             color: var(--text-color);
         }
 
-        /* Sidebar Styles (Improved Design) */
-        .sidebar {
-            width: 280px; /* Slightly wider sidebar */
-            background-color: var(--card-background);
-            box-shadow: var(--shadow-subtle);
-            padding: 20px 0;
-            position: fixed;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid #e5e7eb;
-            z-index: 20;
-        }
-
-        .sidebar .logo {
-            text-align: center;
-            font-size: 28px; /* Larger logo text */
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 50px; /* More space below logo */
-            letter-spacing: 1px;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            flex-grow: 1;
-        }
-
-        .sidebar ul li a {
+        /* ===== Header & Navigation (Matching Index Style) ===== */
+        header {
+            background: var(--card-background);
+            padding: 18px 32px;
             display: flex;
             align-items: center;
-            padding: 15px 30px;
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-            font-size: 16px; /* Slightly larger text */
-            transition: background-color 0.2s, color 0.2s;
-            border-radius: 8px; /* Rounded items */
-            margin: 5px 15px; /* Margin to show border-radius */
-        }
-        
-        /* Hover state for all links */
-        .sidebar ul li a:hover {
-            background-color: #e0f2f7; /* Very light subtle hover */
-            color: var(--primary-color);
-        }
-
-        .sidebar ul li a i {
-            margin-right: 15px;
-            font-size: 18px;
-            color: var(--text-light); /* Lighter icon color by default */
-        }
-        
-        /* Active tab styling */
-        .sidebar ul li.active a {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .sidebar ul li.active a i {
-            color: white;
-        }
-
-        .sidebar-footer {
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
-            color: var(--text-light);
-            border-top: 1px solid #e5e7eb;
-        }
-
-        /* Main Content and Topbar (Improved Design) */
-        .main-content {
-            margin-left: 280px; /* Match wider sidebar */
-            padding: 0;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .topbar {
-            background-color: var(--card-background);
-            display: flex;
-            justify-content: flex-end; /* Align right side */
-            align-items: center;
-            padding: 15px 30px;
-            box-shadow: var(--shadow-subtle);
+            justify-content: space-between;
+            box-shadow: var(--shadow-light);
             position: sticky;
             top: 0;
-            z-index: 10;
-            border-bottom: 1px solid #e5e7eb;
+            z-index: 50;
         }
 
-        .topbar .user-profile {
+        .logo {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 20px; /* More space */
+            gap: 20px;
         }
 
-        .topbar .user-profile .username {
+        .header-actions button {
+            padding: 8px 18px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.2s, transform 0.1s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .header-actions button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        /* ===== Main Content and Layout ===== */
+        main {
+            flex: 1;
+            padding: 40px 32px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 30px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        .dashboard-header p {
+            color: var(--subtle-text);
+            font-size: 16px;
+        }
+
+        /* ===== Dashboard Tabs Navigation ===== */
+        .dashboard-nav {
+            display: flex;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 15px 25px;
             font-size: 16px;
             font-weight: 600;
-            color: var(--primary-color); /* Highlight username */
-        }
-
-        button.logout-btn {
-            background: #ef4444;
-            border: none;
-            color: white;
-            padding: 8px 18px;
-            border-radius: 8px;
+            color: var(--subtle-text);
             cursor: pointer;
-            font-weight: 600;
-            transition: background 0.2s;
+            transition: color 0.2s, border-bottom 0.2s;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
         }
 
-        button.logout-btn:hover {
-            background: #dc2626;
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
         }
 
-        /* Dashboard Body Content & Tabs (Improved Design) */
-        .dashboard-body {
-            padding: 40px; /* Increased padding */
-            flex-grow: 1;
-        }
-
-        .dashboard-title {
-            font-size: 32px; /* Larger title */
-            font-weight: 700;
-            color: var(--text-color);
-            margin-bottom: 30px;
-            border-bottom: 2px solid #e5e7eb; /* Subtle separator */
-            padding-bottom: 15px;
-        }
-
-        .seller-tab-content {
+        /* ===== Tab Content Display ===== */
+        .tab-content {
             display: none;
         }
 
-        .seller-tab-content.active {
+        .tab-content.active {
             display: block;
         }
-        
-        /* Stats Cards (Dashboard Tab - Improved Design) */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Better sizing */
-            gap: 25px;
-            margin-top: 20px;
-        }
-        
-        .stat-card {
-            background: var(--card-background);
-            padding: 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-subtle);
-            transition: transform 0.2s, box-shadow 0.2s;
-            border-top: 5px solid var(--primary-color); /* Primary color accent */
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-hover);
-        }
-        
-        .stat-card .icon-and-title {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .stat-card i.fa-2x {
-            color: var(--primary-color);
-        }
-        
-        .stat-card h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-light);
-            margin: 0;
-        }
-        
-        .stat-card .value {
-            font-size: 36px;
+
+        .tab-content h2 {
+            font-size: 24px;
             font-weight: 700;
+            margin-bottom: 20px;
             color: var(--text-color);
         }
 
-        /* Adjusting specific colors for better visual grouping */
-        .stat-card.sales { border-top-color: var(--secondary-color); }
-        .stat-card.sales i { color: var(--secondary-color); }
-        .stat-card.pending { border-top-color: var(--accent-color); }
-        .stat-card.pending i { color: var(--accent-color); }
-
-
-        /* Product Listing Section (Improved Design) */
-        .product-grid {
+        /* ===== Card Styles (For Overview) ===== */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly wider product cards */
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-background);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-light);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: var(--subtle-text);
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+        
+        /* ==================================== */
+        /* ===== ADD PRODUCT FORM STYLES ====== */
+        /* ==================================== */
+
+        .add-product-form {
+            background: var(--card-background);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-light);
+            max-width: 600px; 
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .add-product-form label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .add-product-form input[type="text"],
+        .add-product-form input[type="number"],
+        .add-product-form input[type="url"],
+        .add-product-form textarea,
+        .add-product-form select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .add-product-form input:focus,
+        .add-product-form textarea:focus,
+        .add-product-form select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .add-product-form button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 10px;
+        }
+
+        .add-product-form button[type="submit"]:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            display: none; /* Hidden by default */
+        }
+        
+        /* ==================================== */
+        /* ===== MY PRODUCTS LIST STYLES ====== */
+        /* ==================================== */
+        .product-list-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .product-card {
             background: var(--card-background);
-            padding: 25px; /* Increased padding */
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-subtle); /* Use subtle shadow */
-            border-left: 5px solid var(--primary-color);
-            min-height: 250px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-light);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-hover);
+            min-height: 250px; /* Adjusted height to fit update/delete buttons */
+            border-left: 4px solid #f97316; /* Orange border for products */
         }
 
         .product-card h3 {
-            font-size: 22px; /* Larger title */
-            margin-bottom: 5px;
-            color: var(--primary-color);
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: var(--text-color);
         }
 
         .product-card p {
-            font-size: 15px;
-            color: var(--text-light);
+            font-size: 14px;
+            color: var(--subtle-text);
+        }
+        
+        .product-footer {
+            margin-top: 15px;
+            border-top: 1px dashed #e5e7eb;
+            padding-top: 10px;
         }
 
         .product-card .price {
-            font-size: 26px; /* Larger price */
+            font-size: 22px;
             font-weight: 700;
-            color: var(--secondary-color);
-            margin: 15px 0 10px;
+            color: #10b981; /* Green color for price */
         }
-        
+
         .product-card .stock {
+            font-size: 14px;
             font-weight: 600;
-            color: var(--primary-color);
-            background: #ecfdf5; /* Light background for stock */
-            padding: 5px 10px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .product-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .product-actions button {
-            padding: 10px 15px;
-            border-radius: 8px; /* Slightly more rounded */
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: opacity 0.2s, background 0.2s;
-            flex: 1;
-        }
-        
-        .edit-btn { background: #f59e0b; color: white; }
-        .edit-btn:hover { opacity: 0.9; }
-        
-        .delete-btn { background: #ef4444; color: white; }
-        .delete-btn:hover { opacity: 0.9; }
-
-        /* Add Product Form (Improved Design) */
-        #addProductForm {
-            background: var(--card-background);
-            padding: 40px; /* Increased padding */
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-subtle);
-            max-width: 700px; /* Wider form */
-            margin: 0 auto;
-        }
-        
-        #addProductForm label {
-            display: block;
-            margin-top: 20px;
-            margin-bottom: 5px;
-            font-weight: 600; /* Bolder label */
-        }
-        
-        #addProductForm input, 
-        #addProductForm textarea, 
-        #addProductForm select {
-            width: 100%;
-            padding: 12px; /* Increased input padding */
-            border: 1px solid #d1d5db; /* Darker border */
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        
-        #addProductForm input:focus, 
-        #addProductForm textarea:focus, 
-        #addProductForm select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.3); /* Subtle focus ring */
-        }
-
-        #addProductForm button[type="submit"] {
-            margin-top: 30px;
-            background: var(--primary-color);
-            color: white;
-            padding: 15px 20px; /* Larger button */
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            width: 100%;
-            transition: background 0.2s;
-        }
-        
-        #addProductForm button[type="submit"]:hover {
-            background: #0f766e; /* Slightly darker hover */
-        }
-
-        /* Order List Table (Improved Design) */
-        .order-table {
-            width: 100%;
-            border-collapse: separate; /* Use separate for border-radius on cells/table */
-            border-spacing: 0;
-            background: var(--card-background);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-subtle);
-        }
-        
-        .order-table th, .order-table td {
-            padding: 15px; /* Increased padding */
-            text-align: left;
-            border-bottom: 1px solid #f3f4f6;
-            font-size: 15px;
-        }
-        
-        .order-table th {
-            background-color: #f3f4f6;
-            font-weight: 600;
-            color: #4b5563;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 13px;
-        }
-        
-        .order-table tbody tr:hover {
-            background-color: #fcfcfd;
-        }
-        
-        .status-badge {
-            padding: 6px 12px; /* Larger badge */
-            border-radius: 9999px;
-            font-size: 13px;
-            font-weight: 600;
-            display: inline-block;
-        }
-
-        .status-pending { background: #fffbeb; color: #f59e0b; }
-        .status-shipped { background: #eff6ff; color: #3b82f6; }
-        .status-delivered { background: #ecfdf5; color: var(--primary-color); }
-        .status-cancelled { background: #fee2e2; color: #ef4444; }
-
-
-        /* Media Queries for smaller screens */
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 200px; 
-            }
-            .main-content {
-                margin-left: 200px;
-            }
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding: 10px 0;
-            }
-            .sidebar .logo {
-                display: none; 
-            }
-            .sidebar ul {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-around; 
-                gap: 5px;
-            }
-            .sidebar ul li a {
-                padding: 8px 10px;
-                margin: 0;
-                font-size: 14px;
-            }
-            .sidebar ul li a i {
-                margin-right: 5px;
-            }
-            .main-content {
-                margin-left: 0;
-            }
-            .topbar {
-                padding: 10px 20px;
-            }
-            .dashboard-body {
-                padding: 20px;
-            }
-            .product-grid, .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .sidebar-footer {
-                display: none;
-            }
+            color: var(--text-color);
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="logo">J2 <span style="color: var(--accent-color);">NEXUS</span></div>
-        <ul>
-            <li class="active" data-tab="dashboard"><a href="#" onclick="switchTab('dashboard'); return false;"><i class="fas fa-chart-line"></i>Dashboard</a></li>
-            <li data-tab="products"><a href="#" onclick="switchTab('products'); return false;"><i class="fas fa-box-open"></i>My Products</a></li>
-            <li data-tab="orders"><a href="#" onclick="switchTab('orders'); return false;"><i class="fas fa-truck"></i>Recent Orders</a></li>
-            <li data-tab="add"><a href="#" onclick="switchTab('add'); return false;"><i class="fas fa-plus-circle"></i>Add Product</a></li>
-        </ul>
-        <div class="sidebar-footer">
-            <p>J2 Nexus Seller</p>
+    <header>
+        <a href="index.html" class="logo">J2 Nexus Seller</a>
+        <div class="header-actions">
+            <span id="sellerInfo" style="color: var(--text-color); font-weight: 500;">Loading...</span>
+            <button id="logoutButton">Logout</button>
         </div>
-    </div>
+    </header>
 
-    <div class="main-content">
-        
-        <div class="topbar">
-            <div class="user-profile">
-                <span class="username" id="sellerName">Loading...</span>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </div>
+    <main>
+        <div class="dashboard-header">
+            <h1>Seller Dashboard</h1>
+            <p>Manage your sales, products, and orders here.</p>
         </div>
 
-        <div class="dashboard-body">
-            <h1 class="dashboard-title" id="welcomeTitle">Hello, Seller! 👋</h1> 
-            
-            <div id="dashboard" class="seller-tab-content active">
-                <p style="color: var(--text-light); margin-bottom: 25px;">Welcome to your central hub. View quick stats below.</p>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="icon-and-title">
-                            <i class="fas fa-boxes fa-2x"></i>
-                            <h3>Total Products</h3>
-                        </div>
-                        <p class="value">24</p>
-                    </div>
-                    <div class="stat-card sales">
-                        <div class="icon-and-title">
-                            <i class="fas fa-chart-bar fa-2x"></i>
-                            <h3>Sales YTD</h3>
-                        </div>
-                        <p class="value">₱45,000</p>
-                    </div>
-                    <div class="stat-card pending">
-                        <div class="icon-and-title">
-                            <i class="fas fa-shipping-fast fa-2x"></i>
-                            <h3>Pending Orders</h3>
-                        </div>
-                        <p class="value">5</p>
-                    </div>
-                    <div class="stat-card">
-                        <div class="icon-and-title">
-                            <i class="fas fa-star fa-2x" style="color: #fbbf24;"></i>
-                            <h3>Product Views</h3>
-                        </div>
-                        <p class="value">1,245</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="products" class="seller-tab-content">
-                <h2 style="margin-bottom: 25px;">📦 My Product Listings</h2>
-                <div id="sellerProductGrid" class="product-grid">
-                    <p style="text-align: center; color: var(--text-light); grid-column: 1 / -1;">Loading your products...</p>
-                </div>
-            </div>
-            
-            <div id="orders" class="seller-tab-content">
-                <h2 style="margin-bottom: 25px;">🚚 Recent Orders</h2>
-                <div id="ordersList">
-                    <p style="text-align: center; color: var(--text-light);"><i class="fas fa-spinner fa-spin"></i> Loading recent order data...</p>
-                    <table class="order-table" id="recentOrdersTable" style="display: none;">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Item Name</th>
-                                <th>Qty</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                             <tr>
-                                <td>#90123</td>
-                                <td>Wireless Headset</td>
-                                <td>1</td>
-                                <td>₱1,500.00</td>
-                                <td><span class="status-badge status-shipped">Shipped</span></td>
-                                <td><button onclick="alert('Update Order Status')" style="background: var(--secondary-color); color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-weight: 500;">Update</button></td>
-                            </tr>
-                            <tr>
-                                <td>#90124</td>
-                                <td>Ergonomic Keyboard</td>
-                                <td>2</td>
-                                <td>₱4,000.00</td>
-                                <td><span class="status-badge status-pending">Pending</span></td>
-                                <td><button onclick="alert('Update Order Status')" style="background: var(--secondary-color); color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-weight: 500;">Update</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="dashboard-nav">
+            <button class="tab-button active" data-tab="overview">Overview</button>
+            <button class="tab-button" data-tab="products">My Products</button>
+            <button class="tab-button" data-tab="addProduct">Add Product</button>
+            <button class="tab-button" data-tab="orders">Orders</button>
+        </div>
 
-            <div id="add" class="seller-tab-content">
-                <h2 style="margin-bottom: 25px;">➕ List a New Product</h2>
-                <form id="addProductForm">
-                    <label for="name">Product Name</label>
-                    <input type="text" id="name" required>
-                    
-                    <label for="description">Description</label>
-                    <textarea id="description" rows="3" required></textarea>
-                    
-                    <label for="price">Price (₱)</label>
-                    <input type="number" id="price" step="0.01" required>
+        <div id="overview" class="tab-content active">
+            <h2>📊 Sales Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Revenue</h3>
+                    <p>$<span id="totalRevenue">0.00</span></p>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Orders</h3>
+                    <p><span id="pendingOrders">0</span></p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Products</h3>
+                    <p><span id="totalProducts">0</span></p>
+                </div>
+                <div class="stat-card">
+                    <h3>Product Views</h3>
+                    <p><span id="productViews">0</span></p>
+                </div>
+            </div>
+            <h2 style="margin-top: 40px;">Recent Activity</h2>
+            <p style="color: var(--subtle-text);">No recent activity to display.</p>
+        </div>
 
-                    <label for="stock">Initial Stock Quantity</label>
-                    <input type="number" id="stock" min="0" required>
-                    
-                    <label for="category">Category</label>
-                    <select id="category" required>
-                        <option value="electronics">Electronics</option>
-                        <option value="fashion">Fashion</option>
-                        <option value="home">Home Goods</option>
-                        <option value="other">Other</option>
+        <div id="products" class="tab-content">
+            <h2>🛍️ My Active Products</h2>
+            <div id="sellerProductsList" class="product-list-container">
+                <p>Loading your products...</p>
+            </div>
+        </div>
+
+        <div id="addProduct" class="tab-content">
+            <h2>➕ Add New Product Listing</h2>
+            <form id="addProductForm" class="add-product-form">
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" name="productName" required>
+                </div>
+                <div class="form-group">
+                    <label for="productDescription">Description</label>
+                    <textarea id="productDescription" name="productDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label for="productPrice">Price ($)</label>
+                        <input type="number" id="productPrice" name="productPrice" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productStock">Stock Quantity</label>
+                        <input type="number" id="productStock" name="productStock" min="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Category</label>
+                    <select id="productCategory" name="productCategory" required>
+                        <option value="">Select a category</option>
+                        
+                        <option value="Smartphones">Smartphones</option> 
+                        <option value="Wearables">Wearables</option>
+                        <option value="Smart Home Devices">Smart Home Devices</option>
+                        
+                        <option value="Other">Other</option>
                     </select>
-
-                    <label for="imageURL">Image URL (Optional)</label>
-                    <input type="url" id="imageURL">
-                    
-                    <button type="submit">Submit Product for Listing</button>
-                    <p id="formMessage" style="margin-top: 15px; font-weight: 500; text-align: center;"></p>
-                </form>
-            </div>
+                </div>
+                <div class="form-group">
+                    <label for="productImageURL">Image URL (Optional)</label>
+                    <input type="url" id="productImageURL" name="productImageURL" placeholder="https://example.com/image.jpg">
+                </div>
+                
+                <button type="submit" id="submitProductBtn">Publish Product</button>
+                <p id="productStatusMessage" class="status-message"></p>
+            </form>
         </div>
 
-    </div>
+        <div id="orders" class="tab-content">
+            <h2>📦 Customer Orders</h2>
+            <p style="color: var(--subtle-text);">This section will show the list of orders made by users for your products.</p>
+        </div>
+
+    </main>
+
+    <footer>
+        <p style="text-align: center; color: var(--subtle-text); font-size: 12px; margin-top: 40px;">
+            J2 Nexus Seller Tools | &copy; 2025
+        </p>
+    </footer>
 
     <script type="module">
+        // Import Firebase services - INCLUDING deleteDoc and updateDoc
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc, updateDoc, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; 
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs, doc, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // --- 1. Firebase Configuration (USE YOURS) ---
+        // --- 1. Firebase Configuration (REPLACE with your actual config) ---
         const firebaseConfig = {
             apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
             authDomain: "j2nexuss-a7b99.firebaseapp.com",
@@ -613,131 +436,177 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        
-        // --- Global State & Elements (ORIGINAL) ---
-        let currentSellerId = null; 
-        const logoutBtn = document.getElementById("logoutBtn");
-        const sellerProductGrid = document.getElementById('sellerProductGrid');
-        const addProductForm = document.getElementById('addProductForm');
-        const formMessage = document.getElementById('formMessage');
-        const ordersListEl = document.getElementById('ordersList');
 
-        // --- 2. Tab Switching Functionality (ORIGINAL) ---
-        window.switchTab = function(tabId) {
-            document.querySelectorAll('.seller-tab-content').forEach(content => {
+        // --- 2. Global Variables and DOM Elements ---
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const logoutButton = document.getElementById('logoutButton');
+        const addProductForm = document.getElementById('addProductForm');
+        const productStatusMessage = document.getElementById('productStatusMessage');
+        const sellerProductsList = document.getElementById('sellerProductsList');
+        const totalProductsEl = document.getElementById('totalProducts');
+        const sellerInfoEl = document.getElementById('sellerInfo');
+        let currentUserID = null;
+
+        // --- 3. Tab Switching Logic ---
+        function switchTab(tabId) {
+            tabContents.forEach(content => {
                 content.classList.remove('active');
             });
-            document.getElementById(tabId).classList.add('active');
-            
-            document.querySelectorAll('.sidebar ul li').forEach(li => {
-                li.classList.remove('active');
-                if (li.dataset.tab === tabId) {
-                    li.classList.add('active');
-                }
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
             });
 
-            // Load specific data based on the tab
-            if (tabId === 'products') {
-                loadSellerProducts();
-            } else if (tabId === 'orders') {
-                loadRecentOrders();
-            }
-        };
-        
-        // --- 3. Load Seller's Products (Product tab - ORIGINAL) ---
-        async function loadSellerProducts() {
-            if (!currentSellerId) return;
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-button[data-tab="${tabId}"]`).classList.add('active');
+        }
 
-            sellerProductGrid.innerHTML = '<p style="text-align: center; color: #6b7280;"><i class="fas fa-spinner fa-spin"></i> Fetching your current listings...</p>';
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                switchTab(button.dataset.tab);
+            });
+        });
+
+        // --- 4. Product Submission Function ---
+        async function addProduct(e) {
+            e.preventDefault();
+
+            if (!currentUserID) {
+                productStatusMessage.textContent = '❌ Error: You must be logged in to add a product.';
+                productStatusMessage.style.backgroundColor = '#fecaca';
+                productStatusMessage.style.color = '#dc2626';
+                productStatusMessage.style.display = 'block';
+                return;
+            }
+
+            productStatusMessage.textContent = 'Publishing product...';
+            productStatusMessage.style.backgroundColor = '#e0f2fe';
+            productStatusMessage.style.color = '#2563eb';
+            productStatusMessage.style.display = 'block';
+            
+            // Get form data
+            const productData = {
+                sellerId: currentUserID, // IMPORTANT: Link product to the seller
+                name: document.getElementById('productName').value.trim(),
+                description: document.getElementById('productDescription').value.trim(),
+                price: parseFloat(document.getElementById('productPrice').value),
+                stock: parseInt(document.getElementById('productStock').value),
+                category: document.getElementById('productCategory').value,
+                imageURL: document.getElementById('productImageURL').value.trim() || 'placeholder.jpg',
+                createdAt: new Date(),
+                status: 'active'
+            };
+
+            try {
+                const docRef = await addDoc(collection(db, "products"), productData);
+                
+                productStatusMessage.textContent = `✅ Product "${productData.name}" published!`;
+                productStatusMessage.style.backgroundColor = '#d1fae5';
+                productStatusMessage.style.color = '#059669';
+                
+                addProductForm.reset();
+                loadSellerProducts(currentUserID); // Refresh the product list and stats
+            } catch (error) {
+                console.error("Error adding product: ", error);
+                productStatusMessage.textContent = `❌ Failed to publish product: ${error.message}`;
+                productStatusMessage.style.backgroundColor = '#fecaca';
+                productStatusMessage.style.color = '#dc2626';
+            }
+
+            setTimeout(() => {
+                productStatusMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        addProductForm.addEventListener('submit', addProduct);
+
+
+        // --- 5. Product Display Function (INCLUDES Stock Update/Delete UI) ---
+        async function loadSellerProducts(sellerId) {
+            sellerProductsList.innerHTML = '<p style="text-align: center;">Loading products...</p>';
             
             try {
-                // 💡 Best Practice: Use a query to filter on the server side
-                const productsCollectionRef = collection(db, "products");
-                const q = query(productsCollectionRef, where("sellerId", "==", currentSellerId), orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q); 
+                // Query the 'products' collection where the sellerId matches the current user's UID
+                const q = query(collection(db, "products"), where("sellerId", "==", sellerId));
+                const querySnapshot = await getDocs(q);
+                const totalCount = querySnapshot.size;
+                totalProductsEl.textContent = totalCount; // Update the overview stat
 
-                let productsHTML = '';
-                
                 if (querySnapshot.empty) {
-                    sellerProductGrid.innerHTML = '<p style="text-align: center; color: #6b7280;">You have no products listed. Use the "Add Product" tab to start selling!</p>';
+                    sellerProductsList.innerHTML = '<p style="color: var(--subtle-text); text-align: center;">You have not listed any products yet. Go to "Add Product" to get started!</p>';
                     return;
                 }
 
+                let productsHTML = '';
                 querySnapshot.forEach((doc) => {
                     const product = doc.data();
-                    
                     productsHTML += `
                         <div class="product-card">
                             <div>
                                 <h3>${product.name}</h3>
-                                <p>${product.description.substring(0, 70)}${product.description.length > 70 ? '...' : ''}</p>
-                                <div class="price">₱${product.price.toLocaleString('en-PH', {minimumFractionDigits: 2})}</div>
-                                <p class="stock">Stock: ${product.stock}</p>
+                                <p>Category: ${product.category}</p>
+                                <p style="font-size: 13px; margin-top: 8px; color: #4f46e5;">
+                                    <strong>Product ID:</strong> 
+                                    <span style="font-family: monospace;">${doc.id}</span>
+                                </p>
                             </div>
-                            <div class="product-actions">
-                                <button class="edit-btn" data-product-id="${doc.id}" onclick="alert('Edit functionality not yet implemented.')">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="delete-btn" data-product-id="${doc.id}">
+                            
+                            <div class="product-footer">
+                                <p class="price">$${product.price.toFixed(2)}</p>
+                                <p class="stock">Current Stock: <strong id="stock-${doc.id}">${product.stock}</strong></p>
+                                
+                                <div style="display: flex; gap: 5px; margin-top: 10px; align-items: center;">
+                                    <input 
+                                        type="number" 
+                                        id="newStock-${doc.id}" 
+                                        min="0" 
+                                        placeholder="New Stock" 
+                                        value="${product.stock}" 
+                                        style="width: 100px; padding: 5px; border: 1px solid #d1d5db; border-radius: 4px;">
+                                    
+                                    <button 
+                                        class="update-stock-btn" 
+                                        data-product-id="${doc.id}" 
+                                        style="
+                                            background: #10b981; 
+                                            color: white; 
+                                            border: none; 
+                                            padding: 6px 10px; 
+                                            border-radius: 6px; 
+                                            cursor: pointer;
+                                            font-size: 14px;
+                                            white-space: nowrap;
+                                        ">
+                                        Update Stock
+                                    </button>
+                                </div>
+
+                                <button class="delete-btn" data-product-id="${doc.id}" style="
+                                    background: #ef4444; 
+                                    color: white; 
+                                    border: none; 
+                                    padding: 5px 10px; 
+                                    border-radius: 6px; 
+                                    cursor: pointer;
+                                    font-size: 14px;
+                                    margin-top: 10px;
+                                ">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </div>
                         </div>
                     `;
                 });
-
-                sellerProductGrid.innerHTML = productsHTML;
-                
-                // Attach delete listeners
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', (e) => deleteProduct(e.currentTarget.dataset.productId));
-                });
-                
+                sellerProductsList.innerHTML = productsHTML;
             } catch (error) {
-                console.error("Error loading seller products:", error);
-                sellerProductGrid.innerHTML = '<p style="text-align: center; color: #ef4444;">Error fetching products. Check console for details.</p>';
+                console.error("Error loading seller products: ", error);
+                sellerProductsList.innerHTML = '<p style="color: #ef4444; text-align: center;">Error loading your products. Check your console for details.</p>';
             }
         }
-
-        // --- 4. Add Product Handler (Add tab - ORIGINAL) ---
-        addProductForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            formMessage.textContent = 'Submitting...';
-            formMessage.style.color = '#f59e0b'; 
-
-            if (!currentSellerId) {
-                formMessage.textContent = 'Error: Seller not authenticated. Please log in again.';
-                formMessage.style.color = '#ef4444';
-                return;
-            }
-
-            const newProduct = {
-                name: document.getElementById('name').value,
-                description: document.getElementById('description').value,
-                price: parseFloat(document.getElementById('price').value),
-                stock: parseInt(document.getElementById('stock').value),
-                category: document.getElementById('category').value,
-                imageURL: document.getElementById('imageURL').value || 'placeholder.jpg',
-                sellerId: currentSellerId, // CRITICAL: Assign the product to the current seller
-                createdAt: new Date() // Use Firestore Timestamp
-            };
-
-            try {
-                // 🟢 FIX: Used addDoc to save the new product to the "products" collection
-                await addDoc(collection(db, "products"), newProduct);
-                formMessage.textContent = 'Product listed successfully! It is now visible in the marketplace.';
-                formMessage.style.color = '#10b981';
-                addProductForm.reset(); // Clear the form
-            } catch (error) {
-                console.error("Error adding product:", error);
-                formMessage.textContent = `Error: Failed to list product. ${error.message}`;
-                formMessage.style.color = '#ef4444';
-            }
-        });
-
-        // --- 5. Delete Product Handler (ORIGINAL) ---
+        
+        // --- 6. Product Deletion Function ---
         async function deleteProduct(productId) {
-            if (!confirm("Are you sure you want to delete this product listing permanently?")) {
+            if (!confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
                 return;
             }
 
@@ -745,8 +614,10 @@
                 const productRef = doc(db, "products", productId);
                 await deleteDoc(productRef);
 
-                alert("Product deleted successfully.");
-                loadSellerProducts(); // Refresh the list
+                alert(`Product ${productId.substring(0, 8)}... deleted successfully.`);
+                
+                // Reload the product list to show the change immediately
+                loadSellerProducts(currentUserID);
 
             } catch (error) {
                 console.error("Error deleting product:", error);
@@ -754,58 +625,88 @@
             }
         }
         
-        // --- 6. Load Recent Orders (Orders tab - ORIGINAL) ---
-        async function loadRecentOrders() {
-             if (!currentSellerId) return;
+        // --- 7. Product Stock Update Function ---
+        async function updateProductStock(productId, newStockValue) {
+            if (isNaN(newStockValue) || newStockValue < 0) {
+                alert("Please enter a valid, non-negative stock quantity.");
+                return;
+            }
+            
+            try {
+                const productRef = doc(db, "products", productId);
+                
+                await updateDoc(productRef, {
+                    stock: newStockValue
+                });
 
-             ordersListEl.innerHTML = '<p style="text-align: center; color: #6b7280;"><i class="fas fa-spinner fa-spin"></i> Loading recent order data...</p>';
+                // INSTANT UI FEEDBACK: Update the stock display without full reload
+                document.getElementById(`stock-${productId}`).textContent = newStockValue;
+                
+                alert(`Stock for Product ${productId.substring(0, 8)}... updated to ${newStockValue}.`);
 
-             try {
-                 // In a real application, orders would likely be processed by item/product.
-                 // This example mimics fetching all orders related to this seller.
-                 // This query is highly complex in a real app (requires aggregation/denormalization).
-                 // For simplicity, we'll use a placeholder table for now.
-                 
-                 // **Placeholder for demonstration:**
-                 document.getElementById('recentOrdersTable').style.display = 'table';
-                 ordersListEl.innerHTML = '';
-                 ordersListEl.appendChild(document.getElementById('recentOrdersTable'));
-
-
-             } catch (error) {
-                 console.error("Error loading recent orders:", error);
-                 ordersListEl.innerHTML = '<p style="text-align: center; color: #ef4444;">Error fetching orders. Check security rules or data structure.</p>';
-             }
+            } catch (error) {
+                console.error("Error updating product stock:", error);
+                alert(`Failed to update stock: ${error.message}`);
+            }
         }
         
-        // --- 7. Authentication and Setup (ORIGINAL) ---
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentSellerId = user.uid; // Set the global seller ID
+        // --- 8. Event Listener Delegation for Update and Delete Buttons ---
+        sellerProductsList.addEventListener('click', (e) => {
+            // 1. Check for Delete Button
+            const deleteButton = e.target.closest('.delete-btn');
+            if (deleteButton) {
+                const productIdToDelete = deleteButton.dataset.productId;
+                deleteProduct(productIdToDelete);
+                return; 
+            }
 
-                // Set Display Names
-                const displayName = user.email.split('@')[0];
-                document.getElementById("sellerName").textContent = displayName;
-                document.getElementById("welcomeTitle").textContent = `Hello, ${displayName}!`;
+            // 2. Check for Update Stock Button
+            const updateButton = e.target.closest('.update-stock-btn');
+            if (updateButton) {
+                const productIdToUpdate = updateButton.dataset.productId;
+                const newStockInput = document.getElementById(`newStock-${productIdToUpdate}`);
+                const newStockValue = parseInt(newStockInput.value);
 
-                // Load initial data (defaulting to the products tab's load)
-                switchTab('dashboard'); // Initial view set to dashboard
-            } else {
-                // User is signed out, redirect to login
-                window.location.href = "login.html";
+                updateProductStock(productIdToUpdate, newStockValue);
             }
         });
 
-        // Logout functionality
-        logoutBtn.addEventListener("click", async () => {
+        // --- 9. Logout Function ---
+        logoutButton.addEventListener('click', async () => {
             try {
                 await signOut(auth);
-                window.location.href = "login.html";
+                window.location.href = 'login.html'; // Redirect to login page
             } catch (error) {
-                console.error("Logout failed:", error);
+                console.error("Error signing out: ", error);
+                alert("Failed to log out.");
             }
         });
-    </script>
 
+        // --- 10. Authentication State Listener ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserID = user.uid;
+                sellerInfoEl.textContent = `Seller ID: ${user.uid.substring(0, 8)}...`;
+                
+                // Fetch seller name/profile (optional)
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists() && userDoc.data().name) {
+                        sellerInfoEl.textContent = `Welcome, ${userDoc.data().name}!`;
+                    }
+                } catch (e) {
+                    console.warn("Could not fetch seller profile.", e);
+                }
+                
+                // Load products specific to this seller
+                loadSellerProducts(currentUserID); 
+                
+            } else {
+                // No user is signed in, redirect
+                window.location.href = 'login.html'; 
+            }
+        });
+
+    </script>
 </body>
 </html>
