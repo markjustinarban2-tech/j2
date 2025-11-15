@@ -50,7 +50,7 @@
       <a href="user_dashboard.html">Home</a>
       <a href="#categories">Categories</a>
       <a href="#products">Products</a>
-      <a href="login.html">logout</a>
+      <a href="#" id="logoutBtn">Logout</a>
       <a href="contact.html">Contact</a>
     </nav>
   </header>
@@ -152,12 +152,17 @@
         });
     
         // Logout functionality
-        const logoutLink = document.querySelector('nav a[href="login.html"]');
-        logoutLink.addEventListener("click", async (e) => {
-          e.preventDefault();
-          await signOut(auth);
-          window.location.href = "login.html";
-        });
+        const logoutBtn = document.getElementById("logoutBtn");
+logoutBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+  try {
+    await signOut(auth); // Ends the Firebase session
+    window.location.href = "login.html"; // Redirect to login page
+  } catch (error) {
+    console.error("Logout error:", error);
+  }
+});
+
       </script>
     
     </body>
