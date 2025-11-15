@@ -32,9 +32,9 @@
             color: var(--text-color);
         }
 
-        /* ===== Sidebar Styles ===== */
+        /* ===== Sidebar Styles (Unchanged) ===== */
         .sidebar {
-            width: 280px; /* Slightly wider sidebar */
+            width: 280px;
             background-color: var(--card-background);
             box-shadow: var(--shadow-lg);
             padding: 20px 0;
@@ -72,7 +72,7 @@
         .sidebar ul li a i {
             margin-right: 15px;
             font-size: 18px;
-            color: #9ca3af; /* Icon color */
+            color: #9ca3af;
         }
 
         .sidebar ul li:hover a {
@@ -81,7 +81,7 @@
         }
         
         .sidebar ul li:hover a i {
-            color: white; /* Icon color on hover */
+            color: white;
         }
         
         .sidebar ul li.active a {
@@ -98,7 +98,7 @@
             border-top: 1px solid #e5e7eb;
         }
 
-        /* ===== Main Content and Topbar ===== */
+        /* ===== Main Content and Topbar (Unchanged) ===== */
         .main-content {
             margin-left: 280px;
             padding: 0;
@@ -108,7 +108,7 @@
         .topbar {
             background-color: var(--card-background);
             display: flex;
-            justify-content: flex-end; /* Push content to the right */
+            justify-content: flex-end;
             align-items: center;
             padding: 15px 30px;
             box-shadow: var(--shadow-light);
@@ -139,7 +139,7 @@
         }
 
         button.logout-btn {
-            background: #ef4444; /* Red color for log out */
+            background: #ef4444;
             border: none;
             color: white;
             padding: 10px 18px;
@@ -153,7 +153,7 @@
             background: #dc2626;
         }
 
-        /* ===== Dashboard Body Content ===== */
+        /* ===== Dashboard Body Content (Unchanged) ===== */
         .dashboard-body {
             padding: 30px;
         }
@@ -177,7 +177,7 @@
             border-radius: 12px;
             padding: 25px;
             box-shadow: var(--shadow-light);
-            border-left: 5px solid var(--primary-color); /* Highlight color */
+            border-left: 5px solid var(--primary-color);
             transition: transform 0.2s, box-shadow 0.2s;
         }
         
@@ -217,8 +217,77 @@
             border-top: 1px solid #f3f4f6;
             padding-top: 8px;
         }
+        
+        /* ===== NEW: Tab Content and Product List Styles ===== */
+        .admin-tab-content {
+            display: none;
+        }
+        
+        .admin-tab-content.active {
+            display: block;
+        }
 
-        /* ===== Footer ===== */
+        .product-list-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .product-card {
+            background: var(--card-background);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-light);
+            border-left: 4px solid #f97316;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .product-card h3 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+        
+        .product-card .details p {
+            font-size: 14px;
+            margin-top: 2px;
+        }
+        
+        .product-card .ids {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #e5e7eb;
+        }
+        
+        .product-card .price {
+            font-size: 22px;
+            font-weight: 700;
+            color: #10b981;
+            margin-top: 5px;
+        }
+        
+        .product-card .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+        
+        .product-card .delete-btn:hover {
+            background: #dc2626;
+        }
+        
+        /* ===== Footer (Unchanged) ===== */
         .admin-footer {
             text-align: center;
             padding: 20px;
@@ -228,7 +297,7 @@
             border-top: 1px solid #e5e7eb;
         }
 
-        /* ===== Media Queries for Responsiveness ===== */
+        /* ===== Media Queries (Unchanged) ===== */
         @media (max-width: 1024px) {
             .sidebar { width: 230px; }
             .main-content { margin-left: 230px; }
@@ -258,12 +327,12 @@
 
     <div class="sidebar">
         <div class="logo">J2 Nexus</div>
-        <ul>
-            <li class="active"><a href="#"><i class="fas fa-chart-line"></i>Dashboard</a></li>
-            <li><a href="#"><i class="fas fa-users"></i>Users</a></li>
-            <li><a href="#"><i class="fas fa-box-open"></i>Products</a></li>
-            <li><a href="#"><i class="fas fa-chart-bar"></i>Analytics</a></li>
-            <li><a href="#"><i class="fas fa-cog"></i>Settings</a></li>
+        <ul id="sidebarNav">
+            <li class="active" data-tab="overview"><a href="#" onclick="switchTab('overview')"><i class="fas fa-chart-line"></i>Dashboard</a></li>
+            <li data-tab="users"><a href="#" onclick="switchTab('users')"><i class="fas fa-users"></i>Users</a></li>
+            <li data-tab="products"><a href="#" onclick="switchTab('products')"><i class="fas fa-box-open"></i>Products</a></li>
+            <li data-tab="analytics"><a href="#" onclick="switchTab('analytics')"><i class="fas fa-chart-bar"></i>Analytics</a></li>
+            <li data-tab="settings"><a href="#" onclick="switchTab('settings')"><i class="fas fa-cog"></i>Settings</a></li>
         </ul>
         <div class="sidebar-footer">
             <p>Admin Panel</p>
@@ -283,37 +352,61 @@
         <div class="dashboard-body">
             <h1 class="dashboard-title">Welcome Back, Admin</h1>
             
-            <div class="dashboard-overview">
-                
-                <div class="overview-card" style="border-left-color: #f59e0b;"> <h3>Total Users</h3>
-                    <div class="card-content">
-                        <div class="number" id="totalUsers">0</div>
-                        <i class="card-icon fas fa-user-friends"></i>
+            <div id="overview" class="admin-tab-content active">
+                <div class="dashboard-overview">
+                    
+                    <div class="overview-card" style="border-left-color: #f59e0b;"> <h3>Total Users</h3>
+                        <div class="card-content">
+                            <div class="number" id="totalUsers">0</div>
+                            <i class="card-icon fas fa-user-friends"></i>
+                        </div>
+                        <div class="description">The total number of registered users.</div>
                     </div>
-                    <div class="description">The total number of registered users.</div>
+
+                    <div class="overview-card" style="border-left-color: #10b981;"> <h3>Total Products</h3>
+                        <div class="card-content">
+                            <div class="number" id="totalProducts">0</div>
+                            <i class="card-icon fas fa-cube"></i>
+                        </div>
+                        <div class="description">The total number of available products.</div>
+                    </div>
+
+                    <div class="overview-card" style="border-left-color: #ef4444;"> <h3>Total Sales</h3>
+                        <div class="card-content">
+                            <div class="number" id="totalSales">$0</div>
+                            <i class="card-icon fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="description">Total sales in the last 30 days.</div>
+                    </div>
                 </div>
 
-                <div class="overview-card" style="border-left-color: #10b981;"> <h3>Total Products</h3>
-                    <div class="card-content">
-                        <div class="number" id="totalProducts">0</div>
-                        <i class="card-icon fas fa-cube"></i>
-                    </div>
-                    <div class="description">The total number of available products.</div>
-                </div>
-
-                <div class="overview-card" style="border-left-color: #ef4444;"> <h3>Total Sales</h3>
-                    <div class="card-content">
-                        <div class="number" id="totalSales">$0</div>
-                        <i class="card-icon fas fa-dollar-sign"></i>
-                    </div>
-                    <div class="description">Total sales in the last 30 days.</div>
+                <section style="background: white; padding: 30px; border-radius: 12px; box-shadow: var(--shadow-light);">
+                    <h2>Recent Activity</h2>
+                    <p>Placeholder for charts or data tables.</p>
+                </section>
+            </div>
+            
+            <div id="products" class="admin-tab-content">
+                <h2 style="margin-bottom: 20px;">All Listed Products</h2>
+                <div id="allProductsList" class="product-list-container">
+                    <p style="text-align: center; color: #6b7280;">Loading all product listings...</p>
                 </div>
             </div>
-
-            <section style="background: white; padding: 30px; border-radius: 12px; box-shadow: var(--shadow-light);">
-                <h2>Recent Activity</h2>
-                <p>Placeholder for charts or data tables.</p>
-            </section>
+            
+            <div id="users" class="admin-tab-content">
+                <h2 style="margin-bottom: 20px;">User Management</h2>
+                <p style="color: #6b7280;">User list and management tools go here.</p>
+            </div>
+            
+            <div id="analytics" class="admin-tab-content">
+                <h2 style="margin-bottom: 20px;">Platform Analytics</h2>
+                <p style="color: #6b7280;">Detailed charts and reports on sales and traffic go here.</p>
+            </div>
+            
+            <div id="settings" class="admin-tab-content">
+                <h2 style="margin-bottom: 20px;">Admin Settings</h2>
+                <p style="color: #6b7280;">Global configuration options go here.</p>
+            </div>
 
         </div>
 
@@ -326,7 +419,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // 🟢 ADD deleteDoc for admin control
+        import { getFirestore, collection, getDocs, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; 
 
         const firebaseConfig = {
             apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
@@ -341,28 +435,149 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        
+        // --- Global Elements ---
+        const allProductsList = document.getElementById('allProductsList');
+        const sidebarNav = document.getElementById('sidebarNav');
 
+        // --- Tab Switching Functionality ---
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.admin-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            
+            // Highlight active sidebar item
+            document.querySelectorAll('#sidebarNav li').forEach(li => {
+                li.classList.remove('active');
+                if (li.dataset.tab === tabId) {
+                    li.classList.add('active');
+                }
+            });
+            
+            // If switching to products, load the data
+            if (tabId === 'products') {
+                loadAllProducts();
+            }
+        };
+
+
+        // --- 1. Load All Products Function (Admin View) ---
+        async function loadAllProducts() {
+            allProductsList.innerHTML = '<p style="text-align: center; color: #6b7280;">Fetching all product listings...</p>';
+            
+            try {
+                // Fetch ALL documents from the 'products' collection (NO WHERE clause)
+                const productsCollection = collection(db, "products");
+                const querySnapshot = await getDocs(productsCollection);
+                
+                document.getElementById("totalProducts").textContent = querySnapshot.size;
+
+                if (querySnapshot.empty) {
+                    allProductsList.innerHTML = '<p style="text-align: center; color: #6b7280;">No products are currently listed on the platform.</p>';
+                    return;
+                }
+
+                let productsHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    productsHTML += `
+                        <div class="product-card">
+                            <div>
+                                <h3>${product.name}</h3>
+                                <div class="details">
+                                    <p><strong>Category:</strong> ${product.category}</p>
+                                    <p class="price">$${product.price.toFixed(2)}</p>
+                                    <p>Stock: ${product.stock}</p>
+                                </div>
+                                <div class="ids">
+                                    <p><strong>Product ID:</strong> ${doc.id}</p>
+                                    <p><strong>Seller ID:</strong> ${product.sellerId.substring(0, 10)}...</p>
+                                </div>
+                            </div>
+                            <button class="delete-btn" data-product-id="${doc.id}">
+                                <i class="fas fa-trash"></i> Delete Product
+                            </button>
+                        </div>
+                    `;
+                });
+                allProductsList.innerHTML = productsHTML;
+                
+            } catch (error) {
+                console.error("Error loading all products:", error);
+                allProductsList.innerHTML = '<p style="text-align: center; color: #ef4444;">Error fetching products. Check console for details.</p>';
+            }
+        }
+        
+        
+        // --- 2. Admin Delete Product Function ---
+        async function deleteProduct(productId) {
+            if (!confirm(`ADMIN WARNING: Are you sure you want to permanently delete product ID ${productId}?`)) {
+                return;
+            }
+
+            try {
+                const productRef = doc(db, "products", productId);
+                await deleteDoc(productRef);
+
+                alert(`Product ${productId} deleted by Admin.`);
+                
+                // Refresh the list after deletion
+                loadAllProducts();
+
+            } catch (error) {
+                console.error("Error deleting product:", error);
+                alert(`Failed to delete product: ${error.message}`);
+            }
+        }
+        
+        // --- 3. Event Listener Delegation for Delete Buttons ---
+        allProductsList.addEventListener('click', (e) => {
+            const deleteButton = e.target.closest('.delete-btn');
+            
+            if (deleteButton) {
+                const productIdToDelete = deleteButton.dataset.productId;
+                deleteProduct(productIdToDelete);
+            }
+        });
+
+
+        // --- Authentication and Setup ---
+        
         // Redirect if not logged in or not admin
+        let currentAdminUID = null;
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 window.location.href = "login.html";
                 return;
             }
+            currentAdminUID = user.uid;
 
-            // Check role from Firestore
-            const userDoc = await getDocs(collection(db, "users"));
-            let isAdmin = false;
-            userDoc.forEach(doc => {
-                if (doc.id === user.uid && doc.data().role === "admin") {
+            // Check role from Firestore (Simplified check for demo)
+            try {
+                const userDocRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
+                
+                let isAdmin = false;
+
+                if (userDoc.exists() && userDoc.data().role === "admin") {
                     isAdmin = true;
-                    document.getElementById("adminName").textContent = doc.data().email || "Admin";
+                    document.getElementById("adminName").textContent = userDoc.data().email || "Admin";
                 }
-            });
 
-            if (!isAdmin) {
-                alert("Access denied. You are not an admin.");
-                await signOut(auth);
-                window.location.href = "login.html";
+                if (!isAdmin) {
+                    alert("Access denied. You are not an admin.");
+                    await signOut(auth);
+                    window.location.href = "login.html";
+                } else {
+                    // Admin is logged in, fetch initial totals
+                    fetchTotals();
+                }
+            } catch (error) {
+                 console.error("Admin check failed:", error);
+                 alert("Authentication error. Redirecting to login.");
+                 await signOut(auth);
+                 window.location.href = "login.html";
             }
         });
 
@@ -373,25 +588,26 @@
             window.location.href = "login.html";
         });
 
-        // Fetch totals
+        // Fetch totals for the dashboard overview
         async function fetchTotals() {
-            const usersSnap = await getDocs(collection(db, "users"));
-            const productsSnap = await getDocs(collection(db, "products"));
+            try {
+                const usersSnap = await getDocs(collection(db, "users"));
+                const productsSnap = await getDocs(collection(db, "products"));
 
-            document.getElementById("totalUsers").textContent = usersSnap.size;
-            document.getElementById("totalProducts").textContent = productsSnap.size;
+                document.getElementById("totalUsers").textContent = usersSnap.size;
+                document.getElementById("totalProducts").textContent = productsSnap.size;
 
-            // Optional: calculate total sales
-            let totalSales = 0;
-            const salesSnap = await getDocs(collection(db, "sales")); // if you have a 'sales' collection
-            salesSnap.forEach(doc => {
-                totalSales += doc.data().amount || 0;
-            });
-            document.getElementById("totalSales").textContent = `$${totalSales}`;
+                // Optional: calculate total sales
+                let totalSales = 0;
+                const salesSnap = await getDocs(collection(db, "sales")); 
+                salesSnap.forEach(doc => {
+                    totalSales += doc.data().amount || 0;
+                });
+                document.getElementById("totalSales").textContent = `$${totalSales.toFixed(2)}`;
+            } catch (error) {
+                console.error("Error fetching totals:", error);
+            }
         }
-
-        fetchTotals();
-
     </script>
 
 </body>
