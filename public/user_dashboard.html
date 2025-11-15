@@ -15,6 +15,7 @@
             --shadow-light: 0 4px 6px rgba(0,0,0,0.05);
             --shadow-hover: 0 8px 16px rgba(0,0,0,0.1);
             --card-background: #ffffff;
+            --success-color: #22c55e; /* Green */
         }
 
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins', sans-serif}
@@ -43,7 +44,7 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 25px; /* This adds the required space between links */
+            gap: 25px; 
         }
 
         .nav-links a{
@@ -53,6 +54,29 @@
             transition:color 0.2s;
         }
         .nav-links a:hover{color:var(--primary-color)}
+
+        /* --- CART ICON STYLE --- */
+        .cart-icon-container {
+            position: relative;
+            padding: 0 10px;
+            cursor: pointer;
+        }
+        .cart-icon-container i {
+            font-size: 20px;
+            color: var(--primary-color);
+        }
+        #cartCount {
+            position: absolute;
+            top: -8px;
+            right: -5px;
+            background: #ef4444; 
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1;
+        }
 
         /* User Profile in Header */
         .user-profile-header {
@@ -75,7 +99,7 @@
             color: var(--text-color);
         }
         .logout-btn { 
-            background: #ef4444; /* Red color for log out */
+            background: #ef4444; 
             border: none;
             color: white;
             padding: 8px 14px;
@@ -137,15 +161,53 @@
             border-radius:14px;
             box-shadow:var(--shadow-light);
             padding:16px;
-            cursor:pointer;
             transition:0.2s;
-            min-height: 380px; /* Ensure uniform card height */
+            min-height: 420px; /* Increased height to fit new controls */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .product-card:hover{transform:translateY(-5px); box-shadow:var(--shadow-hover);}
         .product-card img{width:100%;height:220px;object-fit:cover;border-radius:10px;margin-bottom:15px}
         .product-card h3{font-size:20px;font-weight:600;margin-bottom:6px}
         .product-card p{color:#6b7280;font-size:15px;margin-bottom:10px}
         .price{font-size:20px;font-weight:700;color:#ef4444;}
+        
+        /* --- NEW: Cart Controls Style --- */
+        .cart-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .cart-controls input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 70px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .cart-controls button {
+            background: var(--success-color); 
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            flex-grow: 1; /* Make the button fill available space */
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cart-controls button:hover:not(:disabled) { background: #15803d; }
+        .cart-controls button i { margin-right: 8px; }
+        .cart-controls button:disabled {
+            background: #d1d5db; /* Light gray when disabled */
+            cursor: not-allowed;
+        }
 
         /* Footer */
         footer{margin-top:0;background:#1f2937;color:#fff;padding:40px;text-align:center;font-size:14px}
@@ -157,8 +219,10 @@
             .section { padding: 40px 20px; }
             header { padding: 15px 20px; }
             .nav-content { flex-direction: column; align-items: flex-end; gap: 10px; }
-            .nav-links { gap: 15px; } /* Slightly reduce gap on mobile */
+            .nav-links { gap: 15px; } 
             .user-profile-header { padding-left: 0; border-left: none; }
+            .cart-controls { flex-direction: column; }
+            .cart-controls input { width: 100%; }
         }
     </style>
 </head>
@@ -172,6 +236,10 @@
                 <a href="#categories">Categories</a>
                 <a href="#products">Products</a>
                 <a href="contact.html">Contact</a>
+                <div class="cart-icon-container" title="View Shopping Cart">
+                    <i class="fas fa-shopping-cart"></i> 
+                    <span id="cartCount">0</span>
+                </div>
             </div>
             <div class="user-profile-header">
                 <img src="https://www.gravatar.com/avatar?d=mp" alt="User Profile" />
@@ -193,7 +261,6 @@
     <section class="section" id="categories">
         <h2>Shop by Category</h2>
         <div class="categories">
-            
             <div class="category-card">
                 <img src="https://images.pexels.com/photos/47261/pexels-photo-47261.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Smartphones" />
                 <h3>Smartphones</h3>
@@ -208,7 +275,7 @@
                 <img src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Smart Home Devices" />
                 <h3>Smart Home Devices</h3>
             </div>
-    
+ 
         </div>
     </section>
 
@@ -228,8 +295,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        // 🟢 NEW: Import Firestore services
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // 🟢 NEW: Import Firestore services for CRUD operations and real-time listening
+        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // **IMPORTANT:** Use your actual Firebase Config
         const firebaseConfig = {
@@ -244,23 +311,106 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        // 🟢 NEW: Initialize Firestore
         const db = getFirestore(app); 
 
+        // --- Global State & Elements ---
+        let currentUserId = null;
         const userNameEl = document.getElementById("userName");
         const welcomeTitleEl = document.getElementById("welcomeTitle");
         const logoutBtn = document.getElementById("logoutBtn");
-        // 🟢 NEW: DOM element for products
         const dynamicProductGrid = document.getElementById('dynamicProductGrid');
+        // 🟢 NEW: Cart Count Element
+        const cartCountElement = document.getElementById('cartCount');
 
+        // --- 1. Real-Time Cart Counter (Listener) ---
+        function subscribeToCartUpdates(userId) {
+            // Reference to the carts subcollection: users/{userId}/carts
+            const cartCollectionRef = collection(db, "users", userId, "carts");
+            
+            // onSnapshot provides real-time updates for the cart count
+            onSnapshot(cartCollectionRef, (snapshot) => {
+                let totalItemsInCart = 0;
+                snapshot.forEach((doc) => {
+                    totalItemsInCart += doc.data().quantity;
+                });
+                cartCountElement.textContent = totalItemsInCart;
+            }, (error) => {
+                console.error("Error listening to cart:", error);
+                cartCountElement.textContent = 'Err';
+            });
+        }
+        
+        // --- 2. Add to Cart Functionality ---
+        window.addToCart = async function(productId, price, name, maxStock) {
+            if (!currentUserId) {
+                alert("Please log in to add items to your cart.");
+                return;
+            }
 
-        // --- 🟢 NEW: Function to load all products from Firestore ---
+            // Get the quantity from the input field specific to this product
+            const quantityInput = document.getElementById(`qty_${productId}`);
+            let quantityToAdd = parseInt(quantityInput.value) || 1;
+
+            if (quantityToAdd <= 0 || maxStock <= 0) {
+                 alert("Item is out of stock or invalid quantity selected.");
+                 return;
+            }
+            if (quantityToAdd > maxStock) quantityToAdd = maxStock; // Max out at available stock
+
+            // Reference to the specific cart item document: users/{userId}/carts/{productId}
+            const cartItemRef = doc(db, "users", currentUserId, "carts", productId);
+
+            try {
+                // Check if item already exists in the cart
+                const cartSnapshot = await getDoc(cartItemRef);
+                let finalQuantity = quantityToAdd;
+                let message = "";
+
+                if (cartSnapshot.exists()) {
+                    const existingQuantity = cartSnapshot.data().quantity;
+                    finalQuantity = existingQuantity + quantityToAdd;
+                }
+                
+                // Check against overall stock limit
+                if (finalQuantity > maxStock) {
+                    finalQuantity = maxStock;
+                    const amountAdded = finalQuantity - (cartSnapshot.exists() ? cartSnapshot.data().quantity : 0);
+                    
+                    if (amountAdded > 0) {
+                         message = `Added ${amountAdded} more of ${name}. Total quantity limited by stock (${maxStock}).`;
+                    } else {
+                         message = `${name} is already at maximum quantity (${maxStock}) in your cart.`;
+                    }
+                } else {
+                    message = `Successfully added ${quantityToAdd} of ${name} to cart!`;
+                }
+
+                // If final quantity is 0 or less (shouldn't happen here), skip setDoc
+                if (finalQuantity > 0) {
+                    await setDoc(cartItemRef, {
+                        productId: productId,
+                        name: name,
+                        price: price, // Price at the time of adding
+                        quantity: finalQuantity,
+                        addedAt: new Date().toISOString()
+                    });
+                }
+                
+                alert(message);
+                quantityInput.value = 1; // Reset input after successful add/update
+
+            } catch (error) {
+                console.error("Error adding to cart:", error);
+                alert("Failed to add item to cart. Please try again later.");
+            }
+        }
+
+        // --- 3. Load All Products (Updated to include Cart Controls) ---
         async function loadAllProducts() {
             const loadingStatusEl = document.getElementById('productLoadingStatus');
             dynamicProductGrid.innerHTML = '<div id="productLoadingStatus" style="text-align: center; color: #6b7280; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading latest products...</div>';
             
             try {
-                // Fetch ALL documents from the 'products' collection
                 const querySnapshot = await getDocs(collection(db, "products"));
 
                 if (querySnapshot.empty) {
@@ -271,25 +421,49 @@
                 let productsHTML = '';
                 querySnapshot.forEach((doc) => {
                     const product = doc.data();
+                    const productId = doc.id;
+                    const stock = product.stock || 0;
+                    const price = product.price.toFixed(2);
                     
-                    // Set fallback for image URL
                     const imageUrl = product.imageURL && product.imageURL !== 'placeholder.jpg' 
                                      ? product.imageURL 
                                      : 'https://via.placeholder.com/280x220?text=J2+Nexus+Product';
                     
-                    // Create a product card using the dashboard's existing CSS classes
+                    // Determine if the product is out of stock
+                    const outOfStock = stock <= 0;
+                    const stockText = outOfStock ? 'Out of Stock' : `Stock: ${stock}`;
+                    const stockColor = outOfStock ? '#ef4444' : '#10b981';
+
+                    // 🟢 NEW: Product card with cart controls
                     productsHTML += `
                         <div class="product-card">
-                            <img src="${imageUrl}" alt="${product.name}" />
-                            <h3>${product.name}</h3>
-                            <p>${product.description.substring(0, 50)}...</p>
-                            <div class="price">₱${product.price.toLocaleString('en-PH', {minimumFractionDigits: 2})}</div>
-                            <p style="font-size: 12px; color: #10b981; margin-top: 5px;">Stock: ${product.stock}</p>
+                            <div>
+                                <img src="${imageUrl}" alt="${product.name}" />
+                                <h3>${product.name}</h3>
+                                <p>${product.description.substring(0, 50)}...</p>
+                                <div class="price">₱${product.price.toLocaleString('en-PH', {minimumFractionDigits: 2})}</div>
+                                <p style="font-size: 12px; color: ${stockColor}; margin-top: 5px;">${stockText}</p>
+                            </div>
+                            
+                            <div class="cart-controls">
+                                <input type="number" 
+                                       id="qty_${productId}" 
+                                       value="1" 
+                                       min="1" 
+                                       max="${stock}" 
+                                       ${outOfStock ? 'disabled' : ''} 
+                                />
+                                <button 
+                                    onclick="addToCart('${productId}', ${price}, '${product.name}', ${stock})"
+                                    ${outOfStock ? 'disabled' : ''}
+                                >
+                                    <i class="fas fa-cart-plus"></i> ${outOfStock ? 'Sold Out' : 'Add to Cart'}
+                                </button>
+                            </div>
                         </div>
                     `;
                 });
                 
-                // Replace the loading message with the products
                 dynamicProductGrid.innerHTML = productsHTML;
 
             } catch (error) {
@@ -303,17 +477,16 @@
         // Check authentication state on page load
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in
+                currentUserId = user.uid; // 🟢 Set global user ID
                 const email = user.email;
                 const displayName = email.split('@')[0];
-                userNameEl.textContent = displayName; // Display name before @
+                userNameEl.textContent = displayName; 
                 welcomeTitleEl.textContent = `Welcome, ${displayName}!`;
                 
-                // 🟢 NEW: Load products immediately after user verification
                 loadAllProducts(); 
+                subscribeToCartUpdates(currentUserId); // 🟢 Start cart listener
                 
             } else {
-                // User is signed out, redirect to login
                 window.location.href = "login.html";
             }
         });
