@@ -121,10 +121,45 @@
     </div>
   </section>
 
-  <footer>
-    © 2025 MyShop — All Rights Reserved
-  </footer>
-
-</body>
-</html>
+    <!-- Your existing footer -->
+    <footer>
+        © 2025 MyShop — All Rights Reserved
+      </footer>
+    
+      <!-- ADD THIS SCRIPT RIGHT BELOW FOOTER -->
+      <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    
+        const firebaseConfig = {
+          apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
+          authDomain: "j2nexuss-a7b99.firebaseapp.com",
+          projectId: "j2nexuss-a7b99",
+          storageBucket: "j2nexuss-a7b99.firebasestorage.app",
+          messagingSenderId: "456617087462",
+          appId: "1:456617087462:web:be5dba59b5a117cab38627",
+          measurementId: "G-9JQEGSHWHM"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+    
+        // Redirect to login if user is not logged in
+        onAuthStateChanged(auth, (user) => {
+          if (!user) {
+            window.location.href = "login.html";
+          }
+        });
+    
+        // Logout functionality
+        const logoutLink = document.querySelector('nav a[href="login.html"]');
+        logoutLink.addEventListener("click", async (e) => {
+          e.preventDefault();
+          await signOut(auth);
+          window.location.href = "login.html";
+        });
+      </script>
+    
+    </body>
+    </html>    
 images.pexels.com
