@@ -14,6 +14,7 @@
             --text-color: #1f2937;
             --shadow-light: 0 4px 6px rgba(0,0,0,0.05);
             --shadow-hover: 0 8px 16px rgba(0,0,0,0.1);
+            --card-background: #ffffff;
         }
 
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins', sans-serif}
@@ -30,18 +31,28 @@
             position:sticky;top:0;z-index:50
         }
         .logo{font-size:26px;font-weight:700;color:var(--primary-color);text-decoration:none}
+        
+        /* Combined navigation and profile container */
         .nav-content {
             display: flex;
             align-items: center;
             gap: 25px;
         }
-        nav a{
+        
+        /* New container for navigation links (with corrected spacing) */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px; /* This adds the required space between links */
+        }
+
+        .nav-links a{
             text-decoration:none;
             color:#4b5563;
             font-weight:500;
             transition:color 0.2s;
         }
-        nav a:hover{color:var(--primary-color)}
+        .nav-links a:hover{color:var(--primary-color)}
 
         /* User Profile in Header */
         .user-profile-header {
@@ -75,7 +86,7 @@
         }
         .logout-btn:hover { background: #dc2626; }
 
-        /* Hero (Same as index) */
+        /* Hero */
         .hero{
             display:flex;
             align-items:center;
@@ -100,14 +111,14 @@
         .hero button:hover{opacity:0.9; transform: translateY(-1px);}
         .hero img{width:500px;height:400px;object-fit:cover;border-radius:20px;box-shadow:0 15px 40px rgba(79, 70, 229, 0.3);}
 
-        /* Sections (Same as index) */
+        /* Sections */
         .section{padding:80px 50px}
         .section h2{font-size:32px;font-weight:700;margin-bottom:30px;text-align:center;}
 
         /* Categories */
         .categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:30px}
         .category-card{
-            background:var(--card-background, #fff);
+            background:var(--card-background);
             padding:25px;
             border-radius:14px;
             text-align:center;
@@ -122,7 +133,7 @@
         /* Featured products */
         .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px}
         .product-card{
-            background:var(--card-background, #fff);
+            background:var(--card-background);
             border-radius:14px;
             box-shadow:var(--shadow-light);
             padding:16px;
@@ -145,7 +156,7 @@
             .section { padding: 40px 20px; }
             header { padding: 15px 20px; }
             .nav-content { flex-direction: column; align-items: flex-end; gap: 10px; }
-            nav { width: 100%; display: flex; justify-content: flex-end;}
+            .nav-links { gap: 15px; } /* Slightly reduce gap on mobile */
             .user-profile-header { padding-left: 0; border-left: none; }
         }
     </style>
@@ -155,12 +166,12 @@
     <header>
         <a href="user_dashboard.html" class="logo">J2 Nexus</a>
         <div class="nav-content">
-            <nav>
+            <div class="nav-links">
                 <a href="user_dashboard.html">Home</a>
                 <a href="#categories">Categories</a>
                 <a href="#products">Products</a>
                 <a href="contact.html">Contact</a>
-            </nav>
+            </div>
             <div class="user-profile-header">
                 <img src="https://www.gravatar.com/avatar?d=mp" alt="User Profile" />
                 <span class="username-text" id="userName">Loading...</span>
@@ -264,8 +275,9 @@
             if (user) {
                 // User is signed in
                 const email = user.email;
-                userNameEl.textContent = email.split('@')[0]; // Display name before @
-                welcomeTitleEl.textContent = `Welcome, ${email.split('@')[0]}!`;
+                const displayName = email.split('@')[0];
+                userNameEl.textContent = displayName; // Display name before @
+                welcomeTitleEl.textContent = `Welcome, ${displayName}!`;
             } else {
                 // User is signed out, redirect to login
                 window.location.href = "login.html";
