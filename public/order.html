@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J2 Nexus — Order History</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* --- REUSED HEADER AND BODY STYLES (Match user_dashboard) --- */
+        :root {
+            --primary-color: #4f46e5;
+            --light-bg: #f3f4f6;
+            --text-color: #1f2937;
+            --shadow-light: 0 4px 6px rgba(0,0,0,0.05);
+            --card-background: #ffffff;
+            --danger-color: #ef4444;
+            --pending-color: #f59e0b;
+            --success-color: #22c55e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: var(--light-bg); color: var(--text-color); }
+
+        header {
+            background: #fff; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: var(--shadow-light); position: sticky; top: 0; z-index: 50;
+        }
+        .logo { font-size: 26px; font-weight: 700; color: var(--primary-color); text-decoration: none; }
+        .nav-content { display: flex; align-items: center; gap: 25px; }
+        .nav-links { display: flex; align-items: center; gap: 25px; }
+        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--primary-color); }
+        .user-profile-header { display: flex; align-items: center; gap: 15px; padding-left: 20px; border-left: 1px solid #e5e7eb; }
+        .user-profile-header img { height: 35px; width: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
+        .username-text { font-size: 15px; font-weight: 600; color: var(--text-color); }
+        .logout-btn { background: var(--danger-color); border: none; color: white; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        .logout-btn:hover { background: #dc2626; }
+
+        /* --- ORDER HISTORY SPECIFIC STYLES --- */
+        .orders-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 30px;
+        }
+        .orders-container h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .order-card {
+            background: var(--card-background);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-light);
+            border-left: 5px solid var(--primary-color);
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .order-info {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .order-id { font-weight: 600; color: var(--primary-color); }
+        .order-total { font-size: 18px; font-weight: 700; color: var(--danger-color); }
+
+        .order-items-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            padding: 5px 0;
+            border-bottom: 1px dotted #e5e7eb;
+        }
+        .item-details { font-weight: 500; }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+        .status-Pending { background-color: #fef3c7; color: var(--pending-color); }
+        .status-Shipped { background-color: #d1fae5; color: var(--success-color); }
+        .status-Delivered { background-color: #e0f2f1; color: #064e3b; }
+        .status-Cancelled { background-color: #fee2e2; color: var(--danger-color); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="user_dashboard.html" class="logo">J2 Nexus</a>
+        <div class="nav-content">
+            <div class="nav-links">
+                <a href="user_dashboard.html">Home</a>
+                <a href="orders.html" style="color: var(--primary-color);">Orders</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="user-profile-header">
+                <img src="https://www.gravatar.com/avatar?d=mp" alt="User Profile" />
+                <span class="username-text" id="userName">Loading...</span>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="orders-container">
+        <h1><i class="fas fa-history"></i> My Order History</h1>
+        
+        <div id="ordersList">
+            <p style="text-align: center; padding: 50px;">
+                <i class="fas fa-spinner fa-spin"></i> Loading your orders...
+            </p>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; 
+
+        // **IMPORTANT:** Use your actual Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
+            authDomain: "j2nexuss-a7b99.firebaseapp.com",
+            projectId: "j2nexuss-a7b99",
+            storageBucket: "j2nexuss-a7b99.firebasestorage.app",
+            messagingSenderId: "456617087462",
+            appId: "1:456617087462:web:be5dba59b5a117cab38627",
+            measurementId: "G-9JQEGSHWHM"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app); 
+
+        // --- Global State & Elements ---
+        let currentUserId = null;
+        const userNameEl = document.getElementById("userName");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const ordersListEl = document.getElementById('ordersList');
+
+        // --- 1. Load and Display Orders (Real-Time) ---
+        function loadOrders(userId) {
+            const ordersRef = collection(db, "orders");
+            
+            // Create a query to filter orders by the current user ID and sort by time
+            const userOrdersQuery = query(
+                ordersRef,
+                where("userId", "==", userId),
+                orderBy("timestamp", "desc") // Show newest orders first
+            );
+            
+            // Use onSnapshot to listen for new orders in real-time
+            onSnapshot(userOrdersQuery, (snapshot) => {
+                let ordersHTML = '';
+
+                if (snapshot.empty) {
+                    ordersListEl.innerHTML = `<p style="text-align: center; padding: 50px; color: #6b7280;">
+                        <i class="fas fa-inbox"></i> You haven't placed any orders yet.
+                    </p>`;
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const order = doc.data();
+                    const orderId = doc.id;
+                    const date = new Date(order.timestamp).toLocaleDateString();
+                    
+                    let itemsListHTML = '';
+                    order.items.forEach(item => {
+                        itemsListHTML += `
+                            <li class="order-item">
+                                <span class="item-details">${item.name}</span>
+                                <span>x${item.quantity} | ₱${(item.price * item.quantity).toFixed(2)}</span>
+                            </li>
+                        `;
+                    });
+
+                    ordersHTML += `
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div class="order-info">
+                                    Order ID: <span class="order-id">${orderId.substring(0, 8)}...</span> | 
+                                    Placed on: ${date}
+                                </div>
+                                <span class="status-badge status-${order.status}">${order.status}</span>
+                            </div>
+
+                            <ul class="order-items-list">
+                                ${itemsListHTML}
+                            </ul>
+
+                            <div class="order-total">
+                                Total Paid: ₱${order.totalAmount.toFixed(2)}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                ordersListEl.innerHTML = ordersHTML;
+
+            }, (error) => {
+                console.error("Error loading orders:", error);
+                ordersListEl.innerHTML = `<p style="text-align: center; padding: 50px; color: var(--danger-color);">
+                    <i class="fas fa-exclamation-triangle"></i> Failed to load order history.
+                </p>`;
+            });
+        }
+        
+        // --- 2. Authentication and Setup ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                const email = user.email;
+                const displayName = email.split('@')[0];
+                userNameEl.textContent = displayName;
+                
+                loadOrders(currentUserId); 
+                
+            } else {
+                window.location.href = "login.html"; 
+            }
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener("click", async () => {
+            try {
+                await signOut(auth);
+                window.location.href = "login.html";
+            } catch (error) {
+                console.error("Logout failed:", error);
+            }
+        });
+    </script>
+
+</body>
+</html>
