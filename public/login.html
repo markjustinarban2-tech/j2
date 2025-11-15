@@ -3,136 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - J2 Nexus Technologies</title>
+  <title>Login - J2 Nexus</title>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', Arial, sans-serif; }
-    body { background: #f5f6f8; color: #111; }
-
-    /* Header */
-    header {
-      background: #fff;
-      padding: 18px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-    .logo { font-size: 24px; font-weight: 700; color: #2563eb; text-decoration: none; }
-    nav a {
-      margin-left: 20px;
-      text-decoration: none;
-      color: #444;
-      font-weight: 500;
-    }
-    nav a:hover {
-      color: #2563eb;
-    }
-
-    /* Login Section */
-    main {
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: calc(100vh - 80px); /* Adjusted for fixed header */
-      padding: 20px;
+      height: 100vh;
+      margin: 0;
     }
-    .login-container {
-      background: #fff;
+    .login-box {
+      background: white;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
+      width: 320px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
     }
-    .login-container h2 {
+    h2 {
       text-align: center;
       margin-bottom: 20px;
-      color: #003366;
-      font-weight: 700;
-      font-size: 24px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #333;
     }
     input {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
     }
     button {
       width: 100%;
       padding: 12px;
       border: none;
-      border-radius: 5px;
-      background: #2563eb;
+      background: #007bff;
       color: white;
       font-size: 16px;
       cursor: pointer;
-      font-weight: 600;
-    }
-    button:hover { background: #0055a5; }
-    .login-container p {
-      text-align: center;
-      font-size: 14px;
+      border-radius: 6px;
       margin-top: 10px;
     }
-    .login-container a {
-      color: #2563eb;
-      text-decoration: none;
+    button:hover {
+      background: #0056b3;
     }
-    .login-container a:hover { text-decoration: underline; }
-
-    /* Footer */
-    footer {
-      background: #111;
-      color: #fff;
+    .error {
+      color: red;
       text-align: center;
-      padding: 15px 0;
-      font-size: 14px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <a href="#" class="logo">J2 Nexus</a>
-  </header>
+  <div class="login-box">
+    <h2>Login</h2>
 
-  <!-- Login Form -->
-  <main>
-    <div class="login-container">
-      <h2>Sign In</h2>
-      <form id="loginForm">
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="Your Email" required>
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Your Password" required>
-        <button type="submit">Login</button>
-      </form>
-      <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-    </div>
-  </main>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    
+    <button id="loginBtn">Login</button>
 
-  <!-- Footer -->
-  <footer>
-    <p>© 2025 J2 Nexus Technologies. All rights reserved.</p>
-  </footer>
+    <p class="error" id="errorMsg"></p>
+  </div>
 
-  <!-- Firebase & Scripts -->
+  <!-- Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
       authDomain: "j2nexuss-a7b99.firebaseapp.com",
@@ -142,36 +82,51 @@
       appId: "1:456617087462:web:be5dba59b5a117cab38627",
       measurementId: "G-9JQEGSHWHM"
     };
-  
+
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-  
-    // Check if the user is logged in and redirect accordingly
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // If the logged-in user is an admin
-        if (user.email === 'arban@gmail.com') {  // Replace with the admin email
-          window.location.href = 'admin_dashboard.html';  // Redirect to the admin dashboard
-        } else {
-          window.location.href = 'index.html';  // Redirect to the regular home page
-        }
-      }
-    });
-  
-    // Handle login form submission
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    document.getElementById("loginBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      errorMsg.textContent = "";
+
       try {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert("✅ Logged in successfully!");
+        // Sign in user
+        const userCred = await signInWithEmailAndPassword(auth, email, password);
+        const uid = userCred.user.uid;
+
+        // Get role from Firestore
+        const ref = doc(db, "users", uid);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+          errorMsg.textContent = "User role not found!";
+          return;
+        }
+
+        const role = snap.data().role;
+
+        // Redirect based on role
+        if (role === "admin") {
+          window.location.href = "admin-dashboard.html";
+        } else if (role === "seller") {
+          window.location.href = "seller-dashboard.html";
+        } else if (role === "user") {
+          window.location.href = "home.html";
+        } else {
+          errorMsg.textContent = "Unknown role!";
+        }
+
       } catch (error) {
-        console.error(error);
-        alert("⚠️ Login failed: " + error.message);
+        errorMsg.textContent = error.message;
       }
     });
+
   </script>
-  
+
 </body>
 </html>
