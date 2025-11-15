@@ -9,7 +9,7 @@
     <style>
         /* Variables and Global Reset */
         :root {
-            --primary-color: #10b981; /* Green */
+            --primary-color: #3210b9; /* Green */
             --secondary-color: #3b82f6; /* Blue */
             --background-color: #f8fafc;
             --card-background: #ffffff;
@@ -279,23 +279,87 @@
             font-weight: 600;
         }
         
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 9999px;
-            font-size: 12px;
-            font-weight: 600;
+        /* Status Dropdown Styling */
+        .status-select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            /* Default appearance reset */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        .status-select:hover {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .status-pending { background: #fef3c7; color: #f59e0b; }
-        .status-shipped { background: #dbeafe; color: #3b82f6; }
-        .status-delivered { background: #d1fae5; color: var(--primary-color); }
+        /* Custom background for dropdown options and select */
+        .status-select.status-pending, .status-pending { background-color: #fef3c7; color: #b45309; }
+        .status-select.status-shipped, .status-shipped { background-color: #dbeafe; color: #1e40af; }
+        .status-select.status-delivered, .status-delivered { background-color: #d1fae5; color: #065f46; }
 
+        /* Modal Styles for Order Details */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: none; /* Hidden by default */
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: var(--card-background);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-item-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            border-top: 1px dashed #e5e7eb;
+            padding-top: 15px;
+        }
+        .modal-item-list li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #f3f4f6;
+            display: flex;
+            justify-content: space-between;
+        }
+        .modal-item-list li span {
+            font-weight: 600;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="logo">Seller Hub</div>
+        <div class="logo">J2 Nexus Seller</div>
         <ul>
             <li class="active" data-tab="dashboard"><a href="#" onclick="switchTab('dashboard'); return false;"><i class="fas fa-chart-line"></i>Dashboard</a></li>
             <li data-tab="products"><a href="#" onclick="switchTab('products'); return false;"><i class="fas fa-box-open"></i>My Products</a></li>
@@ -333,32 +397,20 @@
             <div id="orders" class="seller-tab-content">
                 <h2 style="margin-bottom: 20px;">🚚 Recent Orders</h2>
                 <div id="ordersList">
-                    <table class="order-table">
+                    <p style="text-align: center; color: #6b7280;"><i class="fas fa-spinner fa-spin"></i> Loading orders...</p>
+                    <table class="order-table" id="orderTable">
                         <thead>
                             <tr>
                                 <th>Order ID</th>
-                                <th>Product</th>
-                                <th>Qty</th>
-                                <th>Total</th>
+                                <th>Customer</th>
+                                <th>Total (Seller's)</th>
+                                <th>Date</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>#90123</td>
-                                <td>Wireless Headset</td>
-                                <td>1</td>
-                                <td>₱1,500.00</td>
-                                <td><span class="status-badge status-shipped">Shipped</span></td>
-                            </tr>
-                            <tr>
-                                <td>#90124</td>
-                                <td>Ergonomic Keyboard</td>
-                                <td>2</td>
-                                <td>₱4,000.00</td>
-                                <td><span class="status-badge status-pending">Pending</span></td>
-                            </tr>
-                        </tbody>
+                        <tbody id="orderTableBody">
+                            </tbody>
                     </table>
                 </div>
             </div>
@@ -397,11 +449,26 @@
 
     </div>
 
+    <div id="orderDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2>Order Details (<span id="modalOrderId"></span>)</h2>
+            <p><strong>Customer:</strong> <span id="modalCustomerName"></span></p>
+            <p><strong>Address:</strong> <span id="modalAddress"></span></p>
+            <p><strong>Payment:</strong> <span id="modalPaymentMethod"></span></p>
+            
+            <h3>Items by You</h3>
+            <ul class="modal-item-list" id="modalItemList">
+                </ul>
+            
+            <h3 style="text-align: right; margin-top: 15px;">Seller Total: <span id="modalTotalAmount" style="color: var(--primary-color);"></span></h3>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        // 🟢 UPDATED IMPORTS: Added doc, getDoc, updateDoc
-        import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; 
+        import { getFirestore, collection, getDocs, doc, addDoc, deleteDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; 
 
         // --- 1. Firebase Configuration (USE YOURS) ---
         const firebaseConfig = {
@@ -424,6 +491,12 @@
         const sellerProductGrid = document.getElementById('sellerProductGrid');
         const addProductForm = document.getElementById('addProductForm');
         const formMessage = document.getElementById('formMessage');
+        // NEW ORDER ELEMENTS
+        const orderTableBody = document.getElementById('orderTableBody');
+        const ordersListDiv = document.getElementById('ordersList');
+        const orderDetailsModal = document.getElementById('orderDetailsModal');
+        const closeModalBtn = document.getElementById('closeModal');
+
 
         // --- 2. Tab Switching Functionality ---
         window.switchTab = function(tabId) {
@@ -439,9 +512,11 @@
                 }
             });
 
-            // Load products only when switching to the 'products' tab
+            // Load data only when switching to the relevant tab
             if (tabId === 'products') {
                 loadSellerProducts();
+            } else if (tabId === 'orders') {
+                loadSellerOrders();
             }
         };
 
@@ -453,8 +528,8 @@
             
             try {
                 const productsCollection = collection(db, "products");
-                // Fetch all products where the sellerId matches the current user's UID
-                const querySnapshot = await getDocs(productsCollection); // In a real app, you'd use a Firestore query
+                // Note: In a real app, use a query (where('sellerId', '==', currentSellerId)) for efficiency.
+                const querySnapshot = await getDocs(productsCollection); 
 
                 let productsHTML = '';
                 let count = 0;
@@ -462,7 +537,7 @@
                 querySnapshot.forEach((doc) => {
                     const product = doc.data();
                     
-                    // Client-side filtering (Use Firestore queries for large datasets!)
+                    // Client-side filtering (due to generic getDocs above)
                     if (product.sellerId === currentSellerId) { 
                         count++;
                         
@@ -505,7 +580,7 @@
         }
 
 
-        // --- 4. Add Product Handler ---
+        // --- 4. Add Product Handler (Remains the same) ---
         addProductForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             formMessage.textContent = 'Submitting...';
@@ -541,7 +616,7 @@
             }
         });
 
-        // --- 5. Delete Product Handler ---
+        // --- 5. Delete Product Handler (Remains the same) ---
         async function deleteProduct(productId) {
             if (!confirm("Are you sure you want to delete this product listing permanently?")) {
                 return;
@@ -559,38 +634,150 @@
                 alert(`Failed to delete product: ${error.message}`);
             }
         }
+        
+        // ----------------------------------------------------
+        // --- 6. Order Management Functions 🟢 NEW SECTION ---
+        // ----------------------------------------------------
 
-        // --- 6. Stock Management (Conceptual function for sales fulfillment) ---
-        // This function would be called when an order is moved to 'Shipped' or 'Completed'.
-        // It is defined here to ensure your seller dashboard is ready for e-commerce logic.
-        async function decrementStock(productId, quantitySold) {
-            if (quantitySold <= 0) return;
+        async function loadSellerOrders() {
+            if (!currentSellerId) return;
 
-            const productRef = doc(db, "products", productId);
+            orderTableBody.innerHTML = ''; // Clear existing orders
+            ordersListDiv.querySelector('p')?.remove();
+            
+            ordersListDiv.insertAdjacentHTML('afterbegin', '<p style="text-align: center; color: #6b7280;"><i class="fas fa-spinner fa-spin"></i> Fetching your orders...</p>');
+            const loadingMessage = ordersListDiv.querySelector('p');
 
             try {
-                const productSnap = await getDoc(productRef);
+                const ordersCollection = collection(db, "orders");
+                // Fetch all orders (relies on the loosened security rule)
+                const querySnapshot = await getDocs(ordersCollection); 
 
-                if (productSnap.exists()) {
-                    const currentStock = productSnap.data().stock || 0;
-                    const newStock = Math.max(0, currentStock - quantitySold);
-
-                    await updateDoc(productRef, {
-                        stock: newStock
-                    });
-                    console.log(`Successfully reduced stock for ${productId} from ${currentStock} to ${newStock}.`);
+                let ordersHTML = '';
+                let count = 0;
+                
+                querySnapshot.forEach((doc) => {
+                    const order = doc.data();
                     
-                    // You would refresh the product list if the current tab is 'products'
-                    // if (document.getElementById('products').classList.contains('active')) loadSellerProducts(); 
+                    // Client-side filtering: Check if ANY item in the order was sold by the current seller
+                    const relevantItems = order.items.filter(item => item.sellerId === currentSellerId);
+                    
+                    if (relevantItems.length > 0) { 
+                        count++;
+                        
+                        // Calculate total for this seller only
+                        const sellerTotal = relevantItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                        
+                        const date = new Date(order.timestamp).toLocaleDateString();
+                        const statusClass = `status-${order.status.toLowerCase()}`;
+                        
+                        // Create the HTML for the order row
+                        ordersHTML += `
+                            <tr>
+                                <td>${doc.id.substring(0, 6)}...</td>
+                                <td>${order.fullName}</td>
+                                <td>₱${sellerTotal.toLocaleString('en-PH', {minimumFractionDigits: 2})}</td>
+                                <td>${date}</td>
+                                <td>
+                                    <select class="status-select ${statusClass}" data-order-id="${doc.id}">
+                                        <option value="Pending" class="status-pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                        <option value="Shipped" class="status-shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                        <option value="Delivered" class="status-delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="edit-btn" onclick='showOrderDetails("${doc.id}", ${JSON.stringify(order)})'><i class="fas fa-eye"></i> View</button>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
 
-                } else {
-                    console.error(`Product ID ${productId} not found.`);
+                loadingMessage.remove(); // Remove loading message
+                orderTableBody.innerHTML = ordersHTML;
+
+                if (count === 0) {
+                    orderTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6b7280;">No orders found for your products.</td></tr>';
                 }
+                
+                // Attach event listeners for status change
+                document.querySelectorAll('.status-select').forEach(select => {
+                    select.addEventListener('change', (e) => updateOrderStatus(e.target.dataset.orderId, e.target.value));
+                });
+                
             } catch (error) {
-                console.error("Error decrementing stock:", error);
+                console.error("Error loading seller orders:", error);
+                loadingMessage.textContent = 'Error fetching orders. Access denied or console error.';
+                loadingMessage.style.color = '#ef4444';
             }
         }
         
+        // Function to update order status
+        async function updateOrderStatus(orderId, newStatus) {
+            const orderRef = doc(db, "orders", orderId);
+            try {
+                // The update only sends 'status' and 'updatedAt' which is allowed by the security rules
+                await updateDoc(orderRef, {
+                    status: newStatus,
+                    updatedAt: new Date().toISOString()
+                });
+                
+                // Update the status class on the select element for visual feedback
+                const selectElement = document.querySelector(`[data-order-id="${orderId}"]`);
+                if (selectElement) {
+                    selectElement.className = `status-select status-${newStatus.toLowerCase()}`;
+                }
+                alert(`Order ${orderId.substring(0, 6)}... status updated to ${newStatus}.`);
+
+            } catch (error) {
+                console.error("Error updating order status:", error);
+                alert(`Failed to update status: ${error.message}. Check Firestore rules.`);
+                // Revert select on failure
+                loadSellerOrders(); 
+            }
+        }
+        
+        // Function to show order details in a modal
+        window.showOrderDetails = function(orderId, order) {
+            
+            // Filter items relevant only to this seller 
+            const sellerItems = order.items.filter(item => item.sellerId === currentSellerId);
+
+            // Populate Modal
+            document.getElementById('modalOrderId').textContent = orderId.substring(0, 8);
+            document.getElementById('modalCustomerName').textContent = order.fullName;
+            document.getElementById('modalAddress').textContent = order.address;
+            document.getElementById('modalPaymentMethod').textContent = order.paymentMethod.toUpperCase();
+            
+            let itemListHTML = '';
+            let total = 0;
+            sellerItems.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+                itemListHTML += `
+                    <li>
+                        <span>${item.name} (x${item.quantity})</span>
+                        <span>₱${subtotal.toFixed(2)}</span>
+                    </li>
+                `;
+            });
+            document.getElementById('modalItemList').innerHTML = itemListHTML;
+            document.getElementById('modalTotalAmount').textContent = `₱${total.toLocaleString('en-PH', {minimumFractionDigits: 2})}`;
+
+            orderDetailsModal.style.display = 'block';
+        }
+        
+        // Modal close functionality
+        closeModalBtn.onclick = function() {
+            orderDetailsModal.style.display = 'none';
+        }
+        window.onclick = function(event) {
+            if (event.target == orderDetailsModal) {
+                orderDetailsModal.style.display = 'none';
+            }
+        }
+
+
         // --- 7. Authentication and Setup ---
 
         // Check authentication state on page load
@@ -598,7 +785,7 @@
             if (user) {
                 currentSellerId = user.uid; // Set the global seller ID
 
-                // Check role (Optional but highly recommended)
+                // Check role 
                 const userDocRef = doc(db, "users", user.uid);
                 const userDoc = await getDoc(userDocRef);
                 const role = userDoc.exists() ? userDoc.data().role : 'user';
@@ -615,8 +802,9 @@
                 document.getElementById("sellerName").textContent = displayName;
                 document.getElementById("welcomeTitle").textContent = `Hello, ${displayName}!`;
 
-                // Load initial data (products if the default tab is products, otherwise load stats)
+                // Load initial data (start on 'dashboard' but load orders and products for the first time)
                 loadSellerProducts(); 
+                loadSellerOrders(); 
                 
             } else {
                 // User is signed out, redirect to login
