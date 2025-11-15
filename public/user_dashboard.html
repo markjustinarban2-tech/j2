@@ -139,6 +139,7 @@
             padding:16px;
             cursor:pointer;
             transition:0.2s;
+            min-height: 380px; /* Ensure uniform card height */
         }
         .product-card:hover{transform:translateY(-5px); box-shadow:var(--shadow-hover);}
         .product-card img{width:100%;height:220px;object-fit:cover;border-radius:10px;margin-bottom:15px}
@@ -213,33 +214,9 @@
 
     <section class="section" id="products">
         <h2>Featured Products</h2>
-        <div class="products">
-            <div class="product-card">
-                <img src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
-                <h3>Stylish Sneakers</h3>
-                <p>Comfortable everyday shoes designed for style.</p>
-                <div class="price">₱1,299</div>
-            </div>
-
-            <div class="product-card">
-                <img src="https://images.pexels.com/photos/18105/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
-                <h3>Smart Headphones</h3>
-                <p>Noise-cancelling with superior sound quality.</p>
-                <div class="price">₱2,799</div>
-            </div>
-
-            <div class="product-card">
-                <img src="https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
-                <h3>Classic Wristwatch</h3>
-                <p>Elegant design for any occasion.</p>
-                <div class="price">₱899</div>
-            </div>
-
-            <div class="product-card">
-                <img src="https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
-                <h3>Wireless Speaker</h3>
-                <p>High-quality sound with long battery life.</p>
-                <div class="price">₱1,999</div>
+        <div class="products" id="dynamicProductGrid"> 
+            <div id="productLoadingStatus" style="text-align: center; color: #6b7280; padding: 20px;">
+                <i class="fas fa-spinner fa-spin"></i> Loading latest products...
             </div>
         </div>
     </section>
@@ -251,7 +228,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        
+        // 🟢 NEW: Import Firestore services
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
         // **IMPORTANT:** Use your actual Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
@@ -265,10 +244,61 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        // 🟢 NEW: Initialize Firestore
+        const db = getFirestore(app); 
 
         const userNameEl = document.getElementById("userName");
         const welcomeTitleEl = document.getElementById("welcomeTitle");
         const logoutBtn = document.getElementById("logoutBtn");
+        // 🟢 NEW: DOM element for products
+        const dynamicProductGrid = document.getElementById('dynamicProductGrid');
+
+
+        // --- 🟢 NEW: Function to load all products from Firestore ---
+        async function loadAllProducts() {
+            const loadingStatusEl = document.getElementById('productLoadingStatus');
+            dynamicProductGrid.innerHTML = '<div id="productLoadingStatus" style="text-align: center; color: #6b7280; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading latest products...</div>';
+            
+            try {
+                // Fetch ALL documents from the 'products' collection
+                const querySnapshot = await getDocs(collection(db, "products"));
+
+                if (querySnapshot.empty) {
+                    dynamicProductGrid.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No products are currently listed in the marketplace. Check back soon!</p>';
+                    return;
+                }
+
+                let productsHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    
+                    // Set fallback for image URL
+                    const imageUrl = product.imageURL && product.imageURL !== 'placeholder.jpg' 
+                                     ? product.imageURL 
+                                     : 'https://via.placeholder.com/280x220?text=J2+Nexus+Product';
+                    
+                    // Create a product card using the dashboard's existing CSS classes
+                    productsHTML += `
+                        <div class="product-card">
+                            <img src="${imageUrl}" alt="${product.name}" />
+                            <h3>${product.name}</h3>
+                            <p>${product.description.substring(0, 50)}...</p>
+                            <div class="price">₱${product.price.toLocaleString('en-PH', {minimumFractionDigits: 2})}</div>
+                            <p style="font-size: 12px; color: #10b981; margin-top: 5px;">Stock: ${product.stock}</p>
+                        </div>
+                    `;
+                });
+                
+                // Replace the loading message with the products
+                dynamicProductGrid.innerHTML = productsHTML;
+
+            } catch (error) {
+                console.error("Error loading all products: ", error);
+                dynamicProductGrid.innerHTML = '<div style="text-align: center; color: #ef4444; padding: 20px;">⚠️ Error loading products. Please check console for details.</div>';
+            }
+        }
+        // --- END loadAllProducts function ---
+
 
         // Check authentication state on page load
         onAuthStateChanged(auth, (user) => {
@@ -278,6 +308,10 @@
                 const displayName = email.split('@')[0];
                 userNameEl.textContent = displayName; // Display name before @
                 welcomeTitleEl.textContent = `Welcome, ${displayName}!`;
+                
+                // 🟢 NEW: Load products immediately after user verification
+                loadAllProducts(); 
+                
             } else {
                 // User is signed out, redirect to login
                 window.location.href = "login.html";
