@@ -32,7 +32,7 @@
             color: var(--text-color);
         }
 
-        /* ===== Sidebar Styles (Unchanged) ===== */
+        /* ===== Sidebar Styles ===== */
         .sidebar {
             width: 280px;
             background-color: var(--card-background);
@@ -43,6 +43,7 @@
             display: flex;
             flex-direction: column;
             border-right: 1px solid #e5e7eb;
+            z-index: 20; /* Ensure sidebar is above main content */
         }
 
         .sidebar .logo {
@@ -98,7 +99,7 @@
             border-top: 1px solid #e5e7eb;
         }
 
-        /* ===== Main Content and Topbar (Unchanged) ===== */
+        /* ===== Main Content and Topbar ===== */
         .main-content {
             margin-left: 280px;
             padding: 0;
@@ -153,7 +154,7 @@
             background: #dc2626;
         }
 
-        /* ===== Dashboard Body Content (Unchanged) ===== */
+        /* ===== Dashboard Body Content & Tabs ===== */
         .dashboard-body {
             padding: 30px;
         }
@@ -218,7 +219,7 @@
             padding-top: 8px;
         }
         
-        /* ===== NEW: Tab Content and Product List Styles ===== */
+        /* ===== Tab Content and Product List Styles (NEW) ===== */
         .admin-tab-content {
             display: none;
         }
@@ -287,7 +288,61 @@
             background: #dc2626;
         }
         
-        /* ===== Footer (Unchanged) ===== */
+        /* ===== User Table Styles (NEW) ===== */
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .user-table th, .user-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .user-table th {
+            background-color: #f3f4f6;
+            color: var(--text-color);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .user-table tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .role-admin {
+            background-color: #fef2f2;
+            color: #ef4444;
+        }
+
+        .role-seller {
+            background-color: #fef9e7;
+            color: #f59e0b;
+        }
+
+        .role-user {
+            background-color: #eff6ff;
+            color: #3b82f6;
+        }
+
+        .user-id {
+            font-family: monospace;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* ===== Footer ===== */
         .admin-footer {
             text-align: center;
             padding: 20px;
@@ -297,7 +352,7 @@
             border-top: 1px solid #e5e7eb;
         }
 
-        /* ===== Media Queries (Unchanged) ===== */
+        /* ===== Media Queries for Responsiveness (Unchanged) ===== */
         @media (max-width: 1024px) {
             .sidebar { width: 230px; }
             .main-content { margin-left: 230px; }
@@ -328,11 +383,11 @@
     <div class="sidebar">
         <div class="logo">J2 Nexus</div>
         <ul id="sidebarNav">
-            <li class="active" data-tab="overview"><a href="#" onclick="switchTab('overview')"><i class="fas fa-chart-line"></i>Dashboard</a></li>
-            <li data-tab="users"><a href="#" onclick="switchTab('users')"><i class="fas fa-users"></i>Users</a></li>
-            <li data-tab="products"><a href="#" onclick="switchTab('products')"><i class="fas fa-box-open"></i>Products</a></li>
-            <li data-tab="analytics"><a href="#" onclick="switchTab('analytics')"><i class="fas fa-chart-bar"></i>Analytics</a></li>
-            <li data-tab="settings"><a href="#" onclick="switchTab('settings')"><i class="fas fa-cog"></i>Settings</a></li>
+            <li class="active" data-tab="overview"><a href="#" onclick="switchTab('overview'); return false;"><i class="fas fa-chart-line"></i>Dashboard</a></li>
+            <li data-tab="users"><a href="#" onclick="switchTab('users'); return false;"><i class="fas fa-users"></i>Users</a></li>
+            <li data-tab="products"><a href="#" onclick="switchTab('products'); return false;"><i class="fas fa-box-open"></i>Products</a></li>
+            <li data-tab="analytics"><a href="#" onclick="switchTab('analytics'); return false;"><i class="fas fa-chart-bar"></i>Analytics</a></li>
+            <li data-tab="settings"><a href="#" onclick="switchTab('settings'); return false;"><i class="fas fa-cog"></i>Settings</a></li>
         </ul>
         <div class="sidebar-footer">
             <p>Admin Panel</p>
@@ -386,16 +441,18 @@
                 </section>
             </div>
             
-            <div id="products" class="admin-tab-content">
-                <h2 style="margin-bottom: 20px;">All Listed Products</h2>
-                <div id="allProductsList" class="product-list-container">
-                    <p style="text-align: center; color: #6b7280;">Loading all product listings...</p>
+            <div id="users" class="admin-tab-content">
+                <h2 style="margin-bottom: 20px;">👥 User Management</h2>
+                <div id="userListContainer" style="background: white; padding: 20px; border-radius: 12px; box-shadow: var(--shadow-light); overflow-x: auto;">
+                    <p style="color: #6b7280; text-align: center;">Loading user data...</p>
                 </div>
             </div>
             
-            <div id="users" class="admin-tab-content">
-                <h2 style="margin-bottom: 20px;">User Management</h2>
-                <p style="color: #6b7280;">User list and management tools go here.</p>
+            <div id="products" class="admin-tab-content">
+                <h2 style="margin-bottom: 20px;">🛍️ All Listed Products</h2>
+                <div id="allProductsList" class="product-list-container">
+                    <p style="text-align: center; color: #6b7280;">Loading all product listings...</p>
+                </div>
             </div>
             
             <div id="analytics" class="admin-tab-content">
@@ -419,9 +476,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        // 🟢 ADD deleteDoc for admin control
         import { getFirestore, collection, getDocs, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; 
 
+        // --- 1. Firebase Configuration (REPLACE with your actual config) ---
         const firebaseConfig = {
             apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
             authDomain: "j2nexuss-a7b99.firebaseapp.com",
@@ -439,8 +496,10 @@
         // --- Global Elements ---
         const allProductsList = document.getElementById('allProductsList');
         const sidebarNav = document.getElementById('sidebarNav');
+        const userListContainer = document.getElementById('userListContainer'); 
 
-        // --- Tab Switching Functionality ---
+
+        // --- 2. Tab Switching Functionality ---
         window.switchTab = function(tabId) {
             document.querySelectorAll('.admin-tab-content').forEach(content => {
                 content.classList.remove('active');
@@ -455,19 +514,76 @@
                 }
             });
             
-            // If switching to products, load the data
+            // Load data when switching to Products or Users tabs
             if (tabId === 'products') {
                 loadAllProducts();
+            } else if (tabId === 'users') {
+                loadAllUsers();
             }
         };
 
 
-        // --- 1. Load All Products Function (Admin View) ---
+        // --- 3. Load All Users Function ---
+        async function loadAllUsers() {
+            userListContainer.innerHTML = '<p style="text-align: center; color: #6b7280;">Fetching all user accounts...</p>';
+            
+            try {
+                const usersCollection = collection(db, "users");
+                const querySnapshot = await getDocs(usersCollection);
+                
+                document.getElementById("totalUsers").textContent = querySnapshot.size;
+
+                if (querySnapshot.empty) {
+                    userListContainer.innerHTML = '<p style="text-align: center; color: #6b7280;">No registered users found.</p>';
+                    return;
+                }
+
+                let tableHTML = `
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Email</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                querySnapshot.forEach((doc) => {
+                    const user = doc.data();
+                    const role = user.role || 'user'; // Default to 'user'
+                    
+                    tableHTML += `
+                        <tr>
+                            <td class="user-id">${doc.id.substring(0, 10)}...</td>
+                            <td>${user.email || 'N/A'}</td>
+                            <td>${user.name || 'Anonymous'}</td>
+                            <td>
+                                <span class="role-badge role-${role}">
+                                    ${role.charAt(0).toUpperCase() + role.slice(1)}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                tableHTML += '</tbody></table>';
+                userListContainer.innerHTML = tableHTML;
+                
+            } catch (error) {
+                console.error("Error loading all users:", error);
+                userListContainer.innerHTML = '<p style="text-align: center; color: #ef4444;">Error fetching users. Check console for details.</p>';
+            }
+        }
+
+
+        // --- 4. Load All Products Function (Admin View) ---
         async function loadAllProducts() {
             allProductsList.innerHTML = '<p style="text-align: center; color: #6b7280;">Fetching all product listings...</p>';
             
             try {
-                // Fetch ALL documents from the 'products' collection (NO WHERE clause)
                 const productsCollection = collection(db, "products");
                 const querySnapshot = await getDocs(productsCollection);
                 
@@ -510,7 +626,7 @@
         }
         
         
-        // --- 2. Admin Delete Product Function ---
+        // --- 5. Admin Delete Product Function ---
         async function deleteProduct(productId) {
             if (!confirm(`ADMIN WARNING: Are you sure you want to permanently delete product ID ${productId}?`)) {
                 return;
@@ -520,7 +636,7 @@
                 const productRef = doc(db, "products", productId);
                 await deleteDoc(productRef);
 
-                alert(`Product ${productId} deleted by Admin.`);
+                alert(`Product ${productId.substring(0, 8)}... deleted by Admin.`);
                 
                 // Refresh the list after deletion
                 loadAllProducts();
@@ -531,7 +647,7 @@
             }
         }
         
-        // --- 3. Event Listener Delegation for Delete Buttons ---
+        // --- 6. Event Listener Delegation for Delete Buttons ---
         allProductsList.addEventListener('click', (e) => {
             const deleteButton = e.target.closest('.delete-btn');
             
@@ -542,7 +658,7 @@
         });
 
 
-        // --- Authentication and Setup ---
+        // --- 7. Authentication and Setup ---
         
         // Redirect if not logged in or not admin
         let currentAdminUID = null;
@@ -553,7 +669,7 @@
             }
             currentAdminUID = user.uid;
 
-            // Check role from Firestore (Simplified check for demo)
+            // Check role from Firestore
             try {
                 const userDocRef = doc(db, "users", user.uid);
                 const userDoc = await getDoc(userDocRef);
@@ -562,7 +678,8 @@
 
                 if (userDoc.exists() && userDoc.data().role === "admin") {
                     isAdmin = true;
-                    document.getElementById("adminName").textContent = userDoc.data().email || "Admin";
+                    // Try to show user name if available, otherwise email
+                    document.getElementById("adminName").textContent = userDoc.data().name || user.email || "Admin";
                 }
 
                 if (!isAdmin) {
@@ -575,7 +692,7 @@
                 }
             } catch (error) {
                  console.error("Admin check failed:", error);
-                 alert("Authentication error. Redirecting to login.");
+                 // If there's a Firebase error, assume they shouldn't be here
                  await signOut(auth);
                  window.location.href = "login.html";
             }
@@ -606,6 +723,8 @@
                 document.getElementById("totalSales").textContent = `$${totalSales.toFixed(2)}`;
             } catch (error) {
                 console.error("Error fetching totals:", error);
+                // Gracefully set to 0 if data isn't available
+                document.getElementById("totalSales").textContent = `$0.00`;
             }
         }
     </script>
