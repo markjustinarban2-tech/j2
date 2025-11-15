@@ -1,170 +1,164 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MyShop — Home</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    body{background:#f5f6f8;color:#111}
-    header{background:#fff;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.05);position:sticky;top:0;z-index:50}
-    .logo{font-size:24px;font-weight:700;color:#2563eb;text-decoration:none}
-    nav a{margin-left:20px;text-decoration:none;color:#444;font-weight:500}
-    nav a:hover{color:#2563eb}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J2 Nexus — User Dashboard</title>
+<style>
+  * { box-sizing: border-box; margin:0; padding:0; font-family:'Segoe UI', Arial, sans-serif; }
+  body { background:#f4f7fc; min-height:100vh; color:#111; }
 
-    /* Hero */
-    .hero{display:flex;align-items:center;justify-content:space-between;padding:80px 32px;background:#eef2ff}
-    .hero h1{font-size:42px;font-weight:800;margin-bottom:14px}
-    .hero p{font-size:18px;color:#444;margin-bottom:24px}
-    .hero button{padding:14px 22px;background:#2563eb;border:0;color:#fff;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
-    .hero button:hover{opacity:0.9}
-    .hero img{width:460px;border-radius:20px;box-shadow:0 10px 30px rgba(37, 99, 235, 0.3)}
+  /* Header */
+  header { background:#2563eb; color:white; padding:18px 32px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:50; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+  header .logo { font-size:24px; font-weight:700; color:white; text-decoration:none; }
+  nav a { margin-left:20px; text-decoration:none; color:white; font-weight:500; transition:0.3s; }
+  nav a:hover { color:#ffeddb; }
+  header button { background:#ff4d4f; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; color:white; transition:0.3s; }
+  header button:hover { background:#d9363e; }
 
-    /* Sections */
-    .section{padding:60px 32px}
-    .section h2{font-size:28px;font-weight:700;margin-bottom:20px}
+  /* Hero */
+  .hero { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:60px 32px; background:#eef2ff; border-radius:10px; margin:20px; }
+  .hero-content { max-width:600px; }
+  .hero h1 { font-size:42px; font-weight:800; margin-bottom:14px; color:#2563eb; }
+  .hero p { font-size:18px; color:#444; margin-bottom:24px; }
+  .hero button { padding:14px 22px; background:#2563eb; border:0; color:#fff; border-radius:10px; font-size:16px; font-weight:600; cursor:pointer; transition:0.3s; }
+  .hero button:hover { opacity:0.9; }
+  .hero img { width:400px; border-radius:20px; box-shadow:0 10px 30px rgba(37,99,235,0.3); }
 
-    .categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px}
-    .category-card{background:#fff;padding:20px;border-radius:14px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.06);cursor:pointer;transition:0.2s}
-    .category-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.1)}
-    .category-card img{width:80px;height:80px;object-fit:cover;margin-bottom:12px;border-radius:50%}
+  /* Sections */
+  .section { padding:60px 32px; }
+  .section h2 { font-size:28px; font-weight:700; margin-bottom:20px; color:#2563eb; }
 
-    /* Featured products */
-    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
-    .product-card{background:#fff;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,0.06);padding:14px;cursor:pointer;transition:0.2s}
-    .product-card:hover{transform:translateY(-4px)}
-    .product-card img{width:100%;height:200px;object-fit:cover;border-radius:10px;margin-bottom:12px}
-    .product-card h3{font-size:18px;font-weight:600;margin-bottom:6px}
-    .product-card p{color:#666;font-size:14px;margin-bottom:10px}
-    .price{font-size:18px;font-weight:700;color:#2563eb}
+  /* Categories */
+  .categories { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; }
+  .category-card { background:#fff; padding:20px; border-radius:14px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.06); cursor:pointer; transition:0.3s; }
+  .category-card:hover { transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.1); }
+  .category-card img { width:80px; height:80px; object-fit:cover; margin-bottom:12px; border-radius:50%; }
 
-    /* Footer */
-    footer{margin-top:60px;background:#111;color:#fff;padding:40px;text-align:center;font-size:14px}
-  </style>
+  /* Products */
+  .products { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; }
+  .product-card { background:#fff; border-radius:14px; box-shadow:0 4px 14px rgba(0,0,0,0.06); padding:14px; cursor:pointer; transition:0.3s; }
+  .product-card:hover { transform:translateY(-4px); }
+  .product-card img { width:100%; height:200px; object-fit:cover; border-radius:10px; margin-bottom:12px; }
+  .product-card h3 { font-size:18px; font-weight:600; margin-bottom:6px; color:#2563eb; }
+  .product-card p { color:#666; font-size:14px; margin-bottom:10px; }
+  .price { font-size:18px; font-weight:700; color:#2563eb; }
+
+  /* Footer */
+  footer { margin-top:60px; background:#111; color:#fff; padding:40px; text-align:center; font-size:14px; }
+
+  @media(max-width:768px){
+    .hero { flex-direction:column; text-align:center; }
+    .hero img { margin-top:20px; width:90%; }
+  }
+</style>
 </head>
 <body>
 
-  <header>
-    <a href="user_dashboard.html" class="logo">J2 Nexus</a>
-    <nav>
-      <a href="user_dashboard.html">Home</a>
-      <a href="#categories">Categories</a>
-      <a href="#products">Products</a>
-      <a href="#" id="logoutBtn">Logout</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
+<header>
+  <a href="user_dashboard.html" class="logo">J2 Nexus</a>
+  <nav>
+    <a href="user_dashboard.html">Home</a>
+    <a href="#categories">Categories</a>
+    <a href="#products">Products</a>
+    <button id="logoutBtn">Logout</button>
+  </nav>
+</header>
 
-  <section class="hero">
-    <div>
-      <h1>Your One-Stop Online Store</h1>
-      <p>Discover the latest products, hottest deals, and premium quality items — all in one place.</p>
-      <button>Shop Now</button>
+<section class="hero">
+  <div class="hero-content">
+    <h1>Welcome to J2 Nexus</h1>
+    <p>Discover the latest products from our sellers and enjoy seamless shopping experience.</p>
+    <button>Shop Now</button>
+  </div>
+  <img src="https://images.pexels.com/photos/3965545/pexels-photo-3965545.jpeg" />
+</section>
+
+<section class="section" id="categories">
+  <h2>Shop by Category</h2>
+  <div class="categories">
+    <div class="category-card">
+      <img src="https://images.pexels.com/photos/845434/pexels-photo-845434.jpeg" />
+      <h3>Fashion</h3>
     </div>
-    <img src="https://images.pexels.com/photos/3965545/pexels-photo-3965545.jpeg" />
-  </section>
-
-  <section class="section" id="categories">
-    <h2>Shop by Category</h2>
-    <div class="categories">
-      <div class="category-card">
-        <img src="https://images.pexels.com/photos/845434/pexels-photo-845434.jpeg" />
-        <h3>Fashion</h3>
-      </div>
-      <div class="category-card">
-        <img src="https://images.pexels.com/photos/1334597/pexels-photo-1334597.jpeg" />
-        <h3>Electronics</h3>
-      </div>
-      <div class="category-card">
-        <img src="https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg" />
-        <h3>Home & Living</h3>
-      </div>
-      <div class="category-card">
-        <img src="https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg" />
-        <h3>Beauty</h3>
-      </div>
+    <div class="category-card">
+      <img src="https://images.pexels.com/photos/1334597/pexels-photo-1334597.jpeg" />
+      <h3>Electronics</h3>
     </div>
-  </section>
-
-  <section class="section" id="products">
-    <h2>Featured Products</h2>
-    <div class="products">
-
-      <div class="product-card">
-        <img src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg" />
-        <h3>Stylish Sneakers</h3>
-        <p>Comfortable everyday shoes designed for style.</p>
-        <div class="price">₱1,299</div>
-      </div>
-
-      <div class="product-card">
-        <img src="https://images.pexels.com/photos/18105/pexels-photo.jpg" />
-        <h3>Smart Headphones</h3>
-        <p>Noise-cancelling with superior sound quality.</p>
-        <div class="price">₱2,799</div>
-      </div>
-
-      <div class="product-card">
-        <img src="https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg" />
-        <h3>Classic Wristwatch</h3>
-        <p>Elegant design for any occasion.</p>
-        <div class="price">₱899</div>
-      </div>
-
-      <div class="product-card">
-        <img src="https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg" />
-        <h3>Wireless Speaker</h3>
-        <p>High-quality sound with long battery life.</p>
-        <div class="price">₱1,999</div>
-      </div>
-
+    <div class="category-card">
+      <img src="https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg" />
+      <h3>Home & Living</h3>
     </div>
-  </section>
+    <div class="category-card">
+      <img src="https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg" />
+      <h3>Beauty</h3>
+    </div>
+  </div>
+</section>
 
-    <!-- Your existing footer -->
-    <footer>
-        © 2025 MyShop — All Rights Reserved
-      </footer>
-    
-      <!-- ADD THIS SCRIPT RIGHT BELOW FOOTER -->
-      <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    
-        const firebaseConfig = {
-          apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
-          authDomain: "j2nexuss-a7b99.firebaseapp.com",
-          projectId: "j2nexuss-a7b99",
-          storageBucket: "j2nexuss-a7b99.firebasestorage.app",
-          messagingSenderId: "456617087462",
-          appId: "1:456617087462:web:be5dba59b5a117cab38627",
-          measurementId: "G-9JQEGSHWHM"
-        };
-    
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-    
-        // Redirect to login if user is not logged in
-        onAuthStateChanged(auth, (user) => {
-          if (!user) {
-            window.location.href = "login.html";
-          }
-        });
-    
-        // Logout functionality
-        const logoutBtn = document.getElementById("logoutBtn");
-logoutBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-  try {
-    await signOut(auth); // Ends the Firebase session
-    window.location.href = "login.html"; // Redirect to login page
-  } catch (error) {
-    console.error("Logout error:", error);
-  }
+<section class="section" id="products">
+  <h2>Featured Products</h2>
+  <div class="products" id="productsContainer"></div>
+</section>
+
+<footer>
+  © 2025 J2 Nexus — All Rights Reserved
+</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAKYSKoY23MbBX9g2PrXoxSuKtTEpaNxcw",
+  authDomain: "j2nexuss-a7b99.firebaseapp.com",
+  projectId: "j2nexuss-a7b99",
+  storageBucket: "j2nexuss-a7b99.firebasestorage.app",
+  messagingSenderId: "456617087462",
+  appId: "1:456617087462:web:be5dba59b5a117cab38627",
+  measurementId: "G-9JQEGSHWHM"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Check login
+onAuthStateChanged(auth, (user) => {
+  if (!user) window.location.href = "login.html";
 });
 
-      </script>
-    
-    </body>
-    </html>    
-images.pexels.com
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.href = "login.html";
+});
+
+// Load products dynamically
+async function loadProducts() {
+  const container = document.getElementById("productsContainer");
+  container.innerHTML = "";
+  const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+  const snapshot = await getDocs(q);
+
+  snapshot.forEach(docSnap => {
+    const product = docSnap.data();
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `
+      <img src="${product.image}" />
+      <h3>${product.name}</h3>
+      <p>${product.description}</p>
+      <div class="price">₱${product.price}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Initial load
+loadProducts();
+</script>
+
+</body>
+</html>
