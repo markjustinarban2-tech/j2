@@ -38,7 +38,6 @@
 </header>
 
 <main>
-  <!-- Add Product Form -->
   <form id="addProductForm">
     <h2>Add New Product</h2>
     <input type="text" id="productName" placeholder="Product Name" required />
@@ -48,7 +47,6 @@
     <button type="submit">Add Product</button>
   </form>
 
-  <!-- List of Seller's Products -->
   <h2>My Products</h2>
   <div class="products-list" id="productsList"></div>
 </main>
@@ -65,8 +63,7 @@ const firebaseConfig = {
   projectId: "j2nexuss-a7b99",
   storageBucket: "j2nexuss-a7b99.appspot.com",
   messagingSenderId: "456617087462",
-  appId: "1:456617087462:web:be5dba59b5a117cab38627",
-  measurementId: "G-9JQEGSHWHM"
+  appId: "1:456617087462:web:be5dba59b5a117cab38627"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -85,13 +82,13 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// Logout button
+// Logout
 document.getElementById("logoutBtn").addEventListener("click", async () => {
   await signOut(auth);
   window.location.href = "login.html";
 });
 
-// Add Product
+// Add product
 document.getElementById("addProductForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const name = document.getElementById("productName").value;
@@ -101,26 +98,23 @@ document.getElementById("addProductForm").addEventListener("submit", async (e) =
 
   if (!imgFile) return alert("Please select an image");
 
-  try {
-    const storageRef = ref(storage, `products/${currentUser.uid}/${imgFile.name}`);
-    await uploadBytes(storageRef, imgFile);
-    const imgUrl = await getDownloadURL(storageRef);
+  // Upload to Firebase Storage
+  const storageRef = ref(storage, `products/${currentUser.uid}/${Date.now()}_${imgFile.name}`);
+  await uploadBytes(storageRef, imgFile);
+  const imgUrl = await getDownloadURL(storageRef);
 
-    await addDoc(collection(db, "products"), {
-      sellerId: currentUser.uid,
-      name,
-      description: desc,
-      price,
-      image: imgUrl,
-      createdAt: serverTimestamp()
-    });
+  // Save product in Firestore
+  await addDoc(collection(db, "products"), {
+    sellerId: currentUser.uid,
+    name,
+    description: desc,
+    price,
+    image: imgUrl,
+    createdAt: serverTimestamp()
+  });
 
-    document.getElementById("addProductForm").reset();
-    loadProducts();
-  } catch(err) {
-    console.error("Error adding product:", err);
-    alert("Failed to add product. Check Firebase rules and storage.");
-  }
+  document.getElementById("addProductForm").reset();
+  loadProducts();
 });
 
 // Load seller products
