@@ -48,11 +48,24 @@
             z-index: 50;
         }
 
+        /* UPDATED: Logo container styles to hold image and text */
         .logo {
+            /* Added flex properties to align image and text */
+            display: flex; 
+            align-items: center; 
+            gap: 10px; /* Space between logo image and text */
+            
             font-size: 26px;
             font-weight: 700;
             color: var(--primary-color);
             text-decoration: none;
+        }
+        
+        /* NEW: Logo Image Styling */
+        #siteLogo {
+            height: 35px; /* Size the logo image to fit well with the text */
+            width: auto;
+            object-fit: contain;
         }
 
         /* Navigation Container */
@@ -74,20 +87,6 @@
             color: var(--primary-color);
             font-weight: 600;
         }
-        
-        /* Removed .active style on the navigation links 
-           to keep the header clean, assuming the 'active' 
-           state is handled visually on the main page content 
-           or via a different structure on the index page.
-           
-           If you *must* highlight Contact, you can add it back:
-           nav a[href="contact.html"] {
-               border-bottom: 2px solid var(--primary-color);
-               padding-bottom: 5px;
-               color: var(--primary-color);
-               font-weight: 600;
-           }
-        */
         
         /* Call-to-Action (CTA) Button Style */
         .cta-button {
@@ -292,7 +291,10 @@
 <body>
 
     <header>
-        <a href="index.html" class="logo">J2 Nexus</a>
+        <a href="user_dashboard.html" class="logo">
+            <img src="pic/logo.jpg.png" id="siteLogo">
+            J2 Nexus
+        </a>
         <div class="nav-links">
             <nav>
                 <a href="user_dashboard.html">Home</a>

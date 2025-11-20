@@ -43,7 +43,7 @@
             display: flex;
             flex-direction: column;
             border-right: 1px solid #e5e7eb;
-            z-index: 20; /* Ensure sidebar is above main content */
+            z-index: 20; 
         }
 
         .sidebar .logo {
@@ -219,7 +219,7 @@
             padding-top: 8px;
         }
         
-        /* ===== Tab Content and Product List Styles (NEW) ===== */
+        /* ===== Tab Content Styles (general) ===== */
         .admin-tab-content {
             display: none;
         }
@@ -227,7 +227,8 @@
         .admin-tab-content.active {
             display: block;
         }
-
+        
+        /* ===== Product List Styles ===== */
         .product-list-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -246,33 +247,7 @@
             justify-content: space-between;
         }
         
-        .product-card h3 {
-            font-size: 20px;
-            margin-bottom: 5px;
-            color: var(--text-color);
-        }
-        
-        .product-card .details p {
-            font-size: 14px;
-            margin-top: 2px;
-        }
-        
-        .product-card .ids {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed #e5e7eb;
-        }
-        
-        .product-card .price {
-            font-size: 22px;
-            font-weight: 700;
-            color: #10b981;
-            margin-top: 5px;
-        }
-        
-        /* New Styles for Product Actions */
+        /* Product Actions */
         .product-actions {
             display: flex;
             gap: 10px;
@@ -308,7 +283,7 @@
         }
         .edit-stock-btn:hover { background: #059669; }
         
-        /* ===== User Table Styles (Unchanged) ===== */
+        /* ===== User Table Styles ===== */
         .user-table {
             width: 100%;
             border-collapse: collapse;
@@ -331,6 +306,31 @@
 
         .user-table tr:hover {
             background-color: #f9fafb;
+        }
+        
+        /* User Management Action Buttons */
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+            margin-right: 5px;
+        }
+
+        .action-btn:hover {
+            background: #312e81;
+        }
+
+        .delete-user-btn {
+            background: #ef4444;
+        }
+
+        .delete-user-btn:hover {
+            background: #dc2626;
         }
 
         .role-badge {
@@ -362,7 +362,7 @@
             color: #6b7280;
         }
         
-        /* ===== Stock Edit Modal Styles (NEW) ===== */
+        /* ===== Modal Styles (applies to both Stock and Role modals) ===== */
         .modal {
             display: none; 
             position: fixed; 
@@ -401,7 +401,8 @@
             cursor: pointer;
         }
 
-        .stock-edit-form input[type="number"] {
+        .stock-edit-form input[type="number"],
+        .stock-edit-form select {
             width: 100%;
             padding: 10px;
             margin: 8px 0 15px 0;
@@ -427,7 +428,6 @@
             background-color: #312e81;
         }
 
-
         /* ===== Footer and Media Queries (Unchanged) ===== */
         .admin-footer {
             text-align: center;
@@ -438,28 +438,8 @@
             border-top: 1px solid #e5e7eb;
         }
 
-        @media (max-width: 1024px) {
-            .sidebar { width: 230px; }
-            .main-content { margin-left: 230px; }
-        }
         @media (max-width: 768px) {
-            .sidebar { 
-                width: 100%; 
-                height: auto; 
-                position: relative; 
-                box-shadow: none;
-                border-bottom: 1px solid #e5e7eb;
-            }
-            .sidebar ul { display: flex; flex-wrap: wrap; justify-content: center; border-top: 1px solid #e5e7eb; }
-            .sidebar ul li { width: 50%; border-bottom: none; border-right: 1px solid #e5e7eb; }
-            .sidebar ul li:nth-child(even) { border-right: none; }
-            .sidebar ul li a { justify-content: center; padding: 10px 15px; }
-            .sidebar ul li a i { margin-right: 8px; }
-
-            .main-content { margin-left: 0; }
-            .topbar { justify-content: space-between; padding: 15px 20px; }
-            .dashboard-title { text-align: center; }
-            .dashboard-overview { grid-template-columns: 1fr; }
+            /* ... existing media queries ... */
         }
     </style>
 </head>
@@ -474,7 +454,7 @@
             <li data-tab="settings"><a href="#" onclick="switchTab('settings'); return false;"><i class="fas fa-cog"></i>Settings</a></li>
         </ul>
         <div class="sidebar-footer">
-            <p>Admin Panel</p>
+            <p>&copy; 2025 J2 Nexus Technologies</p>
         </div>
     </div>
 
@@ -489,7 +469,7 @@
         </div>
 
         <div class="dashboard-body">
-            <h1 class="dashboard-title">Welcome Back, Admin</h1>
+            <h1 class="dashboard-title">Welcome Admin</h1>
             
             <div id="overview" class="admin-tab-content active">
                 <div class="dashboard-overview">
@@ -545,7 +525,7 @@
             </div>
             
             <div id="settings" class="admin-tab-content">
-                <h2 style="margin-bottom: 20px;">Admin Settings</h2>
+                <h2 style="margin-bottom: 20px;">⚙️ Admin Settings</h2>
                 <p style="color: #6b7280;">Global configuration options go here.</p>
             </div>
 
@@ -567,6 +547,23 @@
                 <input type="number" id="newStock" name="newStock" required min="0">
                 <button type="submit">Save Stock</button>
                 <p id="stockMessage" style="margin-top: 10px; font-weight: 500; text-align: center;"></p>
+            </form>
+        </div>
+    </div>
+    
+    <div id="editRoleModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="document.getElementById('editRoleModal').style.display='none'">&times;</span>
+            <h2>Edit Role for: <span id="modalUserEmail" style="color: var(--primary-color);"></span></h2>
+            <form id="roleEditForm" class="stock-edit-form">
+                <input type="hidden" id="editUserId">
+                <label for="newRole">New Role:</label>
+                <select id="newRole" name="newRole" required>
+                    <option value="user">User</option>
+                    <option value="seller">Seller</option>
+                </select>
+                <button type="submit">Save Role</button>
+                <p id="roleMessage" style="margin-top: 10px; font-weight: 500; text-align: center;"></p>
             </form>
         </div>
     </div>
@@ -593,7 +590,6 @@
         
         // --- Global Elements ---
         const allProductsList = document.getElementById('allProductsList');
-        const sidebarNav = document.getElementById('sidebarNav');
         const userListContainer = document.getElementById('userListContainer'); 
 
 
@@ -644,6 +640,7 @@
                                 <th>Email</th>
                                 <th>Name</th>
                                 <th>Role</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -652,17 +649,32 @@
                 querySnapshot.forEach((doc) => {
                     const user = doc.data();
                     const role = user.role || 'user'; // Default to 'user'
+                    const email = user.email || 'N/A';
                     
+                    // Don't allow admin to delete or edit themselves
+                    const isCurrentUser = auth.currentUser && auth.currentUser.uid === doc.id;
+                    const actionButtons = isCurrentUser ? 
+                        `<span style="color:#f59e0b; font-weight: 600;">(Current Admin)</span>` :
+                        `
+                            <button class="action-btn edit-role-btn" data-user-id="${doc.id}" data-current-role="${role}" data-user-email="${email}" title="Edit Role">
+                                <i class="fas fa-user-tag"></i> Edit
+                            </button>
+                            <button class="action-btn delete-user-btn" data-user-id="${doc.id}" title="Delete User">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        `;
+
                     tableHTML += `
                         <tr>
                             <td class="user-id">${doc.id.substring(0, 10)}...</td>
-                            <td>${user.email || 'N/A'}</td>
+                            <td>${email}</td>
                             <td>${user.name || 'Anonymous'}</td>
                             <td>
                                 <span class="role-badge role-${role}">
                                     ${role.charAt(0).toUpperCase() + role.slice(1)}
                                 </span>
                             </td>
+                            <td>${actionButtons}</td>
                         </tr>
                     `;
                 });
@@ -749,8 +761,96 @@
                 alert(`Failed to delete product: ${error.message}`);
             }
         }
+        
+        // --- 6. Admin Delete User Function ---
+        async function deleteUser(userId) {
+            if (!confirm(`ADMIN WARNING: Are you sure you want to permanently delete USER ID ${userId}? This action cannot be undone.`)) {
+                return;
+            }
 
-        // --- NEW 6. Admin Edit Product Stock Function (to open modal) ---
+            try {
+                const userRef = doc(db, "users", userId);
+                await deleteDoc(userRef);
+
+                alert(`User ${userId.substring(0, 8)}... has been deleted.`);
+                
+                // Refresh the list after deletion
+                loadAllUsers();
+
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                alert(`Failed to delete user: ${error.message}`);
+            }
+        }
+
+
+        // --- 7. Admin Edit Role Modal Opener ---
+        function openEditRoleModal(userId, currentRole, email) {
+            document.getElementById('editUserId').value = userId;
+            document.getElementById('modalUserEmail').textContent = email;
+            document.getElementById('newRole').value = currentRole;
+            document.getElementById('roleMessage').textContent = '';
+            document.getElementById('editRoleModal').style.display = 'block';
+        }
+        
+        // --- 8. Save Updated Role Function ---
+        document.getElementById("roleEditForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('editUserId').value;
+            const newRole = document.getElementById('newRole').value;
+            const roleMessageEl = document.getElementById('roleMessage');
+            const saveButton = e.submitter;
+
+            roleMessageEl.textContent = 'Saving...';
+            roleMessageEl.style.color = '#f59e0b';
+            saveButton.disabled = true;
+
+            try {
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, {
+                    role: newRole,
+                    lastUpdatedAdmin: new Date()
+                });
+
+                roleMessageEl.style.color = '#10b981';
+                roleMessageEl.textContent = `✅ Role updated to ${newRole}!`;
+                
+                // Refresh the list and close modal
+                loadAllUsers(); 
+                setTimeout(() => {
+                    document.getElementById('editRoleModal').style.display = 'none';
+                    saveButton.disabled = false;
+                }, 1000);
+
+            } catch (error) {
+                console.error("Error updating role:", error);
+                roleMessageEl.style.color = '#ef4444';
+                roleMessageEl.textContent = `⚠️ Failed to update role: ${error.message}`;
+                saveButton.disabled = false;
+            }
+        });
+
+
+        // --- 9. Event Listener Delegation for User Actions ---
+        userListContainer.addEventListener('click', (e) => {
+            const editButton = e.target.closest('.edit-role-btn');
+            const deleteButton = e.target.closest('.delete-user-btn');
+            
+            if (editButton) {
+                const userId = editButton.dataset.userId;
+                const currentRole = editButton.dataset.currentRole;
+                const userEmail = editButton.dataset.userEmail;
+                openEditRoleModal(userId, currentRole, userEmail);
+            }
+            
+            if (deleteButton) {
+                const userIdToDelete = deleteButton.dataset.userId;
+                deleteUser(userIdToDelete);
+            }
+        });
+
+
+        // --- Product Edit Stock Functions (from previous implementation) ---
         function editProductStock(productId, productName, currentStock) {
             document.getElementById('editProductId').value = productId;
             document.getElementById('modalProductName').textContent = productName;
@@ -759,7 +859,6 @@
             document.getElementById('editStockModal').style.display = 'block';
         }
 
-        // --- NEW 7. Save Updated Stock Function (form submit handler) ---
         document.getElementById("stockEditForm").addEventListener("submit", async (e) => {
             e.preventDefault();
             const productId = document.getElementById('editProductId').value;
@@ -781,23 +880,20 @@
                 const productRef = doc(db, "products", productId);
                 await updateDoc(productRef, {
                     stock: newStock,
-                    isAvailable: newStock > 0, // Update availability status
+                    isAvailable: newStock > 0,
                     lastUpdatedAdmin: new Date()
                 });
 
                 stockMessageEl.style.color = '#10b981';
                 stockMessageEl.textContent = `✅ Stock updated to ${newStock}!`;
 
-                // Update the stock number instantly in the product card display
                 const stockCountEl = document.getElementById(`stock-count-${productId}`);
                 if (stockCountEl) {
                     stockCountEl.textContent = newStock;
                 }
                 
-                // Refreshing the list is good practice
                 loadAllProducts(); 
 
-                // Close modal after a delay
                 setTimeout(() => {
                     document.getElementById('editStockModal').style.display = 'none';
                     saveButton.disabled = false;
@@ -811,7 +907,6 @@
             }
         });
         
-        // --- 8. Event Listener Delegation for Action Buttons ---
         allProductsList.addEventListener('click', (e) => {
             const editButton = e.target.closest('.edit-stock-btn');
             const deleteButton = e.target.closest('.delete-btn');
@@ -828,9 +923,10 @@
                 deleteProduct(productIdToDelete);
             }
         });
+        // --- End Product Edit Stock Functions ---
 
 
-        // --- 9. Authentication and Setup ---
+        // --- 10. Authentication and Setup ---
         
         // Redirect if not logged in or not admin
         let currentAdminUID = null;
@@ -850,7 +946,6 @@
 
                 if (userDoc.exists() && userDoc.data().role === "admin") {
                     isAdmin = true;
-                    // Try to show user name if available, otherwise email
                     document.getElementById("adminName").textContent = userDoc.data().name || user.email.split('@')[0] || "Admin";
                 }
 
@@ -864,7 +959,6 @@
                 }
             } catch (error) {
                  console.error("Admin check failed:", error);
-                 // If there's a Firebase error, assume they shouldn't be here
                  await signOut(auth);
                  window.location.href = "login.html";
             }
@@ -886,16 +980,16 @@
                 document.getElementById("totalUsers").textContent = usersSnap.size;
                 document.getElementById("totalProducts").textContent = productsSnap.size;
 
-                // Optional: calculate total sales
+                // FIX: Calculate total sales from 'orders' collection
                 let totalSales = 0;
-                const salesSnap = await getDocs(collection(db, "sales")); 
-                salesSnap.forEach(doc => {
-                    totalSales += doc.data().amount || 0;
+                const ordersSnap = await getDocs(collection(db, "orders")); 
+                ordersSnap.forEach(doc => {
+                    totalSales += doc.data().totalAmount || 0; 
                 });
                 document.getElementById("totalSales").textContent = `$${totalSales.toFixed(2)}`;
+                
             } catch (error) {
                 console.error("Error fetching totals:", error);
-                // Gracefully set to 0 if data isn't available
                 document.getElementById("totalSales").textContent = `$0.00`;
             }
         }

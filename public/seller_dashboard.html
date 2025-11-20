@@ -9,11 +9,11 @@
     <style>
         /* Variables and Global Reset */
         :root {
-            --primary-color: #3210b9; /* Deep Indigo/Violet */
+            --primary-color: #22bdfb; /* Deep Indigo/Violet */
             --secondary-color: #00bcd4; /* Cyan/Teal Accent */
             --background-color: #f0f2f5; /* Light Gray Background */
             --card-background: #ffffff;
-            --text-color: #1a1a2e; /* Dark Blue Text */
+            --text-color: #1b1b8b; /* Dark Blue Text */
             --text-light: #6b7280;
             --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --shadow-hover: 0 15px 25px -5px rgba(0, 0, 0, 0.1);
@@ -34,10 +34,12 @@
             color: var(--text-color);
         }
 
-        /* --- Sidebar Styles (Unchanged) --- */
+        /* --- Sidebar Styles (Updated for Logo) --- */
         .sidebar {
             width: 260px;
-            background: linear-gradient(180deg, var(--primary-color) 0%, #6997e0 100%);
+            /* Note: Adjusted gradient for better contrast if image is dark */
+            background: var(--primary-color);
+            /* background: linear-gradient(180deg, var(--primary-color) 0%, #ececee 100%); */ 
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px 0;
             position: fixed;
@@ -48,13 +50,27 @@
             z-index: 20;
         }
 
+        /* UPDATED: Logo container styles to hold image and text */
         .sidebar .logo {
-            text-align: center;
+            display: flex; /* Make it a flex container */
+            align-items: center; /* Vertically center items */
+            justify-content: center; /* Horizontally center items */
+            gap: 10px; /* Space between logo and text */
+
             font-size: 28px;
             font-weight: 800;
             letter-spacing: 1px;
             margin-bottom: 40px;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* NEW: Logo Image Styling */
+        #sellerSiteLogo {
+            height: 35px; /* Size the logo image */
+            width: auto;
+            object-fit: contain;
+            /* Subtle shadow for contrast on dark background */
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); 
         }
 
         .sidebar ul {
@@ -67,7 +83,7 @@
             align-items: center;
             padding: 15px 30px;
             text-decoration: none;
-            color: #d1d5db;
+            color: #0c2c5d;
             font-weight: 500;
             font-size: 16px;
             transition: background-color 0.3s, color 0.3s, padding-left 0.3s;
@@ -77,7 +93,7 @@
         .sidebar ul li a i {
             margin-right: 15px;
             font-size: 18px;
-            color: #9ca3af;
+            color: #09398d;
             transition: color 0.3s;
         }
 
@@ -93,7 +109,7 @@
 
         .sidebar ul li.active a {
             background-color: rgba(255, 255, 255, 0.15);
-            color: white;
+            color: rgb(8, 43, 102);
             border-left-color: var(--secondary-color);
             font-weight: 600;
         }
@@ -130,12 +146,30 @@
             z-index: 10;
             border-bottom: 1px solid #e5e7eb;
         }
-
-        .topbar .user-profile {
+        
+        /* FIX: Corrected Topbar user profile structure */
+        .user-profile-header {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
+
+        .user-profile-header img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--secondary-color);
+        }
+
+        .username-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            padding-right: 10px;
+            border-right: 1px solid #e5e7eb;
+        }
+        /* END FIX */
 
         .topbar .user-profile .username {
             font-size: 16px;
@@ -161,18 +195,22 @@
             transform: translateY(-1px);
         }
 
-        /* --- Dashboard Body Content & Tabs (Unchanged) --- */
+        /* --- Dashboard Body Content & Tabs (Updated Title Style) --- */
         .dashboard-body {
             padding: 30px;
         }
 
+        /* ENHANCED: Dashboard Title Styling (For the welcome message) */
         .dashboard-title {
-            font-size: 32px;
-            font-weight: 700;
+            font-size: 36px; /* Slightly larger */
+            font-weight: 800;
             color: var(--primary-color);
             margin-bottom: 30px;
+            border-bottom: 4px solid var(--secondary-color); /* Add a line */
+            display: inline-block;
+            padding-bottom: 5px;
         }
-
+        
         .seller-tab-content {
             display: none;
         }
@@ -180,6 +218,18 @@
         .seller-tab-content.active {
             display: block;
         }
+        
+        /* Style for sub-titles in non-dashboard tabs */
+        .seller-tab-content h2 {
+            font-size: 28px; 
+            margin-bottom: 20px;
+            color: var(--text-color);
+            font-weight: 700;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 5px;
+            display: block;
+        }
+
 
         /* --- Dashboard Stats Grid (Unchanged) --- */
         .stats-grid {
@@ -240,6 +290,12 @@
             justify-content: space-between;
             transition: transform 0.2s, box-shadow 0.2s;
         }
+        .sidebar .logo {
+            /* ... other properties ... */
+            
+            /* USE ANY COLOR YOU WANT: */
+            color: #1e34c6; /* Example: Gold Color */
+        }
 
         .product-card:hover {
             transform: translateY(-3px);
@@ -297,7 +353,7 @@
         .delete-btn { background: #ef4444; color: white; }
         .delete-btn:hover { background: #dc2626; transform: scale(1.02); }
 
-        /* --- ENHANCED: Add/Edit Product Form Styles --- */
+        /* --- ENHANCED: Add/Edit Product Form Styles (Unchanged) --- */
         #product-form {
             padding: 30px;
         }
@@ -343,7 +399,7 @@
             padding-bottom: 5px;
         }
 
-        #addProductForm label {
+        #addProductForm label, #updateProfileForm label {
             display: block;
             margin-top: 10px;
             margin-bottom: 5px;
@@ -354,7 +410,9 @@
         
         #addProductForm input, 
         #addProductForm textarea, 
-        #addProductForm select {
+        #addProductForm select,
+        #updateProfileForm input, 
+        #updateProfileForm textarea {
             width: 100%;
             padding: 12px;
             border: 2px solid #e5e7eb; /* Thicker, softer border */
@@ -366,7 +424,9 @@
 
         #addProductForm input:focus, 
         #addProductForm textarea:focus, 
-        #addProductForm select:focus {
+        #addProductForm select:focus,
+        #updateProfileForm input:focus, 
+        #updateProfileForm textarea:focus {
             border-color: var(--secondary-color);
             box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.1);
             outline: none;
@@ -397,7 +457,7 @@
             font-style: italic;
         }
         
-        /* Form Button */
+        /* Form Button (Product) */
         #addProductForm button[type="submit"] {
             margin-top: 30px;
             background: var(--primary-color);
@@ -421,6 +481,68 @@
         #formMessage {
             grid-column: 1 / -1; 
         }
+
+        /* --- Profile-specific styles (NEW) --- */
+        #profile {
+            padding: 30px; /* Consistent padding with other forms */
+        }
+
+        #profileContainer {
+            background: var(--card-background);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-card);
+            max-width: 700px; /* Slightly narrower than product form */
+            margin: 0 auto;
+            border-top: 5px solid var(--secondary-color);
+        }
+
+        #profileFormTitle {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .profile-form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .static-detail-box {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #f8f9fa; /* Lighter background for read-only */
+            font-size: 16px;
+            color: var(--text-color);
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        /* Profile Form Button style (reusing product form submit style) */
+        #updateProfileForm button[type="submit"] {
+            margin-top: 30px;
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            transition: background 0.2s, transform 0.1s;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(50, 16, 185, 0.2);
+            width: 100%; /* Make button full width */
+        }
+
+        #updateProfileForm button[type="submit"]:hover {
+            background: #1e097d;
+            transform: translateY(-2px);
+        }
+        /* --- END Profile-specific styles (NEW) --- */
 
         /* --- Order List Table (Unchanged) --- */
         .order-table-container {
@@ -470,6 +592,26 @@
         .status-select.status-shipped { background-color: #00bcd4; }
         .status-select.status-delivered { background-color: #10b981; }
         .status-select.status-cancelled { background-color: #ef4444; }
+        
+        /* NEW: Order Table View Button Style */
+        .view-details-btn {
+            background: #6b7280; 
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .view-details-btn:hover {
+            background: #4b5563; 
+            transform: translateY(-1px);
+        }
+
 
         /* --- Modal Styles (Unchanged) --- */
         .modal {
@@ -552,12 +694,16 @@
 <body>
 
     <div class="sidebar">
-        <div class="logo">J2 Nexus Seller</div>
+        <div class="logo">
+            <img src="pic/logo.jpg.png" alt="J2 Nexus Seller Logo" id="sellerSiteLogo">
+            J2 Nexus 
+        </div>
         <ul>
             <li class="active" data-tab="dashboard"><a href="#" onclick="switchTab('dashboard'); return false;"><i class="fas fa-chart-line"></i>Dashboard</a></li>
             <li data-tab="products"><a href="#" onclick="switchTab('products'); return false;"><i class="fas fa-box-open"></i>My Products</a></li>
             <li data-tab="orders"><a href="#" onclick="switchTab('orders'); return false;"><i class="fas fa-truck"></i>Orders</a></li>
             <li data-tab="product-form"><a href="#" onclick="prepareProductForm(); return false;"><i class="fas fa-plus-circle"></i>Add Product</a></li>
+            <li data-tab="profile"><a href="#" onclick="switchTab('profile'); loadSellerProfile(); return false;"><i class="fas fa-user-circle"></i>Profile Settings</a></li>
         </ul>
         <div class="sidebar-footer">
             <p>J2 Nexus Seller</p>
@@ -566,16 +712,16 @@
 
     <div class="main-content">
         <div class="topbar">
-            <div class="user-profile">
-                <span class="username" id="sellerName">Loading...</span>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <div class="user-profile-header">
+                <img src="https://www.gravatar.com/avatar?d=mp" alt="User Profile" />
+                <span class="username-text" id="sellerName">Loading...</span> <button class="logout-btn" id="logoutBtn">Logout</button>
             </div>
         </div>
 
         <div class="dashboard-body">
-            <h1 class="dashboard-title" id="welcomeTitle">Hello, Seller!</h1>
-
+            
             <div id="dashboard" class="seller-tab-content active">
+                <h1 class="dashboard-title" id="welcomeTitle">Hello, Seller!</h1>
                 <div class="stats-grid">
                     <div class="stat-card">
                         <i class="fas fa-money-bill-wave icon"></i>
@@ -596,14 +742,14 @@
             </div>
 
             <div id="products" class="seller-tab-content">
-                <h2>My Product Listings</h2>
+                <h2 class="dashboard-title" style="font-size: 28px; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px; display: block;">My Product Listings</h2>
                 <div class="product-grid" id="sellerProductGrid">
                     <p style="text-align: center; color: #6b7280; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading your products...</p>
                 </div>
             </div>
             
             <div id="orders" class="seller-tab-content">
-                <h2>Recent Orders</h2>
+                <h2 class="dashboard-title" style="font-size: 28px; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px; display: block;">Recent Orders</h2>
                 <div class="order-table-container" id="ordersListDiv">
                     <table class="order-table">
                         <thead>
@@ -623,8 +769,9 @@
             </div>
 
             <div id="product-form" class="seller-tab-content">
+                 <h2 id="addProductPageTitle" style="font-size: 28px; margin-bottom: 20px; color: var(--text-color); font-weight: 700;">Product Management</h2>
                 <div id="productFormContainer">
-                    <h2 id="productFormTitle">List a New Product</h2>
+                    <h2 id="productFormTitle" style="font-size: 24px; font-weight: 600; color: var(--primary-color);">List a New Product</h2>
                     <form id="addProductForm">
                         <input type="hidden" id="productIdHidden" data-mode="add">
 
@@ -682,7 +829,42 @@
                     </form>
                 </div>
             </div>
-        </div>
+            
+            <div id="profile" class="seller-tab-content">
+                <h2 class="dashboard-title" style="font-size: 28px; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; padding-bottom: 5px; display: block;"><i class="fas fa-user-cog"></i> Profile Settings</h2>
+                <div id="profileContainer">
+                    <h2 id="profileFormTitle" style="font-size: 24px; font-weight: 600; color: var(--primary-color);"><i class="fas fa-store"></i> Manage Your Seller Profile</h2>
+                    <form id="updateProfileForm">
+                        <div class="profile-form-grid">
+                            
+                            <div class="input-group">
+                                <h3>Account Information (Read-Only)</h3>
+                                <label>Email Address</label>
+                                <div class="static-detail-box" id="profileEmail">Loading...</div>
+                                
+                                <label>User ID</label>
+                                <div class="static-detail-box" id="profileUid">Loading...</div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <h3>Store Details</h3>
+                                <label for="storeName">Store/Seller Name *</label>
+                                <input type="text" id="storeName" required placeholder="e.g., J2 Nexus Tech Hub">
+
+                                <label for="storeDescription">Store Description</label>
+                                <textarea id="storeDescription" rows="4" placeholder="Tell customers about your store, mission, and products."></textarea>
+                                
+                                <label for="storePhone">Contact Phone Number</label>
+                                <input type="tel" id="storePhone" placeholder="e.g., 0917-XXX-XXXX">
+                            </div>
+                            
+                            <p id="profileFormMessage" style="text-align: center; margin-top: 15px; font-weight: 500;"></p>
+                            <button type="submit"><i class="fas fa-save"></i> Save Profile Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </div>
     </div>
     
     <div id="orderDetailsModal" class="modal"> 
@@ -731,7 +913,7 @@
         const orderTableBody = document.getElementById('orderTableBody');
         const ordersListDiv = document.getElementById('ordersListDiv');
         
-        // Form Elements
+        // Product Form Elements
         const addProductForm = document.getElementById('addProductForm');
         const formMessage = document.getElementById('formMessage');
         const productFormTitle = document.getElementById('productFormTitle');
@@ -740,6 +922,15 @@
         const imageURLInput = document.getElementById('imageURL');
         const imagePreview = document.getElementById('imagePreview');
         const imagePlaceholder = document.getElementById('imagePlaceholder');
+        
+        // Profile Form Elements (NEW)
+        const updateProfileForm = document.getElementById('updateProfileForm');
+        const profileFormMessage = document.getElementById('profileFormMessage');
+        const profileEmailEl = document.getElementById('profileEmail');
+        const profileUidEl = document.getElementById('profileUid');
+        const storeNameInput = document.getElementById('storeName');
+        const storeDescriptionInput = document.getElementById('storeDescription');
+        const storePhoneInput = document.getElementById('storePhone');
 
 
         // --- Helper Functions ---
@@ -1101,7 +1292,7 @@
             }
         }
         
-        // --- 9. Show Order Details (FIXED) ---
+        // --- 9. Show Order Details (Unchanged) ---
         window.showOrderDetails = async function(orderId) {
              const modalOrderId = document.getElementById('modalOrderId');
              const modalCustomerName = document.getElementById('modalCustomerName');
@@ -1168,7 +1359,85 @@
             }
         }
         
-        // --- 10. Authentication and Setup (Unchanged) ---
+        // --- 10. PROFILE FUNCTIONALITY (NEW) ---
+
+        async function loadSellerProfile() {
+            if (!currentSellerId) return;
+
+            profileFormMessage.textContent = 'Loading profile...';
+            profileFormMessage.style.color = '#f59e0b'; // pending color
+
+            try {
+                const userDocRef = doc(db, "users", currentSellerId);
+                const userDoc = await getDoc(userDocRef);
+
+                // Display Read-Only Fields (using auth data first)
+                profileEmailEl.textContent = auth.currentUser.email;
+                profileUidEl.textContent = currentSellerId;
+
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    
+                    // Populate Editable Fields
+                    storeNameInput.value = data.storeName || '';
+                    storeDescriptionInput.value = data.storeDescription || '';
+                    storePhoneInput.value = data.storePhone || '';
+
+                    profileFormMessage.textContent = 'Profile loaded. Ready to edit.';
+                    profileFormMessage.style.color = '#10b981'; // success color
+                    
+                } else {
+                    profileFormMessage.textContent = 'User document not found. Using default values.';
+                    profileFormMessage.style.color = '#f59e0b';
+                }
+
+            } catch (error) {
+                console.error("Error loading profile:", error);
+                profileFormMessage.textContent = `⚠️ Error loading profile: ${error.message}`;
+                profileFormMessage.style.color = '#ef4444'; // error color
+            }
+        }
+        window.loadSellerProfile = loadSellerProfile;
+
+        updateProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentSellerId) return;
+
+            profileFormMessage.textContent = 'Saving changes...';
+            profileFormMessage.style.color = '#f59e0b';
+
+            try {
+                const userDocRef = doc(db, "users", currentSellerId);
+                
+                const profileUpdates = {
+                    storeName: storeNameInput.value.trim(),
+                    storeDescription: storeDescriptionInput.value.trim(),
+                    storePhone: storePhoneInput.value.trim(),
+                    updatedAt: new Date().toISOString()
+                };
+
+                // Using updateDoc to merge changes into the existing user document
+                await updateDoc(userDocRef, profileUpdates);
+
+                profileFormMessage.textContent = '✅ Profile updated successfully!';
+                profileFormMessage.style.color = '#10b981';
+                
+                // Update seller name in the topbar immediately
+                const displayName = profileUpdates.storeName || auth.currentUser.email.split('@')[0];
+                document.getElementById("sellerName").textContent = displayName;
+                
+                // Also update the welcome title for the dashboard, in case the user navigates back
+                document.getElementById("welcomeTitle").textContent = `Hello, ${displayName}!`;
+
+                
+            } catch (error) {
+                console.error("Error updating profile:", error);
+                profileFormMessage.textContent = `⚠️ Error saving profile: ${error.message}`;
+                profileFormMessage.style.color = '#ef4444';
+            }
+        });
+        
+        // --- 11. Authentication and Setup (Updated to call loadSellerProfile) ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentSellerId = user.uid;
@@ -1176,7 +1445,8 @@
                 // Check role explicitly
                 const userDocRef = doc(db, "users", user.uid);
                 const userDoc = await getDoc(userDocRef);
-                const role = userDoc.exists() ? userDoc.data().role : 'user';
+                const data = userDoc.exists() ? userDoc.data() : {};
+                const role = data.role || 'user';
 
                 if (role !== 'seller' && role !== 'admin') {
                     alert("Access denied. You are not registered as a seller.");
@@ -1185,9 +1455,11 @@
                     return;
                 }
                 
-                // Set Display Names
-                const displayName = user.email.split('@')[0];
+                // Set Display Names using storeName if available, otherwise email prefix
+                const displayName = data.storeName || user.email.split('@')[0];
                 document.getElementById("sellerName").textContent = displayName;
+                
+                // Set the welcome title for the dashboard only
                 document.getElementById("welcomeTitle").textContent = `Hello, ${displayName}!`;
 
                 // IMPORTANT: Call the stats function immediately
@@ -1196,6 +1468,9 @@
                 // Load initial content for the tables
                 loadSellerProducts(); 
                 loadSellerOrders(); 
+                
+                // Load profile data (but don't switch tab)
+                loadSellerProfile();
                 
             } else {
                 // User is signed out, redirect to login

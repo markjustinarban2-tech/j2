@@ -31,7 +31,26 @@
             box-shadow:var(--shadow-light);
             position:sticky;top:0;z-index:50
         }
-        .logo{font-size:26px;font-weight:700;color:var(--primary-color);text-decoration:none}
+        
+        /* UPDATED: Logo container styles to hold image and text */
+        .logo {
+            /* Now using flex to align image and text */
+            display: flex; 
+            align-items: center; 
+            gap: 10px; /* Space between logo image and text */
+            
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        /* NEW: Logo Image Styling */
+        #siteLogo {
+            height: 35px; /* Size the logo image */
+            width: auto;
+            object-fit: contain;
+        }
         
         /* Combined navigation and profile container */
         .nav-content {
@@ -173,7 +192,7 @@
         .product-card p{color:#6b7280;font-size:15px;margin-bottom:10px}
         .price{font-size:20px;font-weight:700;color:#ef4444;}
         
-        /* --- NEW: Cart Controls Style --- */
+        /* --- Cart Controls Style --- */
         .cart-controls {
             display: flex;
             align-items: center;
@@ -209,6 +228,47 @@
             cursor: not-allowed;
         }
 
+        /* --- Order Table Styles (Restored) --- */
+        .order-table-container {
+            background: var(--card-background);
+            border-radius: 14px;
+            box-shadow: var(--shadow-light);
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .order-table th, .order-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .order-table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .status-badge {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: white;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .status-pending { background-color: #f59e0b; }
+        .status-shipped { background-color: #3b82f6; } /* Blue */
+        .status-delivered { background-color: #10b981; } /* Green */
+        .status-cancelled { background-color: #ef4444; } /* Red */
+
+
         /* Footer */
         footer{margin-top:0;background:#1f2937;color:#fff;padding:40px;text-align:center;font-size:14px}
 
@@ -229,12 +289,16 @@
 <body>
 
     <header>
-        <a href="user_dashboard.html" class="logo">J2 Nexus</a>
+        <a href="#" onclick="handleNavigation('home'); return false;" class="logo">
+            <img src="pic/logo.jpg.png" id="siteLogo">
+            J2 Nexus
+        </a>
         <div class="nav-content">
             <div class="nav-links">
-                <a href="user_dashboard.html">Home</a>
-                <a href="#categories">Categories</a>
-                <a href="#products">Products</a>
+                <a href="#hero" onclick="handleNavigation('home'); return false;">Home</a>
+                <a href="#categories" onclick="handleNavigation('categories'); return false;">Categories</a>
+                <a href="#products" onclick="handleNavigation('products'); return false;">Products</a>
+                <a href="#" onclick="handleNavigation('orders'); return false;">My Orders</a> 
                 <a href="contact.html">Contact</a>
                 <a href="cart.html" class="cart-link" title="View Shopping Cart">
                     <div class="cart-icon-container">
@@ -251,11 +315,11 @@
         </div>
     </header>
 
-    <section class="hero">
+    <section class="hero" id="hero">
         <div>
             <h1 id="welcomeTitle">Welcome, User!</h1>
             <p>Discover the latest products, hottest deals, and premium quality items — all in one place.</p>
-            <button>Shop Now</button>
+            <button onclick="handleNavigation('products');">Shop Now</button>
         </div>
         <img src="https://images.pexels.com/photos/3965545/pexels-photo-3965545.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
     </section>
@@ -289,6 +353,27 @@
             </div>
         </div>
     </section>
+    
+    <section class="section" id="orders" style="display:none;">
+        <h2>My Orders</h2>
+        <div class="order-table-container">
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Items</th>
+                    </tr>
+                </thead>
+                <tbody id="userOrderTableBody">
+                    <tr><td colspan="5" style="text-align: center; color: #6b7280; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading your orders...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
 
     <footer>
         © 2025 J2 Nexus — All Rights Reserved
@@ -297,8 +382,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        // 🟢 NEW: Import Firestore services for CRUD operations and real-time listening
-        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // Import Firestore services for CRUD operations and real-time listening
+        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // **IMPORTANT:** Use your actual Firebase Config
         const firebaseConfig = {
@@ -321,15 +406,56 @@
         const welcomeTitleEl = document.getElementById("welcomeTitle");
         const logoutBtn = document.getElementById("logoutBtn");
         const dynamicProductGrid = document.getElementById('dynamicProductGrid');
-        // 🟢 NEW: Cart Count Element
         const cartCountElement = document.getElementById('cartCount');
+        const userOrderTableBody = document.getElementById('userOrderTableBody'); // Restored
+        
+        // --- Helper Functions ---
+        const formatCurrency = (amount) => `₱${parseFloat(amount).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
+        // --- Restored: Navigation and Scrolling Handler ---
+        window.handleNavigation = function(sectionId) {
+            // 1. Get references to main sections
+            const heroSection = document.getElementById('hero');
+            const categoriesSection = document.getElementById('categories');
+            const productsSection = document.getElementById('products');
+            const ordersSection = document.getElementById('orders');
+
+            if (sectionId === 'orders') {
+                // 2. TAB VIEW: Hide all shopping sections and show ONLY My Orders
+                heroSection.style.display = 'none';
+                categoriesSection.style.display = 'none';
+                productsSection.style.display = 'none';
+                ordersSection.style.display = 'block';
+                
+                // Load data for the orders tab
+                loadUserOrders();
+            } else {
+                // 3. SCROLL VIEW: Ensure all shopping sections are visible
+                heroSection.style.display = 'flex';
+                categoriesSection.style.display = 'block';
+                productsSection.style.display = 'block';
+                ordersSection.style.display = 'none'; // Hide orders section
+
+                let targetTop = 0;
+                if (sectionId === 'categories') {
+                    // Scrolls to categories, offset by header height
+                    targetTop = categoriesSection.offsetTop - 70; 
+                } else if (sectionId === 'products') {
+                    // Scrolls to products, offset by header height
+                    targetTop = productsSection.offsetTop - 70; 
+                }
+                // 'home' scrolls to the top (targetTop remains 0)
+
+                window.scrollTo({
+                    top: targetTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+        
         // --- 1. Real-Time Cart Counter (Listener) ---
         function subscribeToCartUpdates(userId) {
-            // Reference to the carts subcollection: users/{userId}/carts
             const cartCollectionRef = collection(db, "users", userId, "carts");
-            
-            // onSnapshot provides real-time updates for the cart count
             onSnapshot(cartCollectionRef, (snapshot) => {
                 let totalItemsInCart = 0;
                 snapshot.forEach((doc) => {
@@ -349,7 +475,6 @@
                 return;
             }
 
-            // Get the quantity from the input field specific to this product
             const quantityInput = document.getElementById(`qty_${productId}`);
             let quantityToAdd = parseInt(quantityInput.value) || 1;
 
@@ -357,13 +482,11 @@
                  alert("Item is out of stock or invalid quantity selected.");
                  return;
             }
-            if (quantityToAdd > maxStock) quantityToAdd = maxStock; // Max out at available stock
+            if (quantityToAdd > maxStock) quantityToAdd = maxStock; 
 
-            // Reference to the specific cart item document: users/{userId}/carts/{productId}
             const cartItemRef = doc(db, "users", currentUserId, "carts", productId);
 
             try {
-                // Check if item already exists in the cart
                 const cartSnapshot = await getDoc(cartItemRef);
                 let finalQuantity = quantityToAdd;
                 let message = "";
@@ -373,7 +496,6 @@
                     finalQuantity = existingQuantity + quantityToAdd;
                 }
                 
-                // Check against overall stock limit
                 if (finalQuantity > maxStock) {
                     finalQuantity = maxStock;
                     const amountAdded = finalQuantity - (cartSnapshot.exists() ? cartSnapshot.data().quantity : 0);
@@ -387,19 +509,18 @@
                     message = `Successfully added ${quantityToAdd} of ${name} to cart!`;
                 }
 
-                // If final quantity is 0 or less (shouldn't happen here), skip setDoc
                 if (finalQuantity > 0) {
                     await setDoc(cartItemRef, {
                         productId: productId,
                         name: name,
-                        price: price, // Price at the time of adding
+                        price: price, 
                         quantity: finalQuantity,
                         addedAt: new Date().toISOString()
                     });
                 }
                 
                 alert(message);
-                quantityInput.value = 1; // Reset input after successful add/update
+                quantityInput.value = 1;
 
             } catch (error) {
                 console.error("Error adding to cart:", error);
@@ -407,7 +528,7 @@
             }
         }
 
-        // --- 3. Load All Products (Updated to include Cart Controls) ---
+        // --- 3. Load All Products ---
         async function loadAllProducts() {
             const loadingStatusEl = document.getElementById('productLoadingStatus');
             dynamicProductGrid.innerHTML = '<div id="productLoadingStatus" style="text-align: center; color: #6b7280; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading latest products...</div>';
@@ -436,14 +557,14 @@
                     const stockText = outOfStock ? 'Out of Stock' : `Stock: ${stock}`;
                     const stockColor = outOfStock ? '#ef4444' : '#10b981';
 
-                    // 🟢 NEW: Product card with cart controls
+                    // Product card with cart controls
                     productsHTML += `
                         <div class="product-card">
                             <div>
                                 <img src="${imageUrl}" alt="${product.name}" />
                                 <h3>${product.name}</h3>
                                 <p>${product.description.substring(0, 50)}...</p>
-                                <div class="price">₱${product.price.toLocaleString('en-PH', {minimumFractionDigits: 2})}</div>
+                                <div class="price">${formatCurrency(product.price)}</div>
                                 <p style="font-size: 12px; color: ${stockColor}; margin-top: 5px;">${stockText}</p>
                             </div>
                             
@@ -473,20 +594,73 @@
                 dynamicProductGrid.innerHTML = '<div style="text-align: center; color: #ef4444; padding: 20px;">⚠️ Error loading products. Please check console for details.</div>';
             }
         }
-        // --- END loadAllProducts function ---
+        
+        // --- 4. Restored: Load User Orders Function ---
+        window.loadUserOrders = async function() {
+            if (!currentUserId) {
+                userOrderTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Please log in to view your orders.</td></tr>';
+                return;
+            }
+            
+            userOrderTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6b7280; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Fetching your orders...</td></tr>';
 
+            try {
+                // Query only orders where the 'userId' field matches the current user's UID
+                const ordersQuery = query(collection(db, "orders"), where("userId", "==", currentUserId));
+                const querySnapshot = await getDocs(ordersQuery);
+                
+                let ordersHTML = '';
 
+                if (querySnapshot.empty) {
+                    userOrderTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">You have no completed orders yet.</td></tr>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const order = doc.data();
+                    const orderId = doc.id;
+                    const date = order.timestamp ? new Date(order.timestamp).toLocaleDateString() : 'N/A';
+                    const totalAmount = order.totalAmount || 0;
+                    const status = order.status || 'Pending';
+                    const statusClass = `status-${status.toLowerCase()}`;
+                    
+                    const itemsList = (order.items || []).map(item => {
+                        const categoryText = item.category && item.category !== 'Other' 
+                                         ? ` (${item.category})` 
+                                         : '';
+                        return `${item.name}${categoryText} (x${item.quantity})`;
+                    }).join(', ');
+                    
+                    ordersHTML += `
+                        <tr>
+                            <td>${orderId.substring(0, 8)}...</td>
+                            <td>${date}</td>
+                            <td>${formatCurrency(totalAmount)}</td>
+                            <td><span class="status-badge ${statusClass}">${status}</span></td>
+                            <td>${itemsList}</td>
+                        </tr>
+                    `;
+                });
+                
+                userOrderTableBody.innerHTML = ordersHTML;
+
+            } catch (error) {
+                console.error("Error loading user orders:", error);
+                userOrderTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ef4444; padding: 20px;">⚠️ Error fetching orders.</td></tr>';
+            }
+        }
+        
         // Check authentication state on page load
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                currentUserId = user.uid; // 🟢 Set global user ID
+                currentUserId = user.uid; // Set global user ID
                 const email = user.email;
                 const displayName = email.split('@')[0];
                 userNameEl.textContent = displayName; 
                 welcomeTitleEl.textContent = `Welcome, ${displayName}!`;
                 
                 loadAllProducts(); 
-                subscribeToCartUpdates(currentUserId); // 🟢 Start cart listener
+                subscribeToCartUpdates(currentUserId); // Start cart listener
                 
             } else {
                 window.location.href = "login.html";
