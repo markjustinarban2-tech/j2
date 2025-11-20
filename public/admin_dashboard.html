@@ -272,6 +272,13 @@
             margin-top: 5px;
         }
         
+        /* New Styles for Product Actions */
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
         .product-card .delete-btn {
             background: #ef4444;
             color: white;
@@ -280,15 +287,28 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
-            margin-top: 15px;
             transition: background 0.2s;
+            flex-grow: 1; 
         }
         
         .product-card .delete-btn:hover {
             background: #dc2626;
         }
+
+        .edit-stock-btn { 
+            background: #10b981; 
+            color: white; 
+            border: none; 
+            padding: 8px 15px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: background 0.2s; 
+            flex-grow: 1;
+        }
+        .edit-stock-btn:hover { background: #059669; }
         
-        /* ===== User Table Styles (NEW) ===== */
+        /* ===== User Table Styles (Unchanged) ===== */
         .user-table {
             width: 100%;
             border-collapse: collapse;
@@ -341,8 +361,74 @@
             font-size: 12px;
             color: #6b7280;
         }
+        
+        /* ===== Stock Edit Modal Styles (NEW) ===== */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
 
-        /* ===== Footer ===== */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%; 
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .modal-close:hover,
+        .modal-close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .stock-edit-form input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .stock-edit-form button[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .stock-edit-form button[type="submit"]:hover {
+            background-color: #312e81;
+        }
+
+
+        /* ===== Footer and Media Queries (Unchanged) ===== */
         .admin-footer {
             text-align: center;
             padding: 20px;
@@ -352,7 +438,6 @@
             border-top: 1px solid #e5e7eb;
         }
 
-        /* ===== Media Queries for Responsiveness (Unchanged) ===== */
         @media (max-width: 1024px) {
             .sidebar { width: 230px; }
             .main-content { margin-left: 230px; }
@@ -472,10 +557,24 @@
 
     </div>
 
+    <div id="editStockModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="document.getElementById('editStockModal').style.display='none'">&times;</span>
+            <h2>Edit Stock for: <span id="modalProductName" style="color: var(--primary-color);"></span></h2>
+            <form id="stockEditForm" class="stock-edit-form">
+                <input type="hidden" id="editProductId">
+                <label for="newStock">New Stock Quantity:</label>
+                <input type="number" id="newStock" name="newStock" required min="0">
+                <button type="submit">Save Stock</button>
+                <p id="stockMessage" style="margin-top: 10px; font-weight: 500; text-align: center;"></p>
+            </form>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; 
+        import { getFirestore, collection, getDocs, deleteDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"; 
 
         // --- 1. Firebase Configuration (REPLACE with your actual config) ---
         const firebaseConfig = {
@@ -603,16 +702,21 @@
                                 <div class="details">
                                     <p><strong>Category:</strong> ${product.category}</p>
                                     <p class="price">$${product.price.toFixed(2)}</p>
-                                    <p>Stock: ${product.stock}</p>
+                                    <p>Stock: <span id="stock-count-${doc.id}">${product.stock}</span></p>
                                 </div>
                                 <div class="ids">
                                     <p><strong>Product ID:</strong> ${doc.id}</p>
                                     <p><strong>Seller ID:</strong> ${product.sellerId.substring(0, 10)}...</p>
                                 </div>
                             </div>
-                            <button class="delete-btn" data-product-id="${doc.id}">
-                                <i class="fas fa-trash"></i> Delete Product
-                            </button>
+                            <div class="product-actions">
+                                <button class="edit-stock-btn" data-product-id="${doc.id}" data-product-name="${product.name}" data-current-stock="${product.stock}">
+                                    <i class="fas fa-edit"></i> Edit Stock
+                                </button>
+                                <button class="delete-btn" data-product-id="${doc.id}">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
                         </div>
                     `;
                 });
@@ -645,10 +749,79 @@
                 alert(`Failed to delete product: ${error.message}`);
             }
         }
+
+        // --- NEW 6. Admin Edit Product Stock Function (to open modal) ---
+        function editProductStock(productId, productName, currentStock) {
+            document.getElementById('editProductId').value = productId;
+            document.getElementById('modalProductName').textContent = productName;
+            document.getElementById('newStock').value = currentStock;
+            document.getElementById('stockMessage').textContent = '';
+            document.getElementById('editStockModal').style.display = 'block';
+        }
+
+        // --- NEW 7. Save Updated Stock Function (form submit handler) ---
+        document.getElementById("stockEditForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const productId = document.getElementById('editProductId').value;
+            const newStock = parseInt(document.getElementById('newStock').value, 10);
+            const stockMessageEl = document.getElementById('stockMessage');
+            const saveButton = e.submitter;
+
+            if (isNaN(newStock) || newStock < 0) {
+                stockMessageEl.style.color = '#ef4444';
+                stockMessageEl.textContent = 'Stock must be a non-negative number.';
+                return;
+            }
+
+            stockMessageEl.textContent = 'Saving...';
+            stockMessageEl.style.color = '#f59e0b';
+            saveButton.disabled = true;
+
+            try {
+                const productRef = doc(db, "products", productId);
+                await updateDoc(productRef, {
+                    stock: newStock,
+                    isAvailable: newStock > 0, // Update availability status
+                    lastUpdatedAdmin: new Date()
+                });
+
+                stockMessageEl.style.color = '#10b981';
+                stockMessageEl.textContent = `✅ Stock updated to ${newStock}!`;
+
+                // Update the stock number instantly in the product card display
+                const stockCountEl = document.getElementById(`stock-count-${productId}`);
+                if (stockCountEl) {
+                    stockCountEl.textContent = newStock;
+                }
+                
+                // Refreshing the list is good practice
+                loadAllProducts(); 
+
+                // Close modal after a delay
+                setTimeout(() => {
+                    document.getElementById('editStockModal').style.display = 'none';
+                    saveButton.disabled = false;
+                }, 1000);
+
+            } catch (error) {
+                console.error("Error updating stock:", error);
+                stockMessageEl.style.color = '#ef4444';
+                stockMessageEl.textContent = `⚠️ Failed to update stock: ${error.message}`;
+                saveButton.disabled = false;
+            }
+        });
         
-        // --- 6. Event Listener Delegation for Delete Buttons ---
+        // --- 8. Event Listener Delegation for Action Buttons ---
         allProductsList.addEventListener('click', (e) => {
+            const editButton = e.target.closest('.edit-stock-btn');
             const deleteButton = e.target.closest('.delete-btn');
+            
+            if (editButton) {
+                const productId = editButton.dataset.productId;
+                const productName = editButton.dataset.productName;
+                const currentStock = editButton.dataset.currentStock;
+                editProductStock(productId, productName, currentStock);
+            }
             
             if (deleteButton) {
                 const productIdToDelete = deleteButton.dataset.productId;
@@ -657,7 +830,7 @@
         });
 
 
-        // --- 7. Authentication and Setup ---
+        // --- 9. Authentication and Setup ---
         
         // Redirect if not logged in or not admin
         let currentAdminUID = null;
@@ -678,7 +851,7 @@
                 if (userDoc.exists() && userDoc.data().role === "admin") {
                     isAdmin = true;
                     // Try to show user name if available, otherwise email
-                    document.getElementById("adminName").textContent = userDoc.data().name || user.email || "Admin";
+                    document.getElementById("adminName").textContent = userDoc.data().name || user.email.split('@')[0] || "Admin";
                 }
 
                 if (!isAdmin) {
