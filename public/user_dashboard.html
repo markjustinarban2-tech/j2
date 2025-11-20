@@ -127,28 +127,43 @@
         }
         .logout-btn:hover { background: #dc2626; }
         
-        /* --- NEW: Static Search Bar Styles (Product Section) --- */
+        /* --- NEW STATIC SEARCH BAR STYLES (White Theme) --- */
         #productSearchBarContainer {
             display: flex;
             align-items: center;
             width: 100%;
-            max-width: 600px;
-            margin: 0 auto 30px auto; /* Centered, bottom margin for spacing */
-            background: var(--card-background);
-            border: 1px solid #d1d5db;
+            max-width: 700px;
+            margin: 0 auto 30px auto; 
+            
+            /* WHITE THEME */
+            background: var(--card-background); /* White */
+            color: var(--text-color); /* Dark text */
+            border: 1px solid #e5e7eb; /* Light border */
+            /* END WHITE THEME */
+            
             border-radius: 10px;
-            box-shadow: var(--shadow-light);
+            box-shadow: var(--shadow-light); 
             height: 45px; 
+            overflow: hidden; 
         }
 
         #productSearchBarContainer input {
             flex-grow: 1;
             padding: 10px 15px;
             border: none;
-            background: transparent;
+            
+            /* INPUT THEME */
+            background: var(--card-background); /* White input field */
+            color: var(--text-color); /* Dark text */
+            /* END INPUT THEME */
+            
             font-size: 16px;
             outline: none;
             height: 100%;
+        }
+        
+        #productSearchBarContainer input::placeholder {
+            color: #9ca3af; /* Medium gray placeholder text */
         }
 
         #productSearchBarContainer button {
@@ -157,7 +172,7 @@
             color: white;
             border: none;
             padding: 10px 0;
-            border-radius: 0 10px 10px 0;
+            border-radius: 0; 
             cursor: pointer;
             height: 100%;
             display: flex;
@@ -165,6 +180,12 @@
             justify-content: center;
             transition: background 0.2s;
         }
+        
+        /* Apply radius only to the container's outer edges */
+        #productSearchBarContainer button:last-child {
+            border-radius: 0 10px 10px 0; 
+        }
+
         #productSearchBarContainer button:hover { background: #4338ca; }
 
         /* Hero */
@@ -266,7 +287,7 @@
             cursor: not-allowed;
         }
 
-        /* --- Order Table Styles (Restored) --- */
+        /* --- Order Table Styles --- */
         .order-table-container {
             background: var(--card-background);
             border-radius: 14px;
@@ -478,7 +499,7 @@
         const cartCountElement = document.getElementById('cartCount');
         const userOrderTableBody = document.getElementById('userOrderTableBody'); 
         
-        // --- UPDATED Search Elements ---
+        // --- Search Elements ---
         const productSearchInput = document.getElementById('productSearchInput');
         const searchExecuteBtn = document.getElementById('searchExecuteBtn');
         
@@ -601,17 +622,13 @@
             }
         }
 
-        // --- 3. Load All Products ---
+        // --- 3. Load All Products (and Filter) ---
         async function loadAllProducts(searchQuery = '') {
             const loadingStatusEl = document.getElementById('productLoadingStatus');
             dynamicProductGrid.innerHTML = '<div id="productLoadingStatus" style="text-align: center; color: #6b7280; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading latest products...</div>';
             
             try {
                 let productsRef = collection(db, "products");
-                let productsQuery = productsRef;
-
-                // Simple filtering based on search query (client-side simulation, complex filtering needs backend support)
-                // For demonstration, we fetch all and filter client-side if a query exists
                 
                 const querySnapshot = await getDocs(productsRef);
 
@@ -633,7 +650,7 @@
                     const descriptionLower = product.description ? product.description.toLowerCase() : '';
                     const queryLower = searchQuery.toLowerCase();
 
-                    // Filter condition
+                    // Filter condition (Client-side simulation)
                     if (searchQuery && 
                         !nameLower.includes(queryLower) && 
                         !descriptionLower.includes(queryLower)) {
@@ -682,7 +699,7 @@
                 });
                 
                 if (productsFound === 0 && searchQuery) {
-                    dynamicProductGrid.innerHTML = `<p style="text-align: center; color: #6b7280; padding: 20px;">No products found matching "${searchQuery}".</p>`;
+                    dynamicProductGrid.innerHTML = `<p style="text-align: center; color: #6b7280; padding: 20px;">No products found matching "<strong>${searchQuery}</strong>".</p>`;
                 } else if (productsFound === 0) {
                      dynamicProductGrid.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No products are currently listed in the marketplace. Check back soon!</p>';
                 } else {
@@ -750,21 +767,22 @@
             }
         }
         
-        // --- 5. UPDATED: Search Execution Functionality ---
-        const executeSearch = () => {
+        // --- 5. Live Search Functionality ---
+        // New: Listen for the 'input' event to filter as the user types
+        productSearchInput.addEventListener('input', () => {
             const query = productSearchInput.value.trim();
-            // Call loadAllProducts with the query to filter the displayed grid
             loadAllProducts(query); 
-            
-            // Optional: Scroll to the products section after search
-            window.scrollTo({
-                top: document.getElementById('products').offsetTop - 70,
-                behavior: 'smooth'
-            });
+            // Note: We no longer scroll here, as continuous scrolling is disruptive.
+        });
+        
+        // We can keep the button/Enter key functionality for convenience, 
+        // but it's redundant now with the 'input' listener.
+        const executeSearch = () => {
+             const query = productSearchInput.value.trim();
+             loadAllProducts(query); 
         };
-        
+
         searchExecuteBtn.addEventListener('click', executeSearch);
-        
         productSearchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 executeSearch();
