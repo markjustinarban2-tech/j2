@@ -57,13 +57,33 @@
             text-align: center;
             margin-bottom: 30px;
         }
+        
+        /* New styles for the logo image and text container */
         .login-header .logo {
-            font-size: 32px;
+            text-decoration: none;
+            display: flex; 
+            flex-direction: column; /* Stack image and text vertically */
+            justify-content: center;
+            align-items: center; 
+            gap: 0; /* No gap between image and text */
+            margin-bottom: 5px;
+        }
+        .login-header .logo img {
+            height: 80px; /* Large size */
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 5px; /* Added space below the image */
+        }
+        
+        /* Style for the J2 NEXUS text */
+        .login-header .logo .logo-text {
+            font-size: 28px; /* CHANGE: Reduced from 38px */
             font-weight: 800;
             color: var(--primary-color);
-            text-decoration: none;
-            display: block;
+            line-height: 1; 
         }
+        /* End new logo styles */
+
         .login-header h2 {
             font-size: 20px;
             font-weight: 600;
@@ -136,7 +156,10 @@
 
     <div class="login-box">
         <div class="login-header">
-            <a href="index.html" class="logo">J2 Nexus</a>
+            <a href="index.html" class="logo">
+                <img src="pic/logo.jpg.png" alt="J2 Nexus Logo">
+                <span class="logo-text">J2 NEXUS</span>
+            </a>
             <h2>Sign in to your account</h2>
         </div>
 
