@@ -1101,7 +1101,7 @@
             }
         }
         
-        // --- 9. Show Order Details (Unchanged) ---
+        // --- 9. Show Order Details (FIXED) ---
         window.showOrderDetails = async function(orderId) {
              const modalOrderId = document.getElementById('modalOrderId');
              const modalCustomerName = document.getElementById('modalCustomerName');
@@ -1121,8 +1121,20 @@
 
                 modalOrderId.textContent = orderId.substring(0, 8);
                 modalCustomerName.textContent = order.customerName || 'N/A';
-                modalAddress.textContent = `${order.shippingAddress.street}, ${order.shippingAddress.city}, ${order.shippingAddress.zipCode}`;
                 modalPaymentMethod.textContent = order.paymentMethod || 'N/A';
+                
+                // --- CORRECTED ADDRESS LOGIC ---
+                if (order.shippingAddress) {
+                    // Access properties safely, defaulting to 'N/A' if a sub-field is missing
+                    const street = order.shippingAddress.street || 'N/A';
+                    const city = order.shippingAddress.city || 'N/A';
+                    const zipCode = order.shippingAddress.zipCode || 'N/A';
+                    modalAddress.textContent = `${street}, ${city}, ${zipCode}`;
+                } else {
+                    // Fallback if the entire shippingAddress object is missing (e.g., if stored as a flat string)
+                    modalAddress.textContent = order.address || 'Shipping address unavailable';
+                }
+                // ---------------------------------
                 
                 let itemsHTML = '';
                 let sellerTotal = 0;
