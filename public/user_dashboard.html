@@ -224,6 +224,49 @@
             .cart-controls { flex-direction: column; }
             .cart-controls input { width: 100%; }
         }
+        
+        /* === START: NEW Search Bar Styles === */
+        #searchBarContainer {
+            margin: 0 auto 30px auto; /* Centered, below title */
+            display: flex;
+            align-items: center;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: var(--card-background);
+            box-shadow: var(--shadow-light);
+            overflow: hidden;
+            width: 100%;
+            max-width: 800px; /* Adjust as needed */
+        }
+
+        #searchInput {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: var(--text-color);
+        }
+
+        #searchInput::placeholder {
+            color: #9ca3af;
+        }
+
+        #searchBarContainer i {
+            padding: 0 15px;
+            color: #9ca3af;
+            font-size: 18px;
+        }
+
+        /* Message when no results are found */
+        .no-results-message {
+            grid-column: 1 / -1; 
+            text-align: center;
+            font-size: 18px;
+            color: #6b7280;
+            padding: 50px;
+        }
+        /* === END: NEW Search Bar Styles === */
     </style>
 </head>
 <body>
@@ -283,6 +326,11 @@
 
     <section class="section" id="products">
         <h2>Featured Products</h2>
+        
+        <div id="searchBarContainer">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search products by name or description..." />
+        </div>
         <div class="products" id="dynamicProductGrid"> 
             <div id="productLoadingStatus" style="text-align: center; color: #6b7280; padding: 20px;">
                 <i class="fas fa-spinner fa-spin"></i> Loading latest products...
@@ -324,6 +372,11 @@
         // 🟢 NEW: Cart Count Element
         const cartCountElement = document.getElementById('cartCount');
 
+        // === START: NEW Search/Filter State and Elements ===
+        let allProductsData = []; // Global array to hold ALL product data for filtering
+        const searchInput = document.getElementById('searchInput');
+        // === END: NEW Search/Filter State and Elements ===
+
         // --- 1. Real-Time Cart Counter (Listener) ---
         function subscribeToCartUpdates(userId) {
             // Reference to the carts subcollection: users/{userId}/carts
@@ -342,7 +395,7 @@
             });
         }
         
-        // --- 2. Add to Cart Functionality ---
+        // --- 2. Add to Cart Functionality (Original) ---
         window.addToCart = async function(productId, price, name, maxStock) {
             if (!currentUserId) {
                 alert("Please log in to add items to your cart.");
@@ -407,9 +460,67 @@
             }
         }
 
-        // --- 3. Load All Products (Updated to include Cart Controls) ---
+        // --- 3. Product Renderer Function (NEW) ---
+        // This function builds the HTML based on the provided list of products.
+        function renderProducts(productsToRender) {
+             if (productsToRender.length === 0) {
+                dynamicProductGrid.innerHTML = '<div class="no-results-message">No products match your search criteria.</div>';
+                return;
+            }
+
+            let productsHTML = '';
+            productsToRender.forEach((product) => {
+                const productId = product.id;
+                const stock = product.stock || 0;
+                const price = product.price.toFixed(2);
+                
+                const imageUrl = product.imageURL && product.imageURL !== 'placeholder.jpg' 
+                                 ? product.imageURL 
+                                 : 'https://via.placeholder.com/280x220?text=J2+Nexus+Product';
+                
+                // Determine if the product is out of stock
+                const outOfStock = stock <= 0;
+                const stockText = outOfStock ? 'Out of Stock' : `Stock: ${stock}`;
+                const stockColor = outOfStock ? '#ef4444' : '#10b981';
+
+                // 🟢 Product card with cart controls (same as original)
+                productsHTML += `
+                    <div class="product-card">
+                        <div>
+                            <img src="${imageUrl}" alt="${product.name}" />
+                            <h3>${product.name}</h3>
+                            <p>${product.description.substring(0, 50)}...</p>
+                            <div class="price">₱${product.price.toLocaleString('en-PH', {minimumFractionDigits: 2})}</div>
+                            <p style="font-size: 12px; color: ${stockColor}; margin-top: 5px;">${stockText}</p>
+                        </div>
+                        
+                        <div class="cart-controls">
+                            <input type="number" 
+                                   id="qty_${productId}" 
+                                   value="1" 
+                                   min="1" 
+                                   max="${stock}" 
+                                   ${outOfStock ? 'disabled' : ''} 
+                            />
+                            <button 
+                                onclick="addToCart('${productId}', ${price}, '${product.name}', ${stock})"
+                                ${outOfStock ? 'disabled' : ''}
+                            >
+                                <i class="fas fa-cart-plus"></i> ${outOfStock ? 'Sold Out' : 'Add to Cart'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            dynamicProductGrid.innerHTML = productsHTML;
+        }
+
+
+        // --- 4. Load ALL Products (Modified) ---
+        // This now loads the data once and stores it globally.
         async function loadAllProducts() {
-            const loadingStatusEl = document.getElementById('productLoadingStatus');
+            // Display loading status
             dynamicProductGrid.innerHTML = '<div id="productLoadingStatus" style="text-align: center; color: #6b7280; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading latest products...</div>';
             
             try {
@@ -420,61 +531,43 @@
                     return;
                 }
 
-                let productsHTML = '';
-                querySnapshot.forEach((doc) => {
-                    const product = doc.data();
-                    const productId = doc.id;
-                    const stock = product.stock || 0;
-                    const price = product.price.toFixed(2);
-                    
-                    const imageUrl = product.imageURL && product.imageURL !== 'placeholder.jpg' 
-                                     ? product.imageURL 
-                                     : 'https://via.placeholder.com/280x220?text=J2+Nexus+Product';
-                    
-                    // Determine if the product is out of stock
-                    const outOfStock = stock <= 0;
-                    const stockText = outOfStock ? 'Out of Stock' : `Stock: ${stock}`;
-                    const stockColor = outOfStock ? '#ef4444' : '#10b981';
-
-                    // 🟢 NEW: Product card with cart controls
-                    productsHTML += `
-                        <div class="product-card">
-                            <div>
-                                <img src="${imageUrl}" alt="${product.name}" />
-                                <h3>${product.name}</h3>
-                                <p>${product.description.substring(0, 50)}...</p>
-                                <div class="price">₱${product.price.toLocaleString('en-PH', {minimumFractionDigits: 2})}</div>
-                                <p style="font-size: 12px; color: ${stockColor}; margin-top: 5px;">${stockText}</p>
-                            </div>
-                            
-                            <div class="cart-controls">
-                                <input type="number" 
-                                       id="qty_${productId}" 
-                                       value="1" 
-                                       min="1" 
-                                       max="${stock}" 
-                                       ${outOfStock ? 'disabled' : ''} 
-                                />
-                                <button 
-                                    onclick="addToCart('${productId}', ${price}, '${product.name}', ${stock})"
-                                    ${outOfStock ? 'disabled' : ''}
-                                >
-                                    <i class="fas fa-cart-plus"></i> ${outOfStock ? 'Sold Out' : 'Add to Cart'}
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
+                // Store all data globally
+                allProductsData = querySnapshot.docs.map(doc => ({
+                    id: doc.id, 
+                    ...doc.data()
+                }));
                 
-                dynamicProductGrid.innerHTML = productsHTML;
+                // Render the initial list (all products)
+                renderProducts(allProductsData);
 
             } catch (error) {
                 console.error("Error loading all products: ", error);
                 dynamicProductGrid.innerHTML = '<div style="text-align: center; color: #ef4444; padding: 20px;">⚠️ Error loading products. Please check console for details.</div>';
             }
         }
-        // --- END loadAllProducts function ---
+        // --- END Modified loadAllProducts function ---
 
+        // --- 5. Filter Products Function (NEW) ---
+        function filterProducts() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            // If search is empty, show all
+            if (!searchTerm) {
+                renderProducts(allProductsData);
+                return;
+            }
+
+            // Filter the global array based on the search term
+            const filteredProducts = allProductsData.filter(product => {
+                const nameMatch = product.name.toLowerCase().includes(searchTerm);
+                const descriptionMatch = product.description.toLowerCase().includes(searchTerm);
+                
+                return nameMatch || descriptionMatch; 
+            });
+
+            // Render the filtered results
+            renderProducts(filteredProducts);
+        }
 
         // Check authentication state on page load
         onAuthStateChanged(auth, (user) => {
@@ -487,6 +580,11 @@
                 
                 loadAllProducts(); 
                 subscribeToCartUpdates(currentUserId); // 🟢 Start cart listener
+
+                // 🟢 NEW: Attach the filter function to the search input
+                if (searchInput) {
+                    searchInput.addEventListener('input', filterProducts);
+                }
                 
             } else {
                 window.location.href = "login.html";
