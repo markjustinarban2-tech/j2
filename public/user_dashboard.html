@@ -32,22 +32,20 @@
             position:sticky;top:0;z-index:50
         }
         
-        /* UPDATED: Logo container styles to hold image and text */
+        /* Logo container styles */
         .logo {
-            /* Now using flex to align image and text */
             display: flex; 
             align-items: center; 
-            gap: 10px; /* Space between logo image and text */
-            
+            gap: 10px; 
             font-size: 26px;
             font-weight: 700;
             color: var(--primary-color);
             text-decoration: none;
         }
 
-        /* NEW: Logo Image Styling */
+        /* Logo Image Styling */
         #siteLogo {
-            height: 35px; /* Size the logo image */
+            height: 35px; 
             width: auto;
             object-fit: contain;
         }
@@ -59,7 +57,7 @@
             gap: 25px;
         }
         
-        /* New container for navigation links (with corrected spacing) */
+        /* Container for navigation links */
         .nav-links {
             display: flex;
             align-items: center;
@@ -128,6 +126,46 @@
             transition: background 0.2s;
         }
         .logout-btn:hover { background: #dc2626; }
+        
+        /* --- NEW: Static Search Bar Styles (Product Section) --- */
+        #productSearchBarContainer {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 30px auto; /* Centered, bottom margin for spacing */
+            background: var(--card-background);
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            box-shadow: var(--shadow-light);
+            height: 45px; 
+        }
+
+        #productSearchBarContainer input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            outline: none;
+            height: 100%;
+        }
+
+        #productSearchBarContainer button {
+            width: 60px; 
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 0;
+            border-radius: 0 10px 10px 0;
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        #productSearchBarContainer button:hover { background: #4338ca; }
 
         /* Hero */
         .hero{
@@ -181,7 +219,7 @@
             box-shadow:var(--shadow-light);
             padding:16px;
             transition:0.2s;
-            min-height: 420px; /* Increased height to fit new controls */
+            min-height: 420px; 
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -215,7 +253,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            flex-grow: 1; /* Make the button fill available space */
+            flex-grow: 1; 
             transition: background 0.2s;
             display: flex;
             align-items: center;
@@ -224,7 +262,7 @@
         .cart-controls button:hover:not(:disabled) { background: #15803d; }
         .cart-controls button i { margin-right: 8px; }
         .cart-controls button:disabled {
-            background: #d1d5db; /* Light gray when disabled */
+            background: #d1d5db; 
             cursor: not-allowed;
         }
 
@@ -277,10 +315,33 @@
             .hero { flex-direction: column; text-align: center; padding: 60px 20px; }
             .hero img { width: 100%; max-width: 400px; margin-top: 30px; }
             .section { padding: 40px 20px; }
-            header { padding: 15px 20px; }
-            .nav-content { flex-direction: column; align-items: flex-end; gap: 10px; }
-            .nav-links { gap: 15px; } 
+            
+            header { 
+                padding: 15px 20px; 
+                flex-wrap: wrap; 
+                gap: 15px; 
+            }
+            .nav-content { 
+                flex-direction: column; 
+                align-items: flex-end; 
+                gap: 10px; 
+                width: 100%; 
+            }
+            .nav-links { 
+                gap: 15px; 
+                width: 100%; 
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-end; 
+            } 
             .user-profile-header { padding-left: 0; border-left: none; }
+            
+            /* Mobile search bar style adjustment */
+            #productSearchBarContainer {
+                max-width: 100%; 
+                margin: 0 auto 20px auto; 
+            }
+            
             .cart-controls { flex-direction: column; }
             .cart-controls input { width: 100%; }
         }
@@ -293,6 +354,7 @@
             <img src="pic/logo.jpg.png" id="siteLogo">
             J2 Nexus
         </a>
+        
         <div class="nav-content">
             <div class="nav-links">
                 <a href="#hero" onclick="handleNavigation('home'); return false;">Home</a>
@@ -300,6 +362,7 @@
                 <a href="#products" onclick="handleNavigation('products'); return false;">Products</a>
                 <a href="#" onclick="handleNavigation('orders'); return false;">My Orders</a> 
                 <a href="contact.html">Contact</a>
+                
                 <a href="cart.html" class="cart-link" title="View Shopping Cart">
                     <div class="cart-icon-container">
                         <i class="fas fa-shopping-cart"></i> 
@@ -347,6 +410,12 @@
 
     <section class="section" id="products">
         <h2>Featured Products</h2>
+        
+        <div id="productSearchBarContainer">
+            <input type="text" id="productSearchInput" placeholder="Search products or categories..." />
+            <button id="searchExecuteBtn" title="Search"><i class="fas fa-search"></i></button>
+        </div>
+        
         <div class="products" id="dynamicProductGrid"> 
             <div id="productLoadingStatus" style="text-align: center; color: #6b7280; padding: 20px;">
                 <i class="fas fa-spinner fa-spin"></i> Loading latest products...
@@ -407,12 +476,16 @@
         const logoutBtn = document.getElementById("logoutBtn");
         const dynamicProductGrid = document.getElementById('dynamicProductGrid');
         const cartCountElement = document.getElementById('cartCount');
-        const userOrderTableBody = document.getElementById('userOrderTableBody'); // Restored
+        const userOrderTableBody = document.getElementById('userOrderTableBody'); 
+        
+        // --- UPDATED Search Elements ---
+        const productSearchInput = document.getElementById('productSearchInput');
+        const searchExecuteBtn = document.getElementById('searchExecuteBtn');
         
         // --- Helper Functions ---
         const formatCurrency = (amount) => `₱${parseFloat(amount).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-        // --- Restored: Navigation and Scrolling Handler ---
+        // --- Navigation and Scrolling Handler ---
         window.handleNavigation = function(sectionId) {
             // 1. Get references to main sections
             const heroSection = document.getElementById('hero');
@@ -529,12 +602,18 @@
         }
 
         // --- 3. Load All Products ---
-        async function loadAllProducts() {
+        async function loadAllProducts(searchQuery = '') {
             const loadingStatusEl = document.getElementById('productLoadingStatus');
             dynamicProductGrid.innerHTML = '<div id="productLoadingStatus" style="text-align: center; color: #6b7280; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading latest products...</div>';
             
             try {
-                const querySnapshot = await getDocs(collection(db, "products"));
+                let productsRef = collection(db, "products");
+                let productsQuery = productsRef;
+
+                // Simple filtering based on search query (client-side simulation, complex filtering needs backend support)
+                // For demonstration, we fetch all and filter client-side if a query exists
+                
+                const querySnapshot = await getDocs(productsRef);
 
                 if (querySnapshot.empty) {
                     dynamicProductGrid.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No products are currently listed in the marketplace. Check back soon!</p>';
@@ -542,11 +621,26 @@
                 }
 
                 let productsHTML = '';
+                let productsFound = 0;
+                
                 querySnapshot.forEach((doc) => {
                     const product = doc.data();
                     const productId = doc.id;
                     const stock = product.stock || 0;
                     const price = product.price.toFixed(2);
+                    
+                    const nameLower = product.name ? product.name.toLowerCase() : '';
+                    const descriptionLower = product.description ? product.description.toLowerCase() : '';
+                    const queryLower = searchQuery.toLowerCase();
+
+                    // Filter condition
+                    if (searchQuery && 
+                        !nameLower.includes(queryLower) && 
+                        !descriptionLower.includes(queryLower)) {
+                        return; // Skip if it doesn't match the search query
+                    }
+
+                    productsFound++;
                     
                     const imageUrl = product.imageURL && product.imageURL !== 'placeholder.jpg' 
                                      ? product.imageURL 
@@ -587,7 +681,13 @@
                     `;
                 });
                 
-                dynamicProductGrid.innerHTML = productsHTML;
+                if (productsFound === 0 && searchQuery) {
+                    dynamicProductGrid.innerHTML = `<p style="text-align: center; color: #6b7280; padding: 20px;">No products found matching "${searchQuery}".</p>`;
+                } else if (productsFound === 0) {
+                     dynamicProductGrid.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No products are currently listed in the marketplace. Check back soon!</p>';
+                } else {
+                    dynamicProductGrid.innerHTML = productsHTML;
+                }
 
             } catch (error) {
                 console.error("Error loading all products: ", error);
@@ -595,7 +695,7 @@
             }
         }
         
-        // --- 4. Restored: Load User Orders Function ---
+        // --- 4. Load User Orders Function ---
         window.loadUserOrders = async function() {
             if (!currentUserId) {
                 userOrderTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Please log in to view your orders.</td></tr>';
@@ -650,6 +750,28 @@
             }
         }
         
+        // --- 5. UPDATED: Search Execution Functionality ---
+        const executeSearch = () => {
+            const query = productSearchInput.value.trim();
+            // Call loadAllProducts with the query to filter the displayed grid
+            loadAllProducts(query); 
+            
+            // Optional: Scroll to the products section after search
+            window.scrollTo({
+                top: document.getElementById('products').offsetTop - 70,
+                behavior: 'smooth'
+            });
+        };
+        
+        searchExecuteBtn.addEventListener('click', executeSearch);
+        
+        productSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                executeSearch();
+            }
+        });
+
+
         // Check authentication state on page load
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -676,6 +798,7 @@
                 console.error("Logout failed:", error);
             }
         });
+        
     </script>
 
 </body>
